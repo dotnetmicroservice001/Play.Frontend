@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: playeconomy.azurecr.io/play.frontend
+  repository: playeconomy01acr.azurecr.io/play.frontend
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""

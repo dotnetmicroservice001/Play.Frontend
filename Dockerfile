@@ -1,5 +1,5 @@
 # build environment
-FROM node:18.12 as build
+FROM node:18.12 AS build
 ENV NODE_OPTIONS=--openssl-legacy-provider
 WORKDIR /app
 COPY package*.json .
