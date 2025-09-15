@@ -103,7 +103,7 @@ export class Catalog extends Component {
                     <GrantItemModal
                           item={item} />
                     &nbsp;&nbsp;&nbsp;                    
-                    <Button variant="danger" onClick={() => this.deleteItem(item.id)}>Delete</Button>
+                    <Button variant="danger" onClick={() => this.deleteItem(item.id)}><i className="bi bi-trash mr-2" aria-hidden="true"></i>Delete</Button>
                       </div>
                     </td>
                   </tr>

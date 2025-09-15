@@ -1,7 +1,232 @@
+html, body, #root {
+  height: 100%;
+}
+
+/* Theme variables */
+:root {
+  --color-bg: #ffffff;
+  --color-fg: #111111;
+  --color-border: #e6e6e6;
+  --color-border-strong: #cccccc;
+  --color-black: #000000;
+  --color-white: #ffffff;
+}
+
+.app-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1 0 auto;
+}
+
+/* Subtle card container for main content */
+.content .container {
+  background-color: #ffffff;
+  border: 1px solid #eaeaea;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+  border-radius: 12px;
+  padding: 24px;
+  margin-top: 48px;
+  margin-bottom: 24px;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.content .container:hover {
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
+  transform: translateY(-1px);
+}
+
+/* Center titles inside the main content card */
+.content .container > h1,
+.content .container > h2,
+.content .container > h3 {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
 .footer {
-  position: absolute;
-  bottom: 0;
   width: 100%;
   white-space: nowrap;
-  line-height: 60px;
+  line-height: 1.6;
+  padding: 12px 0;
+  background-color: #fff;
+  border-top: 1px solid #e6e6e6;
+}
+
+/* Base typography and colors */
+body {
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+}
+
+a {
+  color: var(--color-fg);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.15s ease;
+}
+
+a:hover {
+  text-decoration: none;
+  border-bottom-color: var(--color-fg);
+}
+
+/* Navbar: solid black with inverted accents */
+.navbar {
+  background-color: var(--color-black) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.navbar .navbar-brand,
+.navbar .nav-link {
+  color: #f5f5f5 !important;
+}
+
+.navbar .nav-link.active,
+.navbar .nav-link:focus,
+.navbar .nav-link:hover {
+  color: #ffffff !important;
+  border-bottom: 2px solid #ffffff;
+}
+
+/* Navbar toggler visibility on dark glass */
+.navbar .navbar-toggler {
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.navbar .navbar-toggler:focus {
+  box-shadow: none;
+}
+.navbar .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255,255,255,0.85)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* Spacing between navbar elements */
+.navbar .navbar-brand {
+  margin-right: 1rem;
+}
+
+.navbar .nav-link {
+  margin: 0 0.5rem;
+  padding: 0.5rem 0.25rem;
+}
+
+/* Space between left and right nav groups */
+.navbar .navbar-nav + .navbar-nav {
+  margin-left: 1rem;
+}
+
+.navbar .btn {
+  margin-left: 0.75rem;
+}
+
+/* Tighter vertical spacing when collapsed */
+@media (max-width: 991.98px) {
+  .navbar .nav-link {
+    margin: 0.25rem 0;
+  }
+  .navbar .btn {
+    margin: 0.5rem 0;
+  }
+}
+
+/* Any buttons placed in navbar use inverted (light) style */
+.navbar .btn-primary,
+.navbar .btn-primary:focus,
+.navbar .btn-primary:active {
+  background-color: #ffffff !important;
+  border-color: #ffffff !important;
+  color: #111111 !important;
+}
+.navbar .btn-primary:hover {
+  background-color: #eaeaea !important;
+  border-color: #eaeaea !important;
+}
+
+/* Buttons: black primary for modern B/W feel */
+.btn-primary,
+.btn-primary:focus,
+.btn-primary:active {
+  background-color: var(--color-fg) !important;
+  border-color: var(--color-fg) !important;
+  color: var(--color-white) !important;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-black) !important;
+  border-color: var(--color-black) !important;
+}
+
+/* Danger buttons adapted to monochrome */
+.btn-danger,
+.btn-danger:focus,
+.btn-danger:active {
+  background-color: #222222 !important;
+  border-color: #222222 !important;
+  color: var(--color-white) !important;
+}
+
+.btn-danger:hover {
+  background-color: #000000 !important;
+  border-color: #000000 !important;
+}
+
+/* Softer look: rounded buttons and inputs */
+.btn {
+  border-radius: 10px !important;
+}
+
+/* Forms */
+.form-control {
+  color: var(--color-fg);
+  background-color: var(--color-white);
+  border-color: var(--color-border-strong);
+  border-radius: 10px;
+}
+
+/* Focus-visible styles for accessibility */
+a:focus-visible,
+button:focus-visible,
+.btn:focus-visible,
+.nav-link:focus-visible,
+.form-control:focus-visible {
+  outline: 2px solid var(--color-fg) !important;
+  outline-offset: 2px;
+  box-shadow: none !important;
+}
+
+.form-control:focus {
+  color: var(--color-fg);
+  background-color: var(--color-white);
+  border-color: var(--color-fg);
+  box-shadow: none;
+}
+
+/* Tables */
+.table {
+  color: var(--color-fg);
+}
+
+.table thead th {
+  border-bottom: 2px solid var(--color-fg);
+}
+
+.table td, .table th {
+  border-color: var(--color-border);
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: #fafafa;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #f2f2f2;
+}
+
+/* Rounded tables within main content card */
+.content .container .table {
+  border-radius: 10px;
+  overflow: hidden;
 }

@@ -15,7 +15,7 @@ export default class GrantItemModal extends Component
     render()
     {
         return <Fragment>
-            <Button variant="primary" onClick={this.toggle}>Grant</Button>
+            <Button variant="primary" onClick={this.toggle}><i className="bi bi-gift mr-2" aria-hidden="true"></i>Grant</Button>
             <Modal show={this.state.modal} className={this.props.className} onHide={this.toggle}>
                 <Modal.Header closeButton>Grant {this.props.item.name}</Modal.Header>
                 <Modal.Body>

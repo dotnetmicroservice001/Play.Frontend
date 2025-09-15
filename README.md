@@ -14,6 +14,7 @@ npm install
 ## To run the frontend locally
 Run this at the root of this repository:
 ```
+npm install
 npm start
 ```
 Then navigate to http://localhost:3000 in your browser.
@@ -34,7 +35,7 @@ docker buildx build --platform linux/amd64 \
 
 ## Run the docker image
 ```powershell
-docker run -it --rm -p 3000:80 --name frontend "$appname.azurecr.io/play.frontend:$version"
+docker run -it --rm -p 3000:80 --name frontend "$ACR.azurecr.io/play.frontend:$version"
 ```
 
 ## Publish the docker image
@@ -66,9 +67,12 @@ You will also see any lint errors in the console.
 Launches the test runner in the interactive watch mode.\
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+### Build
 
-Builds the app for production to the `build` folder.\
+Builds the app for production to the `build` folder.
+```
+npm run build
+```
 It correctly bundles React in production mode and optimizes the build for the best performance.
 
 The build is minified and the filenames include the hashes.\

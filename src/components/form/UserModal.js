@@ -18,7 +18,7 @@ export default class UserModal extends Component
         return <Fragment>
             <Button
                 variant="primary"
-                onClick={this.toggle}>Edit</Button>
+                onClick={this.toggle}><i className="bi bi-pencil-square mr-2" aria-hidden="true"></i>Edit</Button>
             <Modal show={this.state.modal} className={this.props.className} onHide={this.toggle}>
                 <Modal.Header closeButton>{title}</Modal.Header>
                 <Modal.Body>

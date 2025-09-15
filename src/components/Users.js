@@ -113,7 +113,7 @@ export class Users extends Component
                           user={user}
                           updateUserIntoState={this.updateState} />
                     &nbsp;&nbsp;&nbsp;
-                    <Button variant="danger" onClick={() => this.deleteUser(user.id)}>Delete</Button>
+                    <Button variant="danger" onClick={() => this.deleteUser(user.id)}><i className="bi bi-trash mr-2" aria-hidden="true"></i>Delete</Button>
                       </div>
                     </td>
                   </tr>
