@@ -21,32 +21,31 @@ Then navigate to http://localhost:3000 in your browser.
 ## Build the docker image
 ```bash
 # Build the docker image in Bash
-version="1.0.1"
-appname="playeconomy-01"
-acrname="playeconomy01acr"
+version="1.0.0"
+ACR="acrpfpos"
 
-docker build -t "$acrname.azurecr.io/play.frontend:$version" .
+docker build -t "$ACR.azurecr.io/play.frontend:$version" .
 
 ## amd 64 version
 docker buildx build --platform linux/amd64 \
-  -t "$acrname.azurecr.io/play.frontend:$version" \
+  -t "$ACR.azurecr.io/play.frontend:$version" \
   --push .
 ```
 
 ## Run the docker image
 ```powershell
-docker run -it --rm -p 3000:80 --name frontend "$acrname.azurecr.io/play.frontend:$version"
+docker run -it --rm -p 3000:80 --name frontend "$appname.azurecr.io/play.frontend:$version"
 ```
 
 ## Publish the docker image
 ```powershell
-az acr login --name $acrname
-docker push "$acrname.azurecr.io/play.frontend:$version"
+az acr login --name $ACR
+docker push "$ACR.azurecr.io/play.frontend:$version"
 ```
 
 ## Install the Helm chart
 ```powershell
-$namespace="frontend"
+namespace="frontend"
 helm install frontend-client ./helm --create-namespace -n $namespace
 ```
 
