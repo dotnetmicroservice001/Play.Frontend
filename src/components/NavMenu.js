@@ -88,7 +88,7 @@ export class NavMenu extends Component
     {
       return (<Fragment>
         <Nav className="mr-auto">
-          <Nav.Link as={Link} to="/"><i className="bi bi-house mr-1" aria-hidden="true"></i>Home</Nav.Link>
+          <Nav.Link as={Link} to={ApplicationPaths.HomePath}><i className="bi bi-house mr-1" aria-hidden="true"></i>Home</Nav.Link>
           {this.storeAndInventoryItems()}
           <Nav.Link as={Link} to={ApplicationPaths.CatalogPath}><i className="bi bi-grid mr-1" aria-hidden="true"></i>Catalog</Nav.Link>
           <Nav.Link as={Link} to={ApplicationPaths.UsersPath}><i className="bi bi-people mr-1" aria-hidden="true"></i>Users</Nav.Link>
@@ -102,7 +102,7 @@ export class NavMenu extends Component
     {
       return (<Fragment>
         <Nav className="mr-auto">
-          <Nav.Link as={Link} to="/"><i className="bi bi-house mr-1" aria-hidden="true"></i>Home</Nav.Link>
+          <Nav.Link as={Link} to={ApplicationPaths.HomePath}><i className="bi bi-house mr-1" aria-hidden="true"></i>Home</Nav.Link>
           {this.storeAndInventoryItems()}
         </Nav>
         <Nav>

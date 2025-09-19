@@ -1,0 +1,224 @@
+/* Quest timeline styling */
+.quest-timeline {
+  --timeline-bg: #ffffff;
+  --timeline-text: #1a1a24;
+  --timeline-surface: rgba(255, 255, 255, 0.92);
+  --timeline-accent: #4C1D95;
+  --timeline-accent-ink: #280E4B;
+
+  padding: 3.5rem 0;
+  background: var(--timeline-bg);
+}
+
+.quest-timeline--entered {
+  animation: quest-fade 0.6s ease forwards;
+}
+
+@keyframes quest-fade {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.quest-timeline__header {
+  max-width: 640px;
+  margin: 0 auto 2.5rem;
+}
+
+.quest-timeline__title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 2.35rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  color: var(--timeline-accent-ink);
+}
+
+.quest-timeline__subtitle {
+  font-size: 1rem;
+  color: rgba(26, 26, 36, 0.72);
+  line-height: 1.6;
+}
+
+.quest-timeline__stage {
+  position: relative;
+  margin: 0 auto;
+  max-width: 920px;
+  padding: 0 1.25rem 0;
+}
+
+.quest-timeline__line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(76, 29, 149, 0.85) 0%, rgba(242, 236, 255, 0.4) 100%);
+}
+
+.quest-timeline__item {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 2.4rem;
+  align-items: center;
+  margin-bottom: 3.5rem;
+}
+
+.quest-timeline__item:last-child {
+  margin-bottom: 0;
+}
+
+.quest-timeline__dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(76, 29, 149, 0.12);
+  border: 4px solid rgba(76, 29, 149, 0.55);
+}
+
+.quest-timeline__item.is-active .quest-timeline__dot {
+  background: var(--timeline-accent);
+  box-shadow: 0 0 16px rgba(76, 29, 149, 0.35);
+}
+
+.quest-timeline__card {
+  display: flex;
+  justify-content: center;
+}
+
+.quest-timeline__item--left .quest-timeline__card {
+  grid-column: 1;
+  justify-content: flex-end;
+}
+
+.quest-timeline__item--right .quest-timeline__card {
+  grid-column: 2;
+  justify-content: flex-start;
+}
+
+.quest-badge {
+  width: min(100%, 340px);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.quest-badge:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(76, 29, 149, 0.35);
+}
+
+.quest-badge--active {
+  transform: translateY(-8px);
+}
+
+.quest-badge__frame {
+  padding: 1.5rem 1.25rem;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #ffffff, var(--timeline-surface));
+  border: 1px solid rgba(26, 26, 36, 0.1);
+  box-shadow: 0 12px 32px rgba(26, 26, 36, 0.12);
+}
+
+.quest-badge__icon {
+  font-size: 2.5rem;
+  color: var(--timeline-accent);
+  margin-bottom: 0.85rem;
+}
+
+.quest-badge__title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.2rem;
+  color: var(--timeline-text);
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.quest-badge__description {
+  font-size: 0.95rem;
+  color: rgba(26, 26, 36, 0.75);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.quest-badge__tech {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+.quest-badge__chip {
+  display: inline-block;
+  padding: 0.35rem 0.6rem;
+  background: rgba(76, 29, 149, 0.08);
+  border: 1px solid rgba(76, 29, 149, 0.28);
+  border-radius: 8px;
+  font-size: 0.84rem;
+  color: var(--timeline-accent-ink);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.quest-timeline__caption {
+  max-width: 720px;
+  margin: 1.75rem auto 0;
+  font-size: 0.95rem;
+  color: rgba(26, 26, 36, 0.72);
+  text-align: center;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .quest-timeline__stage {
+    padding: 0 1rem;
+  }
+
+  .quest-timeline__line {
+    left: 36px;
+  }
+
+  .quest-timeline__item {
+    grid-template-columns: minmax(0, 1fr);
+    margin-bottom: 3rem;
+    padding-left: 2.5rem;
+  }
+
+  .quest-timeline__item--left .quest-timeline__card,
+  .quest-timeline__item--right .quest-timeline__card {
+    grid-column: 1;
+    justify-content: flex-start;
+  }
+
+  .quest-timeline__card {
+    margin-left: 3.25rem;
+  }
+
+  .quest-timeline__dot {
+    left: 36px;
+  }
+
+  .quest-badge {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quest-timeline,
+  .quest-badge,
+  .quest-badge__frame {
+    transition: none;
+    animation: none !important;
+  }
+}

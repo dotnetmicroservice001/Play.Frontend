@@ -1,0 +1,103 @@
+import React, { useEffect, useRef, useState } from 'react';
+import { quests } from '../data/quests';
+import { QuestBadge } from './QuestBadge';
+import { AchievementToast } from './AchievementToast';
+import '../styles/quest-timeline.css';
+
+const TOAST_MESSAGE = 'Quest Highlight';
+
+export const QuestTimeline = () => {
+  const itemRefs = useRef([]);
+  const lastActiveRef = useRef(null);
+  const [activeQuestId, setActiveQuestId] = useState(null);
+  const [toastState, setToastState] = useState({ show: false, title: '', message: TOAST_MESSAGE });
+  const [entered, setEntered] = useState(false);
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setEntered(true));
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
+  useEffect(() => {
+    // Intersection observer drives active badge sparkle + toast when snapping into view.
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
+            const questId = Number(entry.target.getAttribute('data-quest-id'));
+            const quest = quests.find((q) => q.id === questId);
+            if (!quest || lastActiveRef.current === questId) {
+              return;
+            }
+
+            lastActiveRef.current = questId;
+            setActiveQuestId(questId);
+            setToastState({ show: true, title: quest.title, message: TOAST_MESSAGE });
+          }
+        });
+      },
+      {
+        threshold: 0.6,
+      }
+    );
+
+    itemRefs.current.forEach((item) => {
+      if (item) {
+        observer.observe(item);
+      }
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Reset item refs before each render so the ref callbacks capture the latest DOM nodes.
+  itemRefs.current = [];
+
+  return (
+    <section className={`quest-timeline quest-timeline--vertical ${entered ? 'quest-timeline--entered' : ''}`}>
+      <div className="quest-timeline__header text-center">
+        <h2 className="quest-timeline__title">Quest Timeline</h2>
+        <p className="quest-timeline__subtitle">Identity issues JWTs, Catalog feeds pricing, Inventory grants items, and Trading keeps wallet and inventory in lockstep.</p>
+      </div>
+
+      <div className="quest-timeline__stage" role="list" aria-label="Play Economy quest timeline">
+        <div className="quest-timeline__line" aria-hidden="true"></div>
+        {quests.map((quest, index) => {
+          const placement = index % 2 === 0 ? 'left' : 'right';
+          return (
+            <div
+              key={quest.id}
+              ref={(el) => {
+                itemRefs.current[index] = el;
+              }}
+              data-quest-id={quest.id}
+              className={`quest-timeline__item quest-timeline__item--${placement} ${activeQuestId === quest.id ? 'is-active' : ''}`}
+              role="listitem"
+            >
+              <span className="quest-timeline__dot" aria-hidden="true"></span>
+              <div className="quest-timeline__card">
+                <QuestBadge
+                  title={quest.title}
+                  description={quest.description}
+                  tech={quest.tech}
+                  icon={quest.icon}
+                  isActive={activeQuestId === quest.id}
+                  placement={placement}
+                />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <p className="quest-timeline__caption">Each quest builds on the last: secure identity, catalog-fed pricing, command-driven inventory, coordinated trading, and end-to-end observability.</p>
+
+      <AchievementToast
+        show={toastState.show}
+        title={toastState.title}
+        message={toastState.message}
+        onClose={() => setToastState((state) => ({ ...state, show: false }))}
+      />
+    </section>
+  );
+};

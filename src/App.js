@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Route } from 'react-router';
 import { Layout } from './components/Layout';
 import { Home } from './components/Home';
+import { Landing } from './components/Landing';
 import { Catalog } from './components/Catalog';
 import { Inventory } from './components/Inventory';
 import { Users } from './components/Users';
@@ -19,7 +20,8 @@ export default class App extends Component {
   render() {
     return (
       <Layout>
-        <Route exact path='/' component={Home} />
+        <Route exact path='/' component={Landing} />
+        <AuthorizeRoute path={ApplicationPaths.HomePath} component={Home} />
         <AuthorizeRoute path={ApplicationPaths.CatalogPath} component={Catalog} />
         <AuthorizeRoute path={ApplicationPaths.InventoryPath} component={Inventory} />
         <AuthorizeRoute path={ApplicationPaths.UsersPath} component={Users} />
