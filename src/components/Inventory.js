@@ -1,102 +1,141 @@
-import React, { Component } from 'react';
-import { Col, Container, Row, Table, Button } from 'react-bootstrap';
-import authService from './api-authorization/AuthorizeService'
+import React, { useEffect, useMemo, useState } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
+import authService from './api-authorization/AuthorizeService';
+import '../styles/inventory.css';
 
-export class Inventory extends Component {
-  static displayName = Inventory.name;
+const initialState = {
+  items: [],
+  loading: true,
+  loadedSuccess: false,
+};
 
-  constructor(props) {
-    super(props);
-    this.state = { items: [], loading: true, loadedSuccess: false };
-  }
+export const Inventory = () => {
+  const location = useLocation();
+  const history = useHistory();
+  const cameFromUsersPage = Boolean(location?.user);
+  const userContext = location?.user;
 
-  componentDidMount() {
-    this.populateItems();
-  }
+  const [{ items, loading, loadedSuccess }, setState] = useState(initialState);
 
-  async populateItems() {
+  useEffect(() => {
+    const fetchItems = async () => {
+      setState((current) => ({ ...current, loading: true }));
 
-    let userId = '';
+      try {
+        let userId = '';
 
-    if (this.cameFromUsersPage()) {
-      userId = this.props.location.user.id;
+        if (cameFromUsersPage) {
+          userId = userContext.id;
+        } else {
+          const user = await authService.getUser();
+          userId = user.sub;
+        }
+
+        const token = await authService.getAccessToken();
+        const response = await fetch(`${window.INVENTORY_ITEMS_API_URL}?userId=${userId}`, {
+          headers: !token ? {} : { Authorization: `Bearer ${token}` },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch inventory');
+        }
+
+        const returnedItems = await response.json();
+        setState({ items: returnedItems, loading: false, loadedSuccess: true });
+      } catch (error) {
+        console.error(error);
+        setState({ items: [], loading: false, loadedSuccess: false });
+      }
+    };
+
+    fetchItems();
+  }, [cameFromUsersPage, userContext]);
+
+  const totals = useMemo(() => {
+    const totalQuantity = items.reduce((sum, item) => sum + (item.quantity ?? 0), 0);
+    return {
+      totalQuantity,
+      distinctItems: items.length,
+    };
+  }, [items]);
+
+  const renderTable = () => {
+    if (!items || items.length === 0) {
+      return (
+        <div className="inventory-empty">
+          <h3>No items yet</h3>
+          <p>Once Trading grants an item, it will appear here with the latest quantity and description.</p>
+        </div>
+      );
     }
-    else {
-      const user = await authService.getUser();
-      userId = user.sub;
-    }
-
-    const token = await authService.getAccessToken();
-    fetch(`${window.INVENTORY_ITEMS_API_URL}?userId=${userId}`, {
-      headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
-    })
-      .then(response => response.json())
-      .then(returnedItems => this.setState({ items: returnedItems, loading: false, loadedSuccess: true }))
-      .catch(err => {
-        console.log(err);
-        this.setState({ items: [], loading: false, loadedSuccess: false })
-      });
-  }
-
-  renderItemsTable(items) {
-    return <Container style={{ paddingTop: "10px", paddingLeft: "0px" }}>
-      <Row>
-        <Col>
-          <Table striped>
-            <thead className="thead-dark">
-              <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Quantity</th>
-              </tr>
-            </thead>
-            <tbody>
-              {!items || items.length <= 0 ?
-                <tr>
-                  <td colSpan="6" align="center"><b>No Items yet</b></td>
-                </tr>
-                : items.map(item => (
-                  <tr key={item.catalogItemId}>
-                    <td>
-                      {item.name}
-                    </td>
-                    <td>
-                      {item.description}
-                    </td>
-                    <td>
-                      {item.quantity}
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </Table>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <Button color="primary" hidden={!this.cameFromUsersPage()} onClick={() => this.props.history.goBack()}>Back to Users</Button>
-        </Col>
-      </Row>
-    </Container>;
-  }
-
-  render() {
-    let contents = this.state.loading
-      ? <p><em>Loading...</em></p>
-      : this.state.loadedSuccess
-        ? this.renderItemsTable(this.state.items)
-        : <p>Could not load items</p>;
 
     return (
-      <div>
-        <h1 id="tabelLabel" >{this.cameFromUsersPage() ? this.props.location.user.username : 'My'} Inventory</h1>
-        {contents}
+      <div className="inventory-table-wrapper">
+        <table className="inventory-table" aria-label="Inventory items">
+          <thead>
+            <tr>
+              <th scope="col">Item</th>
+              <th scope="col">Description</th>
+              <th scope="col">Quantity</th>
+            </tr>
+          </thead>
+          <tbody>
+            {items.map((item) => (
+              <tr key={item.catalogItemId}>
+                <td data-title="Item">{item.name}</td>
+                <td data-title="Description">{item.description}</td>
+                <td data-title="Quantity">{item.quantity}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     );
-  }
+  };
 
-  cameFromUsersPage() {
-    var val = this.props.location.user != null;
-    return val;
-  }
-}
+  return (
+    <div className="inventory">
+      <section className="inventory__header">
+        <p className="inventory__eyebrow">Inventory</p>
+        <h1 className="inventory__title">
+          {cameFromUsersPage ? `${userContext.username}'s inventory` : 'Your inventory'}
+        </h1>
+        <p className="inventory__subtitle">
+          Track everything Trading has granted. Quantities update in real time.
+        </p>
+        <div className="inventory__stats">
+          <span>
+            <strong>{totals.distinctItems}</strong> items 
+          </span>
+          <span>
+            <strong>{totals.totalQuantity}</strong> total quantity
+          </span>
+        </div>
+      </section>
+
+      <section className="inventory__content">
+        {loading && (
+          <div className="inventory__loading" role="status" aria-live="polite">
+            <span className="inventory__spinner" aria-hidden="true"></span>
+            Loading inventory…
+          </div>
+        )}
+
+        {!loading && loadedSuccess && renderTable()}
+
+        {!loading && !loadedSuccess && (
+          <div className="inventory-empty">
+            <h3>Could not load items</h3>
+            <p>Something went wrong while reaching the inventory service. Try refreshing in a moment.</p>
+          </div>
+        )}
+      </section>
+
+      {cameFromUsersPage && (
+        <button type="button" className="inventory__back" onClick={() => history.goBack()}>
+          ← Back to users
+        </button>
+      )}
+    </div>
+  );
+};

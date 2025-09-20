@@ -95,9 +95,27 @@ const highlightedNodes = new Set([
   'seq'
 ]);
 
+const architectureDetails = [
+  {
+    id: 'auth-flow',
+    title: 'Identity Deep Dive',
+    body: 'IdentityServer issues JWTs with gil claims. Trading validates the token, looks up wallet balances through Identity’s message contracts, and uses correlationIds to keep player status updates in sync.'
+  },
+  {
+    id: 'catalog-flow',
+    title: 'Catalog Synchronization',
+    body: 'Catalog broadcasts item created/updated/deleted events. Trading consumes them to keep a local read model, so purchase totals are calculated without cross-service calls at runtime.'
+  },
+  {
+    id: 'saga-flow',
+    title: 'Saga Orchestration',
+    body: 'The MassTransit state machine persists saga state in Mongo. GrantItems, InventoryItemsGranted, DebitGil, and SignalR notifications all share one correlationId so retries, compensations, and UI updates stay coordinated.'
+  }
+];
+
 const reasonsToBelieve = [
   'MassTransit saga owns the workflow, not the front end.',
-  'Inventory and wallet services emit their own status events.',
+  'Inventory and Catalog services emit their own status events.',
   'CorrelationIds and idempotent handlers keep retries safe.'
 ];
 
@@ -174,7 +192,7 @@ export const Landing = () => {
 
               <div className="architecture-map__overlays">
                 <div className="architecture-map__overlay-caption">
-                  Trading keeps inventory and wallet aligned with at-least-once messaging and SignalR status updates.
+                  Trading keeps inventory and player balance aligned with at-least-once messaging and SignalR status updates.
                 </div>
               </div>
 
@@ -261,6 +279,18 @@ export const Landing = () => {
                 </div>
               </div>
 
+              <details className="architecture-details">
+                <summary className="architecture-details__summary">Learn more about how the services collaborate</summary>
+                <div className="architecture-details__content">
+                  {architectureDetails.map((item) => (
+                    <div key={item.id} className="architecture-details__item">
+                      <h3 className="architecture-details__item-title">{item.title}</h3>
+                      <p className="architecture-details__item-body">{item.body}</p>
+                    </div>
+                  ))}
+                </div>
+              </details>
+
               <div className="architecture-map__legend-row">
                 <div className="architecture-map__legend">
                   {legendItems.map((item) => (
@@ -311,7 +341,7 @@ export const Landing = () => {
                   <div className="case-study__icon" aria-hidden="true"><i className="bi bi-arrow-repeat"></i></div>
                   <h3 className="case-study__title">Resilience Playbook</h3>
                   <ul className="case-study__list">
-                    <li>Trading saga orchestrates inventory and wallet calls</li>
+                    <li>Trading saga orchestrates inventory and player balance calls</li>
                     <li>Outbox + idempotent handlers keep retries safe</li>
                     <li>SignalR pushes purchase status back to the SPA</li>
                   </ul>
