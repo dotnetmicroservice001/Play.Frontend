@@ -22,7 +22,9 @@ export default class PurchaseModal extends Component
                     <PurchaseForm
                         toggle={this.toggle}
                         item={this.props.item}
-                        updateItemIntoState={this.props.updateItemIntoState} />
+                        updateItemIntoState={this.props.updateItemIntoState}
+                        onPurchaseSuccess={this.props.onPurchaseSuccess}
+                    />
                 </Modal.Body>
             </Modal>
         </Fragment>;

@@ -23,16 +23,16 @@
 }
 
 .landing-section {
-  padding: 96px 0;
+  padding: clamp(56px, 8vh, 88px) 0;
 }
 
 .landing-section--compact {
-  padding: 64px 0;
+  padding: clamp(40px, 6vh, 64px) 0;
 }
 
 .landing-hero {
   position: relative;
-  padding: 96px 0 72px;
+  padding: clamp(56px, 10vh, 88px) 0 clamp(36px, 6vh, 64px);
   max-width: 1200px;
   margin: 0 auto;
 }

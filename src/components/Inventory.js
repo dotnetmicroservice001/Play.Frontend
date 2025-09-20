@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import authService from './api-authorization/AuthorizeService';
+import { ApplicationPaths } from './Constants';
 import '../styles/inventory.css';
 
 const initialState = {
@@ -110,6 +111,12 @@ export const Inventory = () => {
           <span>
             <strong>{totals.totalQuantity}</strong> total quantity
           </span>
+        </div>
+        <div className="inventory__cta-row">
+          <Link className="inventory__cta" to={ApplicationPaths.StorePath}>
+            <i className="bi bi-bag" aria-hidden="true"></i>
+            Go to store
+          </Link>
         </div>
       </section>
 

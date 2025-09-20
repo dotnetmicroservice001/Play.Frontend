@@ -1,16 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { quests } from '../data/quests';
 import { QuestBadge } from './QuestBadge';
-import { AchievementToast } from './AchievementToast';
 import '../styles/quest-timeline.css';
-
-const TOAST_MESSAGE = 'Quest Highlight';
 
 export const QuestTimeline = () => {
   const itemRefs = useRef([]);
   const lastActiveRef = useRef(null);
   const [activeQuestId, setActiveQuestId] = useState(null);
-  const [toastState, setToastState] = useState({ show: false, title: '', message: TOAST_MESSAGE });
   const [entered, setEntered] = useState(false);
 
   useEffect(() => {
@@ -19,7 +15,7 @@ export const QuestTimeline = () => {
   }, []);
 
   useEffect(() => {
-    // Intersection observer drives active badge sparkle + toast when snapping into view.
+    // Intersection observer toggles the active badge styling when a quest snaps into view.
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -32,7 +28,6 @@ export const QuestTimeline = () => {
 
             lastActiveRef.current = questId;
             setActiveQuestId(questId);
-            setToastState({ show: true, title: quest.title, message: TOAST_MESSAGE });
           }
         });
       },
@@ -92,12 +87,6 @@ export const QuestTimeline = () => {
 
       <p className="quest-timeline__caption">Each quest builds on the last: secure identity, catalog-fed pricing, command-driven inventory, coordinated trading, and end-to-end observability.</p>
 
-      <AchievementToast
-        show={toastState.show}
-        title={toastState.title}
-        message={toastState.message}
-        onClose={() => setToastState((state) => ({ ...state, show: false }))}
-      />
     </section>
   );
 };

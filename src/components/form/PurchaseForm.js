@@ -136,6 +136,14 @@ export default class PurchaseForm extends React.Component
         else
         {
             this.props.updateItemIntoState(this.state.id);
+            if (this.props.onPurchaseSuccess) {
+                const total = Number(this.state.price ?? 0) * Number(this.state.quantity ?? 0);
+                this.props.onPurchaseSuccess({
+                    name: this.state.name,
+                    quantity: this.state.quantity,
+                    total
+                });
+            }
             this.setState({
                 alertMessage: "Item(s) successfully purchased!",
                 alertColor: "success"

@@ -3,7 +3,7 @@ export const quests = [
     id: 1,
     title: 'Quest 1: Identity & Roles',
     description: 'Identity signs players in, maintains gil balances, and issues role-aware JWT access tokens.',
-    tech: ['OAuth 2.0 PKCE', 'IdentityServer', 'Wallet Claims'],
+    tech: ['OAuth 2.0 PKCE', 'IdentityServer'],
     icon: 'shield-lock'
   },
   {
@@ -17,7 +17,7 @@ export const quests = [
     id: 3,
     title: 'Quest 3: Inventory Control',
     description: 'Inventory handles GrantItems/SubtractItems commands and emits status events for the saga.',
-    tech: ['MongoDB', 'Grant/Subtract Commands', 'Single Writer'],
+    tech: ['MongoDB', 'Grant/Subtract Commands'],
     icon: 'boxes'
   },
   {

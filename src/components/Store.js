@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import PurchaseModal from './form/PurchaseModal';
 import authService from './api-authorization/AuthorizeService';
+import { ApplicationPaths } from './Constants';
 import '../styles/store.css';
 
 const initialState = {
@@ -109,6 +111,12 @@ export const Store = () => {
             <span className="store__stat-label">Owned total</span>
             <span className="store__stat-value">{totals.ownedTotal}</span>
           </div>
+        </div>
+        <div className="store__cta-row">
+          <Link className="store__cta" to={ApplicationPaths.InventoryPath}>
+            <i className="bi bi-box-seam" aria-hidden="true"></i>
+            View inventory
+          </Link>
         </div>
       </section>
 
