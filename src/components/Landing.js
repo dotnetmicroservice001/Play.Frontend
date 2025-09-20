@@ -82,19 +82,19 @@ const architectureContexts = [
 ];
 
 const messageBusEvents = [
-  { id: 'purchase-requested', label: 'PurchaseRequested', tooltip: 'userId, itemId, quantity, correlationId' },
-  { id: 'grant-items', label: 'GrantItems', tooltip: 'userId, catalogItemId, quantity, correlationId' },
-  { id: 'inventory-granted', label: 'InventoryItemsGranted', tooltip: 'correlationId' },
-  { id: 'debit-gil', label: 'DebitGil', tooltip: 'userId, gil, correlationId' },
-  { id: 'gil-debited', label: 'GilDebited', tooltip: 'correlationId' },
-  { id: 'subtract-items', label: 'SubtractItems', tooltip: 'userId, catalogItemId, quantity, correlationId' },
-  { id: 'inventory-subtracted', label: 'InventoryItemsSubtracted', tooltip: 'correlationId' }
+  { id: 'purchase-requested', label: 'Purchase-Requested', tooltip: 'userId, itemId, quantity, correlationId' },
+  { id: 'grant-items', label: 'Grant-Items', tooltip: 'userId, catalogItemId, quantity, correlationId' },
+  { id: 'inventory-granted', label: 'Inventory-Items-Granted', tooltip: 'correlationId' },
+  { id: 'debit-gil', label: 'Debit-Gil', tooltip: 'userId, gil, correlationId' },
+  { id: 'gil-debited', label: 'Gil-Debited', tooltip: 'correlationId' },
+  { id: 'subtract-items', label: 'Subtract-Items', tooltip: 'userId, catalogItemId, quantity, correlationId' },
+  { id: 'inventory-subtracted', label: 'Inventory-Items-Subtracted', tooltip: 'correlationId' }
 ];
 
 const operationsRail = [
   { id: 'otel', label: 'OTel Collector', tooltip: 'Ships traces, metrics, and logs out of process.' },
   { id: 'prometheus', label: 'Prometheus', tooltip: 'Scrapes services, powers events/min, reserve success rate.' },
-  { id: 'jaeger', label: 'Jaeger', tooltip: 'Distributed traces; purchase path p95 ≈ 180-220 ms in dev.' },
+  { id: 'jaeger', label: 'Jaeger', tooltip: 'Distributed traces.' },
   { id: 'seq', label: 'Seq', tooltip: 'Structured logs with orderId, playerId, traceId.' }
 ];
 
@@ -122,12 +122,12 @@ const architectureDetails = [
   {
     id: 'auth',
     title: 'Auth',
-    body: 'IdentityServer validates players with PKCE, enriches tokens with gil balances, and keeps SignalR connections scoped to signed-in users.'
+    body: 'IdentityServer validates players with PKCE, enriches tokens with roles, and keeps SignalR connections scoped to signed-in users.'
   },
   {
     id: 'orchestration',
     title: 'Orchestration',
-    body: 'Trading runs the saga: reserves inventory, debits gil, and resolves compensations with replay-safe MassTransit consumers.'
+    body: 'Trading runs the saga: reserves inventory, debits gil, and resolves compensations with MassTransit consumers.'
   },
   {
     id: 'observability',
@@ -137,7 +137,7 @@ const architectureDetails = [
   {
     id: 'deployments',
     title: 'Deployments',
-    body: 'Helm charts package each service and GitHub Actions ships to AKS with environment-specific secrets and smoke checks.'
+    body: 'Helm charts package each service and GitHub Actions ships to AKS with environment-specific secrets.'
   }
 ];
 
@@ -237,7 +237,7 @@ export const Landing = () => {
               <TextType
                 as="h1"
                 className="hero-typer"
-                text={'PLAY ECONOMY\nTrade and manage game items securely\nwith real-time feedback.'}
+                text={'GAMEPLAY ECONOMY\nTrade and manage game items securely\nwith real-time feedback.'}
                 loop={false}
                 typingSpeed={54}
                 pauseDuration={900}
@@ -482,24 +482,24 @@ export const Landing = () => {
             <section className="case-study-sheet__section">
               <h4>Context</h4>
               <p>
-              Built outside coursework to practice shipping an event-driven flow end to end. I wrapped it in a product-style shell so curious engineers can peek at the wiring.
+              Built outside coursework to practice shipping an event-driven flow end to end.
               </p>
             </section>
 
             <section className="case-study-sheet__section">
               <h4>Goals</h4>
               <ul>
-                <li>Ship a believable purchase loop that works locally.</li>
+                <li>Ship a purchase loop that works locally.</li>
                 <li>Keep each service owning its data so changes stay isolated.</li>
-                <li>Default to telemetry instead of screenshots—let traces and logs tell the story.</li>
+                <li>Add traces and logs that tell the story.</li>
               </ul>
             </section>
 
             <section className="case-study-sheet__section">
               <h4>Constraints</h4>
               <ul>
-                <li>No third-party payments—Trading owns the records so I could focus on workflow design.</li>
-                <li>Skipped the Outbox for v1; leaned on idempotent handlers and reconciliation jobs instead.</li>
+                <li>No third-party payments—Trading owns the records.</li>
+                <li>Skipped the Outbox for v1; leaned on idempotent handlers and retries.</li>
                 <li>Kept the surface area small: .NET 8 + MongoDB + RabbitMQ/Azure SB, deployed on AKS with Helm.</li>
               </ul>
             </section>
