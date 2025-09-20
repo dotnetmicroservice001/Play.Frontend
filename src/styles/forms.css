@@ -1,0 +1,120 @@
+:root {
+  --form-bg-dark: rgba(12, 16, 27, 0.96);
+  --form-surface-dark: rgba(17, 20, 33, 0.96);
+  --form-border-dark: rgba(124, 58, 237, 0.35);
+  --form-border-dark-strong: rgba(124, 58, 237, 0.55);
+  --form-text-dark: rgba(233, 233, 248, 0.9);
+  --form-text-muted-dark: rgba(199, 196, 224, 0.75);
+  --form-placeholder-dark: rgba(198, 195, 224, 0.55);
+  --form-control-shadow-dark: 0 0 0 0.2rem rgba(129, 140, 248, 0.35);
+}
+
+body.theme-dark .modal-content {
+  background-color: var(--form-surface-dark);
+  border: 1px solid var(--form-border-dark);
+  color: var(--form-text-dark);
+  box-shadow: 0 28px 48px rgba(3, 7, 18, 0.55);
+}
+
+body.theme-dark .modal-header,
+body.theme-dark .modal-footer {
+  border-color: rgba(124, 58, 237, 0.18);
+}
+
+body.theme-dark .modal-title,
+body.theme-dark .modal-header .close {
+  color: var(--form-text-dark);
+}
+
+body.theme-dark .modal-header .close {
+  opacity: 0.8;
+}
+
+body.theme-dark .modal-header .close:hover,
+body.theme-dark .modal-header .close:focus {
+  opacity: 1;
+}
+
+body.theme-dark .form-label,
+body.theme-dark .form-text,
+body.theme-dark .form-check-label {
+  color: var(--form-text-dark);
+}
+
+body.theme-dark .form-text {
+  color: var(--form-text-muted-dark);
+}
+
+body.theme-dark .form-control,
+body.theme-dark .custom-select,
+body.theme-dark .form-control:disabled,
+body.theme-dark .form-control[readonly] {
+  background-color: var(--form-bg-dark);
+  border-color: var(--form-border-dark);
+  color: var(--form-text-dark);
+}
+
+body.theme-dark .form-control::placeholder {
+  color: var(--form-placeholder-dark);
+}
+
+body.theme-dark .form-control:focus,
+body.theme-dark .custom-select:focus {
+  background-color: var(--form-bg-dark);
+  border-color: var(--form-border-dark-strong);
+  box-shadow: var(--form-control-shadow-dark);
+  color: var(--form-text-dark);
+}
+
+body.theme-dark .form-check-input:checked {
+  background-color: rgba(129, 140, 248, 0.8);
+  border-color: rgba(99, 102, 241, 0.8);
+}
+
+body.theme-dark .form-control:disabled::placeholder {
+  color: var(--form-text-muted-dark);
+}
+
+body.theme-dark .input-group-text {
+  background-color: rgba(124, 58, 237, 0.12);
+  border-color: var(--form-border-dark);
+  color: var(--form-text-dark);
+}
+
+body.theme-dark .form-control.is-invalid,
+body.theme-dark .was-validated .form-control:invalid,
+body.theme-dark .form-control.is-valid,
+body.theme-dark .was-validated .form-control:valid {
+  background-color: var(--form-bg-dark);
+  color: var(--form-text-dark);
+}
+
+body.theme-dark .invalid-feedback,
+body.theme-dark .valid-feedback {
+  color: var(--form-text-muted-dark);
+}
+
+body.theme-dark .modal-content .btn-primary {
+  background: linear-gradient(90deg, rgba(129, 140, 248, 0.9), rgba(99, 102, 241, 0.85));
+  border-color: rgba(99, 102, 241, 0.9);
+  box-shadow: 0 10px 24px rgba(79, 70, 229, 0.35);
+}
+
+body.theme-dark .modal-content .btn-primary:hover,
+body.theme-dark .modal-content .btn-primary:focus,
+body.theme-dark .modal-content .btn-primary:active {
+  background: linear-gradient(90deg, rgba(165, 180, 252, 0.95), rgba(129, 140, 248, 0.92));
+  border-color: rgba(129, 140, 248, 0.95);
+}
+
+body.theme-dark .modal-content .btn-outline-secondary {
+  color: var(--form-text-dark);
+  border-color: var(--form-border-dark);
+}
+
+body.theme-dark .modal-content .btn-outline-secondary:hover,
+body.theme-dark .modal-content .btn-outline-secondary:focus {
+  background-color: rgba(124, 58, 237, 0.18);
+  border-color: var(--form-border-dark-strong);
+  color: var(--form-text-dark);
+}

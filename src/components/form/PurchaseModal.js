@@ -15,7 +15,13 @@ export default class PurchaseModal extends Component
     render()
     {
         return <Fragment>
-            <Button variant="primary" onClick={this.toggle}><i className="bi bi-cart-plus mr-2" aria-hidden="true"></i>Purchase</Button>
+            <Button
+                className="store__purchase-btn"
+                onClick={this.toggle}
+            >
+                <i className="bi bi-cart-plus mr-2" aria-hidden="true"></i>
+                Purchase
+            </Button>
             <Modal show={this.state.modal} className={this.props.className} onHide={this.toggle} size="sm">
                 <Modal.Header closeButton>Purchase {this.props.item.name}</Modal.Header>
                 <Modal.Body>

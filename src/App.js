@@ -13,6 +13,7 @@ import { AuthorizationPaths } from './components/api-authorization/ApiAuthorizat
 import { ApplicationPaths } from './components/Constants';
 
 import './App.css'
+import './styles/forms.css';
 
 export default class App extends Component {
   static displayName = App.name;
