@@ -319,7 +319,7 @@ export const Landing = () => {
               open={isArchitectureOpen}
               onToggle={handleArchitectureToggle}
             >
-              <summary className="architecture-details__summary">How it's built (for engineers)</summary>
+              <summary className="architecture-details__summary">How it's built</summary>
               <div className="architecture-details__content">
                 <p className="architecture-details__intro">
                   Identity signs players in, Catalog owns pricing, Trading orchestrates orders, and observability proves every hop for recruiters who want the full story.

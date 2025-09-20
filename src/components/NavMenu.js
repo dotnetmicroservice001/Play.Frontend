@@ -333,6 +333,9 @@ export class NavMenu extends Component
   profileAndLogoutItems()
   {
     const logoutPath = { pathname: `${AuthorizationPaths.LogOut}`, state: { local: true } };
+    const { theme } = this.context;
+    const isDark = theme === 'dark';
+    const dropdownClassName = `navmenu__profile-dropdown navmenu__dropdown${isDark ? ' navmenu__dropdown--dark' : ''}`;
     return (
       <Fragment>
         <NavDropdown
@@ -344,7 +347,8 @@ export class NavMenu extends Component
           }
           id="profile-dropdown"
           alignRight
-          className="navmenu__profile-dropdown"
+          className={dropdownClassName}
+          menuVariant={isDark ? 'dark' : undefined}
         >
           <NavDropdown.Item
             as={Link}
