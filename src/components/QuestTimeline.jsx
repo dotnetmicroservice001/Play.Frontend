@@ -48,16 +48,18 @@ export const QuestTimeline = () => {
   // Reset item refs before each render so the ref callbacks capture the latest DOM nodes.
   itemRefs.current = [];
 
+  const displayedQuests = quests;
+
   return (
     <section className={`quest-timeline quest-timeline--vertical ${entered ? 'quest-timeline--entered' : ''}`}>
       <div className="quest-timeline__header text-center">
         <h2 className="quest-timeline__title">Quest Timeline</h2>
-        <p className="quest-timeline__subtitle">Identity issues JWTs, Catalog feeds pricing, Inventory grants items, and Trading keeps wallet and inventory in lockstep.</p>
+        <p className="quest-timeline__subtitle">Four moments take you from sign-in to a confirmed order—no waiting, no manual refresh.</p>
       </div>
 
       <div className="quest-timeline__stage" role="list" aria-label="Play Economy quest timeline">
         <div className="quest-timeline__line" aria-hidden="true"></div>
-        {quests.map((quest, index) => {
+        {displayedQuests.map((quest, index) => {
           const placement = index % 2 === 0 ? 'left' : 'right';
           return (
             <div
@@ -85,7 +87,7 @@ export const QuestTimeline = () => {
         })}
       </div>
 
-      <p className="quest-timeline__caption">Each quest builds on the last: secure identity, catalog-fed pricing, command-driven inventory, coordinated trading, and end-to-end observability.</p>
+      <p className="quest-timeline__caption">You take the action—secure sign-in, live catalog, orchestrated purchase, instant status make it feel effortless.</p>
 
     </section>
   );

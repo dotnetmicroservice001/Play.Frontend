@@ -85,7 +85,7 @@ export class NavMenu extends Component
   {
     const toggle = this.themeToggle();
     const loginPath = `${AuthorizationPaths.Login}`;
-    const primaryLinks = this.renderPrimaryLinks(['home', 'caseStudy']);
+    const primaryLinks = this.renderPrimaryLinks(['home']);
     return (
       <Fragment>
         <Nav className="navmenu__primary">
@@ -110,7 +110,7 @@ export class NavMenu extends Component
       return (
         <Fragment>
           <Nav className="navmenu__primary">
-            {this.renderPrimaryLinks(['home', 'caseStudy', 'store', 'inventory'])}
+            {this.renderPrimaryLinks(['home', 'store', 'inventory'])}
             {this.manageDropdown()}
           </Nav>
           <Nav className="navmenu__secondary">
@@ -126,7 +126,7 @@ export class NavMenu extends Component
       return (
         <Fragment>
           <Nav className="navmenu__primary">
-            {this.renderPrimaryLinks(['home', 'caseStudy', 'store', 'inventory'])}
+            {this.renderPrimaryLinks(['home', 'store', 'inventory'])}
           </Nav>
           <Nav className="navmenu__secondary">
             {this.themeToggle()}
@@ -141,7 +141,7 @@ export class NavMenu extends Component
       return (
         <Fragment>
           <Nav className="navmenu__primary">
-            {this.renderPrimaryLinks(['home', 'caseStudy'])}
+            {this.renderPrimaryLinks(['home'])}
           </Nav>
           <Nav className="navmenu__secondary">
             {this.themeToggle()}
@@ -186,7 +186,7 @@ export class NavMenu extends Component
     const developerLinks = [
       window.RABBITMQ_URL && {
         href: window.RABBITMQ_URL,
-        label: 'RabbitMQ',
+        label: 'RabbitMQ(dev)',
         icon: 'bi bi-infinity'
       },
       window.CATALOG_SERVICE_URL && {
@@ -333,12 +333,29 @@ export class NavMenu extends Component
   profileAndLogoutItems()
   {
     const logoutPath = { pathname: `${AuthorizationPaths.LogOut}`, state: { local: true } };
-    return (<Fragment>
-      <span className="navmenu__greeting">
-        <i className="bi bi-person-circle mr-1" aria-hidden="true"></i>
-        Hello {this.state.userName}
-      </span>
-      <Nav.Link as={Link} to={logoutPath}><i className="bi bi-box-arrow-right mr-1" aria-hidden="true"></i>Logout</Nav.Link>
-    </Fragment>);
+    return (
+      <Fragment>
+        <NavDropdown
+          title={
+            <span className="navmenu__greeting navmenu__greeting--dropdown">
+              <i className="bi bi-person-circle mr-1" aria-hidden="true"></i>
+              Hello {this.state.userName}
+            </span>
+          }
+          id="profile-dropdown"
+          alignRight
+          className="navmenu__profile-dropdown"
+        >
+          <NavDropdown.Item
+            as={Link}
+            to={logoutPath}
+            className="navmenu__logout-item"
+          >
+            <i className="bi bi-box-arrow-right mr-2" aria-hidden="true"></i>
+            Logout
+          </NavDropdown.Item>
+        </NavDropdown>
+      </Fragment>
+    );
   }
 }

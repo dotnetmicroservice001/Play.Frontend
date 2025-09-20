@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect, useCallback, useState, useRef } from 'react';
 import { Container, Modal } from 'react-bootstrap';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { AuthorizationPaths } from './api-authorization/ApiAuthorizationConstants';
@@ -13,6 +13,27 @@ const tradeTickerItems = [
   'Trading Saga Committed',
   'Payment Succeeded',
   'Distributed Traces Exported'
+];
+
+const userOutcomeCards = [
+  {
+    id: 'secure-sign-in',
+    title: 'Sign in securely',
+    description: 'Save progress and protect your inventory with verified profiles and role-aware access.',
+    icon: 'bi-shield-lock'
+  },
+  {
+    id: 'browse-buy',
+    title: 'Browse & buy items',
+    description: 'See accurate prices and instant availability pulled straight from the catalog service.',
+    icon: 'bi-joystick'
+  },
+  {
+    id: 'track-status',
+    title: 'Track order status live',
+    description: 'Watch purchase updates stream to the UI in real time—no manual refresh required.',
+    icon: 'bi-lightning-charge'
+  }
 ];
 
 const architectureTopEdge = [
@@ -99,42 +120,49 @@ const highlightedNodes = new Set([
 
 const architectureDetails = [
   {
-    id: 'auth-flow',
-    title: 'Identity Deep Dive',
-    body: 'IdentityServer issues JWTs with gil claims. Trading validates the token, looks up wallet balances through Identity’s message contracts, and uses correlationIds to keep player status updates in sync.'
+    id: 'auth',
+    title: 'Auth',
+    body: 'IdentityServer validates players with PKCE, enriches tokens with gil balances, and keeps SignalR connections scoped to signed-in users.'
   },
   {
-    id: 'catalog-flow',
-    title: 'Catalog Synchronization',
-    body: 'Catalog broadcasts item created/updated/deleted events. Trading consumes them to keep a local read model, so purchase totals are calculated without cross-service calls at runtime.'
+    id: 'orchestration',
+    title: 'Orchestration',
+    body: 'Trading runs the saga: reserves inventory, debits gil, and resolves compensations with replay-safe MassTransit consumers.'
   },
   {
-    id: 'saga-flow',
-    title: 'Saga Orchestration',
-    body: 'The MassTransit state machine persists saga state in Mongo. GrantItems, InventoryItemsGranted, DebitGil, and SignalR notifications all share one correlationId so retries, compensations, and UI updates stay coordinated.'
+    id: 'observability',
+    title: 'Observability',
+    body: 'OpenTelemetry spans stitch catalog, inventory, and trading hops; Prometheus tracks success rates while Seq keeps structured logs searchable.'
+  },
+  {
+    id: 'deployments',
+    title: 'Deployments',
+    body: 'Helm charts package each service and GitHub Actions ships to AKS with environment-specific secrets and smoke checks.'
   }
 ];
 
 const reasonsToBelieve = [
-  'MassTransit saga owns the workflow, not the front end.',
-  'Inventory and Catalog services emit their own status events.',
-  'CorrelationIds and idempotent handlers keep retries safe.'
+  'Product-grade UX backed by orchestrated sagas.',
+  'Inventory and Catalog stay consistent without shared databases.',
+  'Real-time status proven by correlated telemetry.'
 ];
 
 const proofMetrics = [
-  '4 core services (Identity, Catalog, Inventory, Trading)',
-  '6 saga messages on the bus',
-  'SignalR status lands in under a second locally',
-  'Prometheus and Jaeger wired in every service' 
+  '4 focused services power sign-in, catalog, inventory, and trading',
+  'Purchase confirmation arrives in under 2 seconds in demos',
+  '6 coordinated messages keep the saga resilient',
+  'Tracing, metrics, and logs wired in from day one'
 ];
 
 export const Landing = () => {
   const tickerSequence = [...tradeTickerItems, ...tradeTickerItems];
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [showCaseStudy, setShowCaseStudy] = useState(false);
+  const [isArchitectureOpen, setIsArchitectureOpen] = useState(false);
   const location = useLocation();
   const history = useHistory();
   const { hash, pathname, search } = location;
+  const architectureDetailsRef = useRef(null);
 
   const handleScroll = useCallback(() => {
     setShowScrollTop(window.scrollY > 600);
@@ -144,6 +172,19 @@ export const Landing = () => {
     if (hash === '#case-study')
     {
       setShowCaseStudy(true);
+    }
+  }, [hash]);
+
+  useEffect(() => {
+    if (hash === '#architecture')
+    {
+      setIsArchitectureOpen(true);
+      requestAnimationFrame(() => {
+        if (architectureDetailsRef.current)
+        {
+          architectureDetailsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
     }
   }, [hash]);
 
@@ -165,11 +206,26 @@ export const Landing = () => {
     }
   }, [hash, history, pathname, search]);
 
+  const goToArchitecture = useCallback(
+    (event) =>
+    {
+      event.preventDefault();
+      setShowCaseStudy(false);
+      history.replace({ pathname, search, hash: '#architecture' });
+    },
+    [history, pathname, search]
+  );
+
   useEffect(() => {
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
+
+  const handleArchitectureToggle = useCallback((event) =>
+  {
+    setIsArchitectureOpen(event.target.open);
+  }, []);
 
   return (
     <div className="landing-page" id="top">
@@ -177,18 +233,13 @@ export const Landing = () => {
         <section id="demo" className="hero-bleed landing-hero">
           <Container>
             <div className="landing-hero__content landing-hero__content--stack">
-              <div className="landing-hero__eyebrow">Developer Showcase</div>
+              <div className="landing-hero__eyebrow">Virtual Marketplace Demo</div>
               <TextType
                 as="h1"
                 className="hero-typer"
-                text={
-                  'Welcome to Play Economy.\n' +
-                  'Cloud-native, event-driven architecture.\n' +
-                  'Identity • Catalog • Inventory • Trading.\n' +
-                  'Secure and observable end-to-end.'
-                }
+                text={'PLAY ECONOMY\nTrade and manage game items securely\nwith real-time feedback.'}
                 loop={false}
-                typingSpeed={60}
+                typingSpeed={54}
                 pauseDuration={900}
                 showCursor
                 hideCursorWhileTyping
@@ -196,7 +247,7 @@ export const Landing = () => {
                 cursorCharacter="▍"
               />
               <p className="landing-hero__subtitle">
-                Built with secure identity flows, a Trading-led SAGA for purchases, and deep observability.
+                Sign in, browse the catalog, and follow every purchase update without refreshing the page.
               </p>
               <div className="landing-hero__cta-row">
                 <button
@@ -204,22 +255,20 @@ export const Landing = () => {
                   className="hero-cta"
                   onClick={openCaseStudy}
                 >
-                  <i className="bi bi-lightning-charge" aria-hidden="true"></i>
-                  Read 2-min Case Study
+                  <i className="bi bi-diagram-3" aria-hidden="true"></i>
+                  See How It's Built
                 </button>
                 <Link
                   to={AuthorizationPaths.Register}
                   className="hero-cta hero-cta--primary"
                 >
                   <i className="bi bi-person-plus" aria-hidden="true"></i>
-                  Sign Up &amp; Explore
+                  Create Account
                 </Link>
               </div>
             </div>
           </Container>
         </section>
-
-        <div id="case-study" className="case-study-anchor" aria-hidden="true"></div>
 
         <div className="trade-ticker" aria-hidden="true">
           <div className="trade-ticker__inner">
@@ -231,6 +280,31 @@ export const Landing = () => {
           </div>
         </div>
 
+        <section id="outcomes" className="landing-section landing-section--compact">
+          <Container>
+            <div className="outcomes">
+              <h2 className="outcomes__title">What you can do</h2>
+              <p className="outcomes__subtitle">Everything players expect from a modern marketplace—delivered with one login.</p>
+              <div className="outcomes__grid" role="list">
+                {userOutcomeCards.map((card) => (
+                  <div key={card.id} className="outcomes__card" role="listitem">
+                    <div className="outcomes__card-icon" aria-hidden="true">
+                      <span className="outcomes__card-icon-sheen"></span>
+                      <i className={`bi ${card.icon}`}></i>
+                    </div>
+                    <div className="outcomes__card-content">
+                      <h3 className="outcomes__card-title">{card.title}</h3>
+                      <p className="outcomes__card-body">{card.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Container>
+        </section>
+
+        <div id="case-study" className="case-study-anchor" aria-hidden="true"></div>
+
         <section id="quests" className="landing-section landing-section--gradient">
           <Container>
             <QuestTimeline />
@@ -239,110 +313,145 @@ export const Landing = () => {
 
         <section className="landing-section landing-section--gradient" id="architecture">
           <Container>
-            <div className="architecture-map">
-              <div className="architecture-map__intro">
-                <div className="landing-hero__eyebrow">Architecture Map</div>
-                <h2 className="landing-hero__title" style={{ fontSize: '1.7rem' }}>
-                  Event-Driven Services at a Glance
-                </h2>
-                <p className="landing-hero__subtitle">
-                  A player clicks buy, Trading drives the saga, inventory and wallet answer via messages, and SignalR
-                  feeds the status back to the UI. Hover to meet each part of the story.
+            <details
+              ref={architectureDetailsRef}
+              className="architecture-details architecture-details--primary"
+              open={isArchitectureOpen}
+              onToggle={handleArchitectureToggle}
+            >
+              <summary className="architecture-details__summary">How it's built (for engineers)</summary>
+              <div className="architecture-details__content">
+                <p className="architecture-details__intro">
+                  Identity signs players in, Catalog owns pricing, Trading orchestrates orders, and observability proves every hop for recruiters who want the full story.
                 </p>
-              </div>
 
-              <div className="architecture-map__overlays">
-                <div className="architecture-map__overlay-caption">
-                  Trading keeps inventory and player balance aligned with at-least-once messaging and SignalR status updates.
-                </div>
-              </div>
-
-              <div className="architecture-map__diagram">
-                <div className="architecture-map__stack">
-                  <div className="architecture-map__top-edge">
-                    {architectureTopEdge.map((node, index) => (
-                      <div
-                        key={node.id}
-                        className={`architecture-map__box architecture-map__box--edge ${
-                          highlightedNodes.has(node.id) ? 'is-highlighted' : ''
-                        }`}
-                        data-node={node.id}
-                        aria-label={node.label}
-                        tabIndex={0}
-                      >
-                        <span className="architecture-map__box-label">{node.label}</span>
-                        {node.support && <span className="architecture-map__box-support">{node.support}</span>}
-                        <span className="architecture-map__tooltip">{node.tooltip}</span>
-                        {index < architectureTopEdge.length - 1 && <span className="architecture-map__edge-connector" aria-hidden="true"></span>}
-                      </div>
-                    ))}
+                <div className="architecture-map">
+                  <div className="architecture-map__intro">
+                    <div className="landing-hero__eyebrow">Architecture Map</div>
+                    <h2 className="landing-hero__title" style={{ fontSize: '1.7rem' }}>
+                      Identity → Catalog → Orders → Observability
+                    </h2>
+                    <p className="landing-hero__subtitle">
+                      Follow the path from secure login to a confirmed purchase. Hover to see which service owns each step.
+                    </p>
                   </div>
 
-                <div className="architecture-map__lanes">
-                  {architectureContexts.map((context) => (
-                    <div key={context.id} className="architecture-map__lane">
-                      <div
-                        className={`architecture-map__service ${
-                          highlightedNodes.has(context.id) ? 'is-highlighted' : ''
-                        }`}
-                        data-node={context.id}
-                      >
-                        <div className="architecture-map__service-header">
-                          <span className="architecture-map__lane-title">{context.title}</span>
-                            <span className="architecture-map__lane-subtitle">{context.owns}</span>
-                          </div>
-                          <span className="architecture-map__tooltip">{context.serviceTooltip}</span>
-                      </div>
-                      <div className="architecture-map__db" data-node={`${context.id}-db`}>
-                        <span className="architecture-map__db-label">{context.db.label}</span>
-                        <span className="architecture-map__tooltip">{context.db.tooltip}</span>
-                      </div>
-                      <span
-                        className={`architecture-map__lane-connector ${
-                          highlightedNodes.has(context.id) ? 'is-active' : ''
-                        }`}
-                        aria-hidden="true"
-                      ></span>
+                  <div className="architecture-map__overlays">
+                    <div className="architecture-map__overlay-caption">
+                      Trading coordinates inventory and wallet updates with at-least-once messaging and SignalR status pushes.
                     </div>
-                  ))}
-                </div>
+                  </div>
 
-                <div className={`architecture-map__bus ${highlightedNodes.has('bus') ? 'is-highlighted' : ''}`} data-node="bus">
-                    <span className="architecture-map__bus-label">Message Bus (RabbitMQ / Azure Service Bus)</span>
-                    <div className="architecture-map__bus-events">
-                      {messageBusEvents.map((event) => (
-                        <span key={event.id} className="architecture-map__event-chip">
-                          <span className="architecture-map__event-chip-label">{event.label}</span>
-                          <span className="architecture-map__tooltip">{event.tooltip}</span>
-                        </span>
+                  <div className="architecture-map__diagram">
+                    <div className="architecture-map__stack">
+                      <div className="architecture-map__top-edge">
+                        {architectureTopEdge.map((node, index) => (
+                          <div
+                            key={node.id}
+                            className={`architecture-map__box architecture-map__box--edge ${
+                              highlightedNodes.has(node.id) ? 'is-highlighted' : ''
+                            }`}
+                            data-node={node.id}
+                            aria-label={node.label}
+                            tabIndex={0}
+                          >
+                            <span className="architecture-map__box-label">{node.label}</span>
+                            {node.support && <span className="architecture-map__box-support">{node.support}</span>}
+                            <span className="architecture-map__tooltip">{node.tooltip}</span>
+                            {index < architectureTopEdge.length - 1 && (
+                              <span className="architecture-map__edge-connector" aria-hidden="true"></span>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="architecture-map__lanes">
+                        {architectureContexts.map((context) => (
+                          <div key={context.id} className="architecture-map__lane">
+                            <div
+                              className={`architecture-map__service ${
+                                highlightedNodes.has(context.id) ? 'is-highlighted' : ''
+                              }`}
+                              data-node={context.id}
+                            >
+                              <div className="architecture-map__service-header">
+                                <span className="architecture-map__lane-title">{context.title}</span>
+                                <span className="architecture-map__lane-subtitle">{context.owns}</span>
+                              </div>
+                              <span className="architecture-map__tooltip">{context.serviceTooltip}</span>
+                            </div>
+                            <div className="architecture-map__db" data-node={`${context.id}-db`}>
+                              <span className="architecture-map__db-label">{context.db.label}</span>
+                              <span className="architecture-map__tooltip">{context.db.tooltip}</span>
+                            </div>
+                            <span
+                              className={`architecture-map__lane-connector ${
+                                highlightedNodes.has(context.id) ? 'is-active' : ''
+                              }`}
+                              aria-hidden="true"
+                            ></span>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div
+                        className={`architecture-map__bus ${highlightedNodes.has('bus') ? 'is-highlighted' : ''}`}
+                        data-node="bus"
+                      >
+                        <span className="architecture-map__bus-label">Message Bus (RabbitMQ / Azure Service Bus)</span>
+                        <div className="architecture-map__bus-events">
+                          {messageBusEvents.map((event) => (
+                            <span key={event.id} className="architecture-map__event-chip">
+                              <span className="architecture-map__event-chip-label">{event.label}</span>
+                              <span className="architecture-map__tooltip">{event.tooltip}</span>
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="architecture-map__ribbon" aria-hidden="true">
+                        AKS cluster • Helm deploy • GitHub Actions CI/CD
+                      </div>
+                    </div>
+
+                    <div className="architecture-map__ops" aria-label="Observability stack">
+                      {operationsRail.map((tool) => (
+                        <div
+                          key={tool.id}
+                          className={`architecture-map__ops-card ${
+                            highlightedNodes.has(tool.id) ? 'is-highlighted' : ''
+                          }`}
+                          data-node={tool.id}
+                        >
+                          <span className="architecture-map__ops-label">{tool.label}</span>
+                          <span className="architecture-map__tooltip">{tool.tooltip}</span>
+                        </div>
                       ))}
                     </div>
                   </div>
 
-                  <div className="architecture-map__ribbon" aria-hidden="true">
-                    AKS cluster • Helm deploy • GitHub Actions CI/CD 
+                  <div className="architecture-map__legend-row">
+                    <div className="architecture-map__legend">
+                      {legendItems.map((item) => (
+                        <span key={item.id} className="architecture-map__legend-item">{item.label}</span>
+                      ))}
+                    </div>
+                    <div className="architecture-map__reasons">
+                      {reasonsToBelieve.map((reason, index) => (
+                        <span key={reason} className="architecture-map__reason-badge">
+                          {index + 1}. {reason}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="architecture-map__metrics">
+                      {proofMetrics.map((metric) => (
+                        <div key={metric} className="architecture-map__metric-item">{metric}</div>
+                      ))}
+                    </div>
                   </div>
                 </div>
 
-                <div className="architecture-map__ops" aria-label="Observability stack">
-                  {operationsRail.map((tool) => (
-                    <div
-                      key={tool.id}
-                      className={`architecture-map__ops-card ${
-                        highlightedNodes.has(tool.id) ? 'is-highlighted' : ''
-                      }`}
-                      data-node={tool.id}
-                    >
-                      <span className="architecture-map__ops-label">{tool.label}</span>
-                      <span className="architecture-map__tooltip">{tool.tooltip}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <details className="architecture-details">
-                <summary className="architecture-details__summary">Learn more about how the services collaborate</summary>
-                <div className="architecture-details__content">
+                <div className="architecture-details__grid">
                   {architectureDetails.map((item) => (
                     <div key={item.id} className="architecture-details__item">
                       <h3 className="architecture-details__item-title">{item.title}</h3>
@@ -350,28 +459,8 @@ export const Landing = () => {
                     </div>
                   ))}
                 </div>
-              </details>
-
-              <div className="architecture-map__legend-row">
-                <div className="architecture-map__legend">
-                  {legendItems.map((item) => (
-                    <span key={item.id} className="architecture-map__legend-item">{item.label}</span>
-                  ))}
-                </div>
-                <div className="architecture-map__reasons">
-                  {reasonsToBelieve.map((reason, index) => (
-                    <span key={reason} className="architecture-map__reason-badge">
-                      {index + 1}. {reason}
-                    </span>
-                  ))}
-                </div>
-                <div className="architecture-map__metrics">
-                  {proofMetrics.map((metric) => (
-                    <div key={metric} className="architecture-map__metric-item">{metric}</div>
-                  ))}
-                </div>
               </div>
-            </div>
+            </details>
           </Container>
         </section>
 
@@ -386,105 +475,99 @@ export const Landing = () => {
         backdropClassName="case-study-modal__backdrop"
       >
         <Modal.Header closeButton>
-          <Modal.Title id="case-study-title">Play Economy · Case Study</Modal.Title>
+          <Modal.Title id="case-study-title">Play Economy · Behind the Scenes</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="case-study-sheet">
             <section className="case-study-sheet__section">
               <h4>Context</h4>
               <p>
-                I wanted a realistic game-economy demo that shows how I design, ship, and operate a distributed system—
-                without asking reviewers to read code first.
+              Built outside coursework to practice shipping an event-driven flow end to end. I wrapped it in a product-style shell so curious engineers can peek at the wiring.
               </p>
             </section>
 
             <section className="case-study-sheet__section">
               <h4>Goals</h4>
               <ul>
-                <li>End-to-end purchase flow that completes locally in &lt;2s with clear success/failure paths.</li>
-                <li>Separation of ownership across services; no shared DBs.</li>
-                <li>Observable by default: trace every hop; expose basic metrics and structured logs.</li>
+                <li>Ship a believable purchase loop that works locally.</li>
+                <li>Keep each service owning its data so changes stay isolated.</li>
+                <li>Default to telemetry instead of screenshots—let traces and logs tell the story.</li>
               </ul>
             </section>
 
             <section className="case-study-sheet__section">
               <h4>Constraints</h4>
               <ul>
-                <li>No external payments: Trading maintains the Player Balance ledger and debits/credits internally.</li>
-                <li>v1 without Outbox; rely on idempotency, retries, and reconciliation.</li>
-                <li>Small footprint: .NET 8, MongoDB, RabbitMQ/Azure SB, AKS, Helm, GitHub Actions.</li>
+                <li>No third-party payments—Trading owns the records so I could focus on workflow design.</li>
+                <li>Skipped the Outbox for v1; leaned on idempotent handlers and reconciliation jobs instead.</li>
+                <li>Kept the surface area small: .NET 8 + MongoDB + RabbitMQ/Azure SB, deployed on AKS with Helm.</li>
               </ul>
             </section>
 
             <section className="case-study-sheet__section">
               <h4>Architecture</h4>
               <p>
-                Identity, Catalog, Orders, Inventory, Trading services; each owns its MongoDB. HTTP for commands/reads,
-                events on a bus for state changes. SPA frontend (React) gets live status via SignalR. Deployed to AKS with Helm.
+                Four services—Identity, Catalog, Inventory, Trading—each own their datastore. HTTP handles commands and reads; events move state across bounded contexts. The React SPA listens over SignalR for order status so the UI never polls.
               </p>
               <p className="case-study-sheet__action">
-                <button type="button" className="case-study-sheet__link" onClick={closeCaseStudy}>
-                  Open architecture map →
-                </button>
+                <a
+                  href="#architecture"
+                  className="case-study-sheet__link"
+                  onClick={goToArchitecture}
+                >
+                  View architecture map →
+                </a>
               </p>
             </section>
 
-            <section className="case-study-sheet__section case-study-sheet__section--grid">
-              <div>
-                <h4>Highlights</h4>
-                <ul>
-                  <li>SAGA-orchestrated purchase: Orders coordinates Inventory (reserve/release) and Trading (debit/revert).</li>
-                  <li>Player Balance ledger: append-only entries; settlement is separate from item transfer.</li>
-                  <li>Live feedback: purchase status streams to the SPA in real time.</li>
-                  <li>First-class observability: OpenTelemetry traces → Jaeger; metrics → Prometheus; logs → Seq.</li>
-                </ul>
-              </div>
-            </section>
-
-            <section className="case-study-sheet__section">
+            <section className="case-study-sheet__section case-study-walkthrough">
               <h4>Walkthrough</h4>
-              <ul>
-                <li>SPA calls Orders (create order).</li>
-                <li>Orders emits OrderSubmitted; Inventory reserves stock (InventoryReserved / InsufficientStock).</li>
-                <li>Trading debits player (BalanceDebited / InsufficientFunds).</li>
-                <li>Orders completes or rejects and broadcasts final status to the SPA.</li>
-              </ul>
-            </section>
-
-            <section className="case-study-sheet__section">
-              <h4>Reliability &amp; Observability</h4>
-              <ul>
-                <li>Idempotent consumers keyed by orderId/tradeId; retry with backoff.</li>
-                <li>Reconciliation jobs close or roll back stuck flows (e.g., reservation without debit).</li>
-                <li>Correlated telemetry: traceId across spans/logs; simple dashboards for events/min, reserve success, and error rate.</li>
-              </ul>
-            </section>
-
-            <section className="case-study-sheet__section">
-              <h4>Results (dev run)</h4>
-              <ul>
-                <li>Purchase path: ~7 spans, p95 ≈ 200–250 ms locally; zero drift between ledger and inventory.</li>
-                <li>Swagger-first APIs let reviewers try Catalog/Inventory/Trading quickly.</li>
-                <li>Traces and dashboards verify behavior—not mocks.</li>
-              </ul>
+              <ol className="case-study-walkthrough__list">
+                <li className="case-study-walkthrough__item">
+                  <span className="case-study-walkthrough__badge">1</span>
+                  <div className="case-study-walkthrough__content">
+                    <strong className="case-study-walkthrough__title">Order kicks off</strong>
+                    <span className="case-study-walkthrough__body">SPA calls Orders to submit the purchase request.</span>
+                  </div>
+                </li>
+                <li className="case-study-walkthrough__item">
+                  <span className="case-study-walkthrough__badge">2</span>
+                  <div className="case-study-walkthrough__content">
+                    <strong className="case-study-walkthrough__title">Inventory reserves</strong>
+                    <span className="case-study-walkthrough__body">Orders raises <code>OrderSubmitted</code>; Inventory reserves stock or flags insufficient quantity.</span>
+                  </div>
+                </li>
+                <li className="case-study-walkthrough__item">
+                  <span className="case-study-walkthrough__badge">3</span>
+                  <div className="case-study-walkthrough__content">
+                    <strong className="case-study-walkthrough__title">Wallet settles</strong>
+                    <span className="case-study-walkthrough__body">Trading debits the wallet and emits balance outcomes using the shared correlation id.</span>
+                  </div>
+                </li>
+                <li className="case-study-walkthrough__item">
+                  <span className="case-study-walkthrough__badge">4</span>
+                  <div className="case-study-walkthrough__content">
+                    <strong className="case-study-walkthrough__title">Players get the update</strong>
+                    <span className="case-study-walkthrough__body">Orders finalizes the trade and SignalR broadcasts status straight to the SPA.</span>
+                  </div>
+                </li>
+              </ol>
             </section>
 
             <section className="case-study-sheet__section">
               <h4>Trade-offs &amp; Next</h4>
               <ul>
                 <li>Add Outbox to Orders/Trading for atomic state+event writes.</li>
-                <li>Harden retries with DLQs and explicit alerting on stuck SAGA steps.</li>
-                <li>Expand Trading to support escrow/holds for player-to-player trades.</li>
+                <li>Introduce DLQs and alerting so failed saga steps surface sooner.</li>
+                <li>Explore holds to unblock player-to-player trades.</li>
               </ul>
             </section>
 
             <section className="case-study-sheet__section case-study-sheet__quick-links">
               <h4>Quick Links</h4>
               <ul>
-                <li><a href="#top" onClick={closeCaseStudy}>Demo</a></li>
-                <li><a href="#architecture" onClick={closeCaseStudy}>Architecture map</a></li>
-                <li><a href="/seq" onClick={closeCaseStudy}>Example trace</a></li>
-                <li><a href="https://github.com/dotnetmicroservice001" target="_blank" rel="noopener noreferrer">Repo / key files</a></li>
+                <li><a href="/seq/" onClick={closeCaseStudy}>🔗 Example trace</a></li>
+                <li><a href="https://github.com/dotnetmicroservice001" target="_blank" rel="noopener noreferrer">🔗 Repo / key files</a></li>
               </ul>
             </section>
           </div>

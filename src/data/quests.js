@@ -1,37 +1,30 @@
 export const quests = [
   {
     id: 1,
-    title: 'Quest 1: Identity & Roles',
-    description: 'Identity signs players in, maintains gil balances, and issues role-aware JWT access tokens.',
-    tech: ['OAuth 2.0 PKCE', 'IdentityServer'],
+    title: 'Step 1: Sign in & sync your profile',
+    description: 'Log in once and your player stats and wallet balance follow you anywhere you play.',
+    tech: ['IdentityServer secures every session', 'JWT carries your profile and wallet claims'],
     icon: 'shield-lock'
   },
   {
     id: 2,
-    title: 'Quest 2: Catalog Authority',
-    description: 'Catalog publishes item updates that Trading consumes to keep pricing and names in sync.',
-    tech: ['Catalog DB', 'Read Models', 'Domain Events'],
+    title: 'Step 2: Browse live catalog listings',
+    description: 'See accurate prices and availability the moment you open the marketplace.',
+    tech: ['Catalog service streams item updates', 'Pricing cache keeps totals trustworthy'],
     icon: 'collection'
   },
   {
     id: 3,
-    title: 'Quest 3: Inventory Control',
-    description: 'Inventory handles GrantItems/SubtractItems commands and emits status events for the saga.',
-    tech: ['MongoDB', 'Grant/Subtract Commands'],
+    title: 'Step 3: Confirm your purchase',
+    description: 'Reserve items and debit your wallet in under a second—no double charges, no surprises.',
+    tech: ['Trading saga coordinates inventory and wallet', 'Idempotent commands prevent duplicate runs'],
     icon: 'boxes'
   },
   {
     id: 4,
-    title: 'Quest 4: Trading SAGA',
-    description: 'Trading saga coordinates inventory grants, wallet debits, and pushes live status via SignalR.',
-    tech: ['SAGA Orchestration', 'Message Bus', 'MassTransit'],
+    title: 'Step 4: Track status in real time',
+    description: 'Watch progress updates land instantly—no refresh button required.',
+    tech: ['SignalR streams order status to the UI', 'Telemetry traces every hop end-to-end'],
     icon: 'diagram-3'
-  },
-  {
-    id: 5,
-    title: 'Quest 5: Observability & Ops',
-    description: 'Telemetry proves every purchase: traces, metrics, and logs align around each correlationId.',
-    tech: ['OpenTelemetry', 'Prometheus', 'Jaeger', 'Seq'],
-    icon: 'activity'
   }
 ];

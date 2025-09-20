@@ -14,13 +14,18 @@ export const QuestBadge = React.forwardRef(({ title, description, tech, icon, is
       </div>
       <h3 className="quest-badge__title">{title}</h3>
       {description && <p className="quest-badge__description">{description}</p>}
-      <ul className="quest-badge__tech list-unstyled mb-0">
-        {tech.map((item) => (
-          <li key={item}>
-            <span className="quest-badge__chip">{item}</span>
-          </li>
-        ))}
-      </ul>
+      {Array.isArray(tech) && tech.length > 0 && (
+        <details className="quest-badge__details">
+          <summary className="quest-badge__details-summary">Under the hood</summary>
+          <ul className="quest-badge__tech list-unstyled mb-0">
+            {tech.map((item) => (
+              <li key={item}>
+                <span className="quest-badge__chip">{item}</span>
+              </li>
+            ))}
+          </ul>
+        </details>
+      )}
     </div>
   </article>
 ));

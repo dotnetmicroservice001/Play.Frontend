@@ -1,14 +1,16 @@
 .text-type {
   position: relative;
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
   font-family: 'Space Mono', 'Fira Code', 'Courier New', monospace;
   font-weight: 600;
   letter-spacing: 0.04em;
 }
 
 .text-type__content {
-  white-space: pre;
+  white-space: pre-line;
+  min-width: 0;
 }
 
 .text-type__cursor {
