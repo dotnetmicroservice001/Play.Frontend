@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import authService from './api-authorization/AuthorizeService';
 import { AuthorizationPaths } from './api-authorization/ApiAuthorizationConstants';
 import { ApplicationPaths } from './Constants';
+import '../styles/navmenu.css';
 
 export class NavMenu extends Component
 {
@@ -45,11 +46,11 @@ export class NavMenu extends Component
   {
     return (
       <header>
-        <Navbar bg="light" expand="lg" sticky="top">
+        <Navbar bg="light" expand="lg" sticky="top" className="navmenu">
           <Container>
             <Navbar.Brand as={Link} to="/"><i className="bi bi-controller mr-2" aria-hidden="true"></i>GamePlay Economy</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Navbar.Collapse id="basic-navbar-nav">
+            <Navbar.Collapse id="basic-navbar-nav" className="navmenu__collapse">
               {this.checkAuthAndRenderMenuItems()}
             </Navbar.Collapse>
           </Container>
@@ -88,13 +89,11 @@ export class NavMenu extends Component
     {
       return (<Fragment>
         <Nav className="mr-auto">
-          <Nav.Link as={Link} to={ApplicationPaths.HomePath}><i className="bi bi-house mr-1" aria-hidden="true"></i>Home</Nav.Link>
-          {this.storeAndInventoryItems()}
-          <Nav.Link as={Link} to={ApplicationPaths.CatalogPath}><i className="bi bi-grid mr-1" aria-hidden="true"></i>Catalog</Nav.Link>
-          <Nav.Link as={Link} to={ApplicationPaths.UsersPath}><i className="bi bi-people mr-1" aria-hidden="true"></i>Users</Nav.Link>
-          {this.devToolsDropdown()}
+          {this.renderPrimaryLinks(['home', 'store', 'inventory'])}
+          {this.manageDropdown()}
         </Nav>
         <Nav>
+          {this.devToolsDropdown()}
           {this.profileAndLogoutItems()}
         </Nav>
       </Fragment>);
@@ -103,11 +102,10 @@ export class NavMenu extends Component
     {
       return (<Fragment>
         <Nav className="mr-auto">
-          <Nav.Link as={Link} to={ApplicationPaths.HomePath}><i className="bi bi-house mr-1" aria-hidden="true"></i>Home</Nav.Link>
-          {this.storeAndInventoryItems()}
-          {this.devToolsDropdown()}
+          {this.renderPrimaryLinks(['home', 'store', 'inventory'])}
         </Nav>
         <Nav>
+          {this.devToolsDropdown()}
           {this.profileAndLogoutItems()}
         </Nav>
       </Fragment>);
@@ -204,12 +202,44 @@ export class NavMenu extends Component
     );
   }
 
-  storeAndInventoryItems()
+  renderPrimaryLinks(order)
   {
-    return (<Fragment>
-      <Nav.Link as={Link} to={ApplicationPaths.StorePath}><i className="bi bi-bag mr-1" aria-hidden="true"></i>Store</Nav.Link>
-      <Nav.Link as={Link} to={ApplicationPaths.InventoryPath}><i className="bi bi-box-seam mr-1" aria-hidden="true"></i>My Inventory</Nav.Link>
-    </Fragment>);
+    const linkMap = {
+      home: { to: ApplicationPaths.HomePath, icon: 'bi-house', label: 'Home' },
+      store: { to: ApplicationPaths.StorePath, icon: 'bi-bag', label: 'Store' },
+      inventory: { to: ApplicationPaths.InventoryPath, icon: 'bi-box-seam', label: 'Inventory' }
+    };
+
+    return order
+      .map((key) => linkMap[key])
+      .filter(Boolean)
+      .map((link) => (
+        <Nav.Link key={link.label} as={Link} to={link.to}>
+          <i className={`bi ${link.icon} mr-1`} aria-hidden="true"></i>
+          {link.label}
+        </Nav.Link>
+      ));
+  }
+
+  manageDropdown()
+  {
+    if (this.state.role !== 'Admin')
+    {
+      return null;
+    }
+
+    return (
+      <NavDropdown title={<span><i className="bi bi-gear mr-1" aria-hidden="true"></i>Manage</span>} id="manage-dropdown" className="navmenu__manage">
+        <NavDropdown.Item as={Link} to={ApplicationPaths.CatalogPath}>
+          <i className="bi bi-grid mr-2" aria-hidden="true"></i>
+          Catalog
+        </NavDropdown.Item>
+        <NavDropdown.Item as={Link} to={ApplicationPaths.UsersPath}>
+          <i className="bi bi-people mr-2" aria-hidden="true"></i>
+          Users
+        </NavDropdown.Item>
+      </NavDropdown>
+    );
   }
 
   profileAndLogoutItems()

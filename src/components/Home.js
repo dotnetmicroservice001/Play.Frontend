@@ -38,13 +38,15 @@ export const Home = () => {
         to: ApplicationPaths.InventoryPath,
         heading: 'This is your inventory',
         copy: 'Everything you’ve earned lives here. Track quantities, grant history, and what’s ready for your next quest.',
-        icon: 'bi-backpack2'
+        icon: 'bi-backpack2',
+        variant: 'blue'
       },
       {
         to: ApplicationPaths.StorePath,
         heading: 'The store just updated',
         copy: 'A fresh drop just landed—peek at the catalog before it sells out and let Trading do the rest.',
-        icon: 'bi-bag-heart'
+        icon: 'bi-bag-heart',
+        variant: 'blue'
       }
     ],
     []
