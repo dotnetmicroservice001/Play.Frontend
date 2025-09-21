@@ -1664,3 +1664,136 @@ body.theme-dark .case-study-sheet__dismiss:focus {
 .centered-text {
   text-align: center;
 }
+
+
+/*
+ * Additions for the Tech Stack section
+ *
+ * The following styles integrate the tech stack cards into your landing
+ * page and provide dedicated light and dark mode treatments.  They
+ * leverage your existing CSS custom properties (e.g. --landing-accent)
+ * so the section harmonises with the rest of your design without
+ * overriding global definitions.
+ */
+
+/* Container wrapper for the Tech Stack integrated into the architecture section */
+.tech-stack-section {
+  /* Add vertical space above the section so it doesn't butt up against
+   * preceding content.  You can adjust this as needed. */
+  margin-top: 2rem;
+}
+
+/* Ensure tech stack cards inherit the same look and feel as other cards
+ * on the page.  In light mode they have a subtle white background,
+ * lightly coloured border and shadow; in dark mode they become
+ * translucent dark panels with purple accents. */
+.tech-stack-section .card {
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid rgba(13, 15, 20, 0.08);
+  border-radius: 1.25rem; /* 20px */
+  box-shadow: 0 20px 36px rgba(15, 23, 42, 0.08);
+}
+
+/* Dark theme overrides for cards */
+body.theme-dark .tech-stack-section .card {
+  background: rgba(17, 24, 39, 0.92);
+  border: 1px solid rgba(124, 58, 237, 0.24);
+  box-shadow: 0 24px 44px rgba(3, 7, 18, 0.52);
+  color: rgba(232, 229, 255, 0.9);
+}
+
+/* Header styling: accent bar and coloured background.  The span with
+ * class `techstack-header__bar` draws a vertical accent line, while
+ * `techstack-header__title` styles the heading text. */
+.techstack-header {
+  display: flex;
+  align-items: center;
+  background: var(--landing-accent-tint);
+  border-bottom: none;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-top-left-radius: 1.25rem;
+  border-top-right-radius: 1.25rem;
+}
+
+.techstack-header__bar {
+  width: 6px;
+  height: 24px;
+  background: var(--landing-accent);
+  margin-right: 0.75rem;
+  border-radius: 4px;
+}
+
+.techstack-header__title {
+  color: var(--landing-accent);
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+/* Dark theme overrides for the header */
+body.theme-dark .techstack-header {
+  background: rgba(124, 58, 237, 0.25);
+}
+
+body.theme-dark .techstack-header__bar {
+  background: rgba(124, 58, 237, 0.55);
+}
+
+body.theme-dark .techstack-header__title {
+  color: rgba(233, 231, 255, 0.9);
+}
+
+/* Chip styles: compact pillâ€‘shaped badges for each item.  The chips
+ * inherit the base colours from your palette and feel cohesive with
+ * the rest of the site. */
+.techstack-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  background: var(--landing-grid-light);
+  border: 1px solid var(--landing-accent-tint);
+  color: var(--landing-ink);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.techstack-chip i {
+  color: var(--landing-accent);
+}
+
+/* Section heading styles for the tech stack.  Apply consistent
+ * typography and spacing here instead of inline styles in React. */
+.tech-stack-section h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--landing-accent);
+  margin-bottom: 1rem;
+}
+
+body.theme-dark .tech-stack-section h3 {
+  color: rgba(233, 231, 255, 0.9);
+}
+
+/* Increase spacing between chips on medium and larger screens.  You can
+ * customise the gap by overriding this rule in your own CSS if you
+ * prefer tighter or looser spacing. */
+.tech-stack-section .card-body .d-flex.flex-wrap {
+  gap: 0.75rem 1rem;
+}
+
+/* Dark theme overrides for chips */
+body.theme-dark .techstack-chip {
+  background: rgba(124, 58, 237, 0.25);
+  border-color: rgba(124, 58, 237, 0.4);
+  color: rgba(233, 231, 255, 0.9);
+}
+
+body.theme-dark .techstack-chip i {
+  color: rgba(165, 180, 252, 0.85);
+}

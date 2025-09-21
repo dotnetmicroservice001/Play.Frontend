@@ -30,6 +30,10 @@ import GitHubActionsIcon from '../assets/icons/githubactions.svg';
 import PrometheusIcon from '../assets/icons/prometheus.svg';
 import GrafanaIcon from '../assets/icons/grafana.svg';
 import OpenTelemetryIcon from '../assets/icons/opentelemetry.svg';
+import JaegerIcon from '../assets/icons/jaegertracing.svg';
+import AzureIcon from '../assets/icons/Azure.svg';
+import cosmosDbIcon from '../assets/icons/cosmosdb.svg';
+
 
 const sections = [
   {
@@ -50,9 +54,8 @@ const sections = [
     icons: [DotnetIcon, MongoDBIcon, VsCodeIcon, PostmanIcon, RabbitMQIcon, NugetIcon]
   },
   {
-    title: 'Infrastructure & Deployment',
+    title: 'Cloud Infrastructure & Deployment',
     items: [
-      { text: 'Code organization', icon: 'bi-folder' },
       { text: 'Microservices as containers', icon: 'bi-box-seam' },
       { text: 'Integration with Azure resources', icon: 'bi-cloud' },
       { text: 'Kubernetes deployment', icon: 'bi-diagram-3' },
@@ -61,7 +64,7 @@ const sections = [
       { text: 'API Gateway', icon: 'bi-door-open' },
       { text: 'HTTPS and TLS', icon: 'bi-lock-fill' }
     ],
-    icons: [DockerIcon, KubernetesIcon, HelmIcon]
+    icons: [DockerIcon, AzureIcon, cosmosDbIcon, KubernetesIcon]
   },
   {
     title: 'CI/CD & Helm',
@@ -83,7 +86,7 @@ const sections = [
       { text: 'Using metrics', icon: 'bi-graph-up' },
       { text: 'Monitoring', icon: 'bi-eye' }
     ],
-    icons: [PrometheusIcon, GrafanaIcon, OpenTelemetryIcon]
+    icons: [PrometheusIcon, GrafanaIcon, OpenTelemetryIcon, JaegerIcon]
   }
 ];
 
@@ -93,39 +96,12 @@ export const TechStackOverview = () => {
       {sections.map((section, idx) => (
         <Card key={idx} className="mb-4 shadow-sm rounded-3">
           {/*
-            Custom header with accent bar. The background is tinted using
-            the landing accent tint and the text uses the accent colour. An
-            accent bar on the left visually ties the card header into the
-            overall colour scheme.
+            Custom header with accent bar. Use CSS classes instead of inline styles
+            so that light/dark theme styles can be defined in the main CSS file.
           */}
-          <Card.Header
-            className="d-flex align-items-center"
-            style={{
-              backgroundColor: 'var(--landing-accent-tint)',
-              borderBottom: 'none',
-              paddingTop: '0.75rem',
-              paddingBottom: '0.75rem'
-            }}
-          >
-            <span
-              style={{
-                width: '6px',
-                height: '24px',
-                backgroundColor: 'var(--landing-accent)',
-                marginRight: '0.75rem',
-                borderRadius: '4px'
-              }}
-            ></span>
-            <strong
-              style={{
-                color: 'var(--landing-accent)',
-                fontSize: '0.95rem',
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em'
-              }}
-            >
-              {section.title}
-            </strong>
+          <Card.Header className="techstack-header">
+            <span className="techstack-header__bar"></span>
+            <strong className="techstack-header__title">{section.title}</strong>
           </Card.Header>
           <Card.Body>
             <Row>
@@ -139,18 +115,8 @@ export const TechStackOverview = () => {
                     <span
                       key={j}
                       className="techstack-chip d-flex align-items-center gap-1 px-3 py-2 rounded-pill"
-                      style={{
-                        backgroundColor: 'var(--landing-grid-light)',
-                        border: '1px solid var(--landing-accent-tint)',
-                        color: 'var(--landing-ink)'
-                      }}
                     >
-                      {/* Use the accent colour for the icon */}
-                      <i
-                        className={`bi ${item.icon}`}
-                        style={{ color: 'var(--landing-accent)' }}
-                        aria-hidden="true"
-                      ></i>
+                      <i className={`bi ${item.icon}`} aria-hidden="true"></i>
                       <span>{item.text}</span>
                     </span>
                   ))}

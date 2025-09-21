@@ -31,94 +31,6 @@ const userOutcomeCards = [
   }
 ];
 
-// Data for the top edge of the architecture diagram
-const architectureTopEdge = [
-  {
-    id: 'gateway',
-    label: 'Ingress / API Gateway',
-    support: 'Policy & routing',
-    tooltip: 'Gateway terminates TLS, checks auth policies, and forwards traffic to services.'
-  },
-  {
-    id: 'spa',
-    label: 'React SPA',
-    support: 'Player portal',
-    tooltip: 'Single-page app shows quests and live purchase status after sign-in.'
-  },
-  {
-    id: 'identity',
-    label: 'Identity',
-    support: 'JWT & profiles',
-    tooltip: 'Identity signs players in, keeps profiles, and issues role-aware JWTs.'
-  }
-];
-
-// Context blocks for each domain/service in the architecture diagram
-const architectureContexts = [
-  {
-    id: 'catalog',
-    title: 'Catalog',
-    owns: 'Item list & price cache',
-    serviceTooltip: 'Builds a read model from catalog events so Trading always has trusted prices.',
-    db: { label: 'Catalog DB', tooltip: 'Item descriptions, price points, and availability flags.' }
-  },
-  {
-    id: 'inventory',
-    title: 'Inventory',
-    owns: 'Player items & grants',
-    serviceTooltip: 'Single writer handles GrantItems/SubtractItems commands and emits inventory events.',
-    db: { label: 'Inventory DB', tooltip: 'Player holdings plus quantity history.' }
-  },
-  {
-    id: 'trading',
-    title: 'Trading',
-    owns: 'Purchase saga brain',
-    serviceTooltip: 'MassTransit state machine coordinates inventory grants, gil debits, and player notifications.',
-    db: { label: 'Saga Store', tooltip: 'Saga state: who bought what, current step, last error.' }
-  }
-];
-
-// Definitions for message bus events used in the architecture map
-const messageBusEvents = [
-  { id: 'purchase-requested', label: 'Purchase-Requested', tooltip: 'userId, itemId, quantity, correlationId' },
-  { id: 'grant-items', label: 'Grant-Items', tooltip: 'userId, catalogItemId, quantity, correlationId' },
-  { id: 'inventory-granted', label: 'Inventory-Items-Granted', tooltip: 'correlationId' },
-  { id: 'debit-gil', label: 'Debit-Gil', tooltip: 'userId, gil, correlationId' },
-  { id: 'gil-debited', label: 'Gil-Debited', tooltip: 'correlationId' },
-  { id: 'subtract-items', label: 'Subtract-Items', tooltip: 'userId, catalogItemId, quantity, correlationId' },
-  { id: 'inventory-subtracted', label: 'Inventory-Items-Subtracted', tooltip: 'correlationId' }
-];
-
-// Tooling cards shown in the operations rail of the architecture map
-const operationsRail = [
-  { id: 'otel', label: 'OTel Collector', tooltip: 'Ships traces, metrics, and logs out of process.', icon: 'bi-graph-up' },
-  { id: 'prometheus', label: 'Prometheus', tooltip: 'Scrapes services, powers events/min, reserve success rate.', icon: 'bi-bar-chart' },
-  { id: 'jaeger', label: 'Jaeger', tooltip: 'Distributed traces.', icon: 'bi-diagram-3' },
-  { id: 'seq', label: 'Seq', tooltip: 'Structured logs with orderId, playerId, traceId.', icon: 'bi-list-task' }
-];
-
-// Legend items used to describe the lines and symbols in the architecture map
-const legendItems = [
-  { id: 'legend-http', label: 'Solid line = HTTP (sync)' },
-  { id: 'legend-event', label: 'Dashed purple = Event (async)' },
-  { id: 'legend-db', label: 'Cylinder = Owned data' }
-];
-
-// Set of node ids to highlight in the architecture map
-const highlightedNodes = new Set([
-  'spa',
-  'gateway',
-  'identity',
-  'catalog',
-  'inventory',
-  'trading',
-  'bus',
-  'otel',
-  'prometheus',
-  'jaeger',
-  'seq'
-]);
-
 // Details content for the architecture explainer cards
 const architectureDetails = [
   {
@@ -143,20 +55,6 @@ const architectureDetails = [
   }
 ];
 
-// Reasons to believe statements shown in the architecture legend
-const reasonsToBelieve = [
-  'Product-grade UX backed by orchestrated sagas.',
-  'Inventory and Catalog stay consistent without shared databases.',
-  'Real-time status proven by correlated telemetry.'
-];
-
-// Proof metrics displayed under the legend
-const proofMetrics = [
-  '4 focused services power sign-in, catalog, inventory, and trading',
-  'Purchase confirmation arrives in under 2 seconds in demos',
-  '6 coordinated messages keep the saga resilient',
-  'Tracing, metrics, and logs wired in from day one'
-];
 
 export const Landing = () => {
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -294,125 +192,14 @@ export const Landing = () => {
                   />
                 </div>
 
-                {/* Architecture map sub-component */}
-                <div className="architecture-map">
-                  <div className="architecture-map__intro">
-                    <div className="landing-hero__eyebrow">Architecture Map</div>
-                    <h2 className="landing-hero__title" style={{ fontSize: '1.7rem' }}>
-                      Identity → Catalog → Orders → Observability
-                    </h2>
-                    <p className="landing-hero__subtitle">
-                      Follow the path from secure login to a confirmed purchase. Hover to see which service owns each step.
-                    </p>
-                  </div>
-
-                  <div className="architecture-map__overlays">
-                    <div className="architecture-map__overlay-caption">
-                      Trading coordinates inventory and wallet updates with at-least-once messaging and SignalR status pushes.
-                    </div>
-                  </div>
-
-                  <div className="architecture-map__diagram">
-                    <div className="architecture-map__stack">
-                      <div className="architecture-map__top-edge">
-                        {architectureTopEdge.map((node, index) => (
-                          <div
-                            key={node.id}
-                            className={`architecture-map__box architecture-map__box--edge ${highlightedNodes.has(node.id) ? 'is-highlighted' : ''}`}
-                            data-node={node.id}
-                            aria-label={node.label}
-                            tabIndex={0}
-                          >
-                            <span className="architecture-map__box-label">{node.label}</span>
-                            {node.support && <span className="architecture-map__box-support">{node.support}</span>}
-                            <span className="architecture-map__tooltip">{node.tooltip}</span>
-                            {index < architectureTopEdge.length - 1 && (
-                              <span className="architecture-map__edge-connector" aria-hidden="true"></span>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-
-                      <div className="architecture-map__lanes">
-                        {architectureContexts.map((context) => (
-                          <div key={context.id} className="architecture-map__lane">
-                            <div
-                              className={`architecture-map__service ${highlightedNodes.has(context.id) ? 'is-highlighted' : ''}`}
-                              data-node={context.id}
-                            >
-                              <div className="architecture-map__service-header">
-                                <span className="architecture-map__lane-title">{context.title}</span>
-                                <span className="architecture-map__lane-subtitle">{context.owns}</span>
-                              </div>
-                              <span className="architecture-map__tooltip">{context.serviceTooltip}</span>
-                            </div>
-                            <div className="architecture-map__db" data-node={`${context.id}-db`}>
-                              <span className="architecture-map__db-label">{context.db.label}</span>
-                              <span className="architecture-map__tooltip">{context.db.tooltip}</span>
-                            </div>
-                            <span
-                              className={`architecture-map__lane-connector ${highlightedNodes.has(context.id) ? 'is-active' : ''}`}
-                              aria-hidden="true"
-                            ></span>
-                          </div>
-                        ))}
-                      </div>
-
-                      <div
-                        className={`architecture-map__bus ${highlightedNodes.has('bus') ? 'is-highlighted' : ''}`}
-                        data-node="bus"
-                      >
-                        <span className="architecture-map__bus-label">Message Bus (RabbitMQ / Azure Service Bus)</span>
-                        <div className="architecture-map__bus-events">
-                          {messageBusEvents.map((event) => (
-                            <span key={event.id} className="architecture-map__event-chip">
-                              <span className="architecture-map__event-chip-label">{event.label}</span>
-                              <span className="architecture-map__tooltip">{event.tooltip}</span>
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="architecture-map__ribbon" aria-hidden="true">
-                        AKS cluster • Helm deploy • GitHub Actions CI/CD
-                      </div>
-                    </div>
-
-                    <div className="architecture-map__ops" aria-label="Observability stack">
-                      {operationsRail.map((tool) => (
-                        <div
-                          key={tool.id}
-                          className={`architecture-map__ops-card ${highlightedNodes.has(tool.id) ? 'is-highlighted' : ''}`}
-                          data-node={tool.id}
-                        >
-                          <i className={`bi ${tool.icon}`} aria-hidden="true"></i>
-                          <span className="architecture-map__ops-label">{tool.label}</span>
-                          <span className="architecture-map__tooltip">{tool.tooltip}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="architecture-map__legend-row">
-                    <div className="architecture-map__legend">
-                      {legendItems.map((item) => (
-                        <span key={item.id} className="architecture-map__legend-item">{item.label}</span>
-                      ))}
-                    </div>
-                    <div className="architecture-map__reasons">
-                      {reasonsToBelieve.map((reason, index) => (
-                        <span key={reason} className="architecture-map__reason-badge">
-                          {index + 1}. {reason}
-                        </span>
-                      ))}
-                    </div>
-                    <div className="architecture-map__metrics">
-                      {proofMetrics.map((metric) => (
-                        <div key={metric} className="architecture-map__metric-item">{metric}</div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                {/*
+                  Architecture map removed here to simplify the "How it's built" section.
+                  The detailed map, legend, and operations cards were removed to focus
+                  on the high-level overview and tech stack. The architecture image above
+                  conveys the structure at a glance, and the summary and details below
+                  explain the key elements. To see more details, you could provide a
+                  separate page or link.
+                */}
 
                 <div className="architecture-details__grid">
                   {architectureDetails.map((item) => (
@@ -422,17 +209,22 @@ export const Landing = () => {
                     </div>
                   ))}
                 </div>
+
+                {/* Tech Stack integrated within the "How it's built" section */}
+                {/* Tech stack summary integrated within the architecture details.  The
+                    surrounding div uses a semantic class and relies on the
+                    central stylesheet (landing_techstack_additions.css) for
+                    spacing and colours rather than inline styles. */}
+                <div className="tech-stack-section">
+                  <h3>Tech Stack</h3>
+                  <TechStackOverview />
+                </div>
               </div>
             </details>
           </Container>
         </section>
 
-        {/* Tech stack overview section inserted below the architecture section */}
-        <section id="tech-stack" className="landing-section landing-section--compact">
-          <Container>
-            <TechStackOverview />
-          </Container>
-        </section>
+        {/* Tech stack section removed from standalone position. It will be rendered within the "How it's built" section. */}
 
       </main>
 
