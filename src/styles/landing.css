@@ -262,6 +262,8 @@ body.theme-dark .hero-cta:focus {
   box-shadow: 0 18px 34px rgba(15, 23, 42, 0.09);
   text-align: left;
   overflow: hidden;
+  max-width: 800px; /* Increase the maximum width of each card */
+  width: 100%; /* Ensure the card takes up the full width within its container */
 }
 
 .outcomes__card::after {
@@ -650,6 +652,12 @@ body.theme-dark .hero-cta--primary:focus {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 28px;
   margin-bottom: 32px;
+}
+
+.architecture-image {
+  width: 70%;
+  max-width: 500px;
+  height: auto;
 }
 
 .architecture-map__lane {
@@ -1300,7 +1308,7 @@ body.theme-dark .hero-cta--primary:focus {
   height: 48px;
   border-radius: 50%;
   border: none;
-  background: linear-gradient(135deg, rgba(147, 51, 234, 0.95), rgba(124, 58, 237, 0.9));
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.95), #7c3aede6);
   color: #fff;
   display: inline-flex;
   align-items: center;
@@ -1431,7 +1439,7 @@ body.theme-dark .outcomes__card {
 }
 
 body.theme-dark .outcomes__card-title {
-  color: rgba(233, 231, 255, 0.9);
+  color: rgba(232, 229, 255, 0.902);
 }
 
 body.theme-dark .outcomes__card-body {
@@ -1644,4 +1652,15 @@ body.theme-dark .case-study-sheet__dismiss:focus {
   border-color: rgba(165, 180, 252, 0.55);
   color: rgba(248, 250, 255, 0.96);
   box-shadow: 0 16px 28px rgba(2, 6, 23, 0.55);
+}
+
+.reduced-centered-image {
+  display: block;
+  margin: 0 auto;
+  width: 50%; /* Reduce the size to 50% of its original width */
+  height: auto; /* Maintain aspect ratio */
+}
+
+.centered-text {
+  text-align: center;
 }

@@ -1,20 +1,15 @@
 import React, { useEffect, useCallback, useState, useRef } from 'react';
-import { Container, Modal } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { AuthorizationPaths } from './api-authorization/ApiAuthorizationConstants';
 import { QuestTimeline } from './QuestTimeline';
+import { TechStackOverview } from './TechStackOverview';
 import TextType from './TextType';
 
 import '../styles/landing.css';
+import architectureImage from '../images/architecture.png';
 
-const tradeTickerItems = [
-  'Catalog Item Found',
-  'Inventory Item Reserved',
-  'Trading Saga Committed',
-  'Payment Succeeded',
-  'Distributed Traces Exported'
-];
-
+// Cards describing the main user outcomes
 const userOutcomeCards = [
   {
     id: 'secure-sign-in',
@@ -36,18 +31,19 @@ const userOutcomeCards = [
   }
 ];
 
+// Data for the top edge of the architecture diagram
 const architectureTopEdge = [
-  {
-    id: 'spa',
-    label: 'React SPA',
-    support: 'Player portal',
-    tooltip: 'Single-page app shows quests and live purchase status after sign-in.'
-  },
   {
     id: 'gateway',
     label: 'Ingress / API Gateway',
     support: 'Policy & routing',
     tooltip: 'Gateway terminates TLS, checks auth policies, and forwards traffic to services.'
+  },
+  {
+    id: 'spa',
+    label: 'React SPA',
+    support: 'Player portal',
+    tooltip: 'Single-page app shows quests and live purchase status after sign-in.'
   },
   {
     id: 'identity',
@@ -57,6 +53,7 @@ const architectureTopEdge = [
   }
 ];
 
+// Context blocks for each domain/service in the architecture diagram
 const architectureContexts = [
   {
     id: 'catalog',
@@ -81,6 +78,7 @@ const architectureContexts = [
   }
 ];
 
+// Definitions for message bus events used in the architecture map
 const messageBusEvents = [
   { id: 'purchase-requested', label: 'Purchase-Requested', tooltip: 'userId, itemId, quantity, correlationId' },
   { id: 'grant-items', label: 'Grant-Items', tooltip: 'userId, catalogItemId, quantity, correlationId' },
@@ -91,19 +89,22 @@ const messageBusEvents = [
   { id: 'inventory-subtracted', label: 'Inventory-Items-Subtracted', tooltip: 'correlationId' }
 ];
 
+// Tooling cards shown in the operations rail of the architecture map
 const operationsRail = [
-  { id: 'otel', label: 'OTel Collector', tooltip: 'Ships traces, metrics, and logs out of process.' },
-  { id: 'prometheus', label: 'Prometheus', tooltip: 'Scrapes services, powers events/min, reserve success rate.' },
-  { id: 'jaeger', label: 'Jaeger', tooltip: 'Distributed traces.' },
-  { id: 'seq', label: 'Seq', tooltip: 'Structured logs with orderId, playerId, traceId.' }
+  { id: 'otel', label: 'OTel Collector', tooltip: 'Ships traces, metrics, and logs out of process.', icon: 'bi-graph-up' },
+  { id: 'prometheus', label: 'Prometheus', tooltip: 'Scrapes services, powers events/min, reserve success rate.', icon: 'bi-bar-chart' },
+  { id: 'jaeger', label: 'Jaeger', tooltip: 'Distributed traces.', icon: 'bi-diagram-3' },
+  { id: 'seq', label: 'Seq', tooltip: 'Structured logs with orderId, playerId, traceId.', icon: 'bi-list-task' }
 ];
 
+// Legend items used to describe the lines and symbols in the architecture map
 const legendItems = [
   { id: 'legend-http', label: 'Solid line = HTTP (sync)' },
   { id: 'legend-event', label: 'Dashed purple = Event (async)' },
   { id: 'legend-db', label: 'Cylinder = Owned data' }
 ];
 
+// Set of node ids to highlight in the architecture map
 const highlightedNodes = new Set([
   'spa',
   'gateway',
@@ -118,6 +119,7 @@ const highlightedNodes = new Set([
   'seq'
 ]);
 
+// Details content for the architecture explainer cards
 const architectureDetails = [
   {
     id: 'auth',
@@ -141,12 +143,14 @@ const architectureDetails = [
   }
 ];
 
+// Reasons to believe statements shown in the architecture legend
 const reasonsToBelieve = [
   'Product-grade UX backed by orchestrated sagas.',
   'Inventory and Catalog stay consistent without shared databases.',
   'Real-time status proven by correlated telemetry.'
 ];
 
+// Proof metrics displayed under the legend
 const proofMetrics = [
   '4 focused services power sign-in, catalog, inventory, and trading',
   'Purchase confirmation arrives in under 2 seconds in demos',
@@ -155,9 +159,7 @@ const proofMetrics = [
 ];
 
 export const Landing = () => {
-  const tickerSequence = [...tradeTickerItems, ...tradeTickerItems];
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const [showCaseStudy, setShowCaseStudy] = useState(false);
   const [isArchitectureOpen, setIsArchitectureOpen] = useState(false);
   const location = useLocation();
   const history = useHistory();
@@ -169,52 +171,15 @@ export const Landing = () => {
   }, []);
 
   useEffect(() => {
-    if (hash === '#case-study')
-    {
-      setShowCaseStudy(true);
-    }
-  }, [hash]);
-
-  useEffect(() => {
-    if (hash === '#architecture')
-    {
+    if (hash === '#architecture') {
       setIsArchitectureOpen(true);
       requestAnimationFrame(() => {
-        if (architectureDetailsRef.current)
-        {
+        if (architectureDetailsRef.current) {
           architectureDetailsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
       });
     }
   }, [hash]);
-
-  const openCaseStudy = useCallback(() =>
-  {
-    setShowCaseStudy(true);
-    if (hash !== '#case-study')
-    {
-      history.replace({ pathname, search, hash: '#case-study' });
-    }
-  }, [hash, history, pathname, search]);
-
-  const closeCaseStudy = useCallback(() =>
-  {
-    setShowCaseStudy(false);
-    if (hash === '#case-study')
-    {
-      history.replace({ pathname, search, hash: '' });
-    }
-  }, [hash, history, pathname, search]);
-
-  const goToArchitecture = useCallback(
-    (event) =>
-    {
-      event.preventDefault();
-      setShowCaseStudy(false);
-      history.replace({ pathname, search, hash: '#architecture' });
-    },
-    [history, pathname, search]
-  );
 
   useEffect(() => {
     handleScroll();
@@ -222,14 +187,14 @@ export const Landing = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
 
-  const handleArchitectureToggle = useCallback((event) =>
-  {
+  const handleArchitectureToggle = useCallback((event) => {
     setIsArchitectureOpen(event.target.open);
   }, []);
 
   return (
     <div className="landing-page" id="top">
       <main>
+        {/* Hero section with headline and CTA buttons */}
         <section id="demo" className="hero-bleed landing-hero">
           <Container>
             <div className="landing-hero__content landing-hero__content--stack">
@@ -253,7 +218,8 @@ export const Landing = () => {
                 <button
                   type="button"
                   className="hero-cta"
-                  onClick={openCaseStudy}
+                  // on click navigate to #architecture and open the details
+                  onClick={() => history.push({ pathname, hash: '#architecture', search })}
                 >
                   <i className="bi bi-diagram-3" aria-hidden="true"></i>
                   See How It's Built
@@ -270,16 +236,7 @@ export const Landing = () => {
           </Container>
         </section>
 
-        <div className="trade-ticker" aria-hidden="true">
-          <div className="trade-ticker__inner">
-            {tickerSequence.map((item, index) => (
-              <span key={`${item}-${index}`} className="trade-ticker__item">
-                {item}
-              </span>
-            ))}
-          </div>
-        </div>
-
+        {/* User outcomes section */}
         <section id="outcomes" className="landing-section landing-section--compact">
           <Container>
             <div className="outcomes">
@@ -303,14 +260,17 @@ export const Landing = () => {
           </Container>
         </section>
 
+        {/* Placeholder anchor for case study navigation */}
         <div id="case-study" className="case-study-anchor" aria-hidden="true"></div>
 
+        {/* Quests timeline section */}
         <section id="quests" className="landing-section landing-section--gradient">
           <Container>
             <QuestTimeline />
           </Container>
         </section>
 
+        {/* Architecture section */}
         <section className="landing-section landing-section--gradient" id="architecture">
           <Container>
             <details
@@ -321,10 +281,20 @@ export const Landing = () => {
             >
               <summary className="architecture-details__summary">How it's built</summary>
               <div className="architecture-details__content">
-                <p className="architecture-details__intro">
-                  Identity signs players in, Catalog owns pricing, Trading orchestrates orders, and observability proves every hop for recruiters who want the full story.
-                </p>
+                <div className="centered-text">
+                  <p>
+                    Identity signs players in, Catalog owns pricing, Trading orchestrates orders, and observability proves every hop for recruiters who want the full story.
+                  </p>
+                </div>
+                <div className="architecture-details__image">
+                  <img
+                    src={architectureImage}
+                    alt="Additional architecture diagram"
+                    className="architecture-details__image-content reduced-centered-image"
+                  />
+                </div>
 
+                {/* Architecture map sub-component */}
                 <div className="architecture-map">
                   <div className="architecture-map__intro">
                     <div className="landing-hero__eyebrow">Architecture Map</div>
@@ -348,9 +318,7 @@ export const Landing = () => {
                         {architectureTopEdge.map((node, index) => (
                           <div
                             key={node.id}
-                            className={`architecture-map__box architecture-map__box--edge ${
-                              highlightedNodes.has(node.id) ? 'is-highlighted' : ''
-                            }`}
+                            className={`architecture-map__box architecture-map__box--edge ${highlightedNodes.has(node.id) ? 'is-highlighted' : ''}`}
                             data-node={node.id}
                             aria-label={node.label}
                             tabIndex={0}
@@ -369,9 +337,7 @@ export const Landing = () => {
                         {architectureContexts.map((context) => (
                           <div key={context.id} className="architecture-map__lane">
                             <div
-                              className={`architecture-map__service ${
-                                highlightedNodes.has(context.id) ? 'is-highlighted' : ''
-                              }`}
+                              className={`architecture-map__service ${highlightedNodes.has(context.id) ? 'is-highlighted' : ''}`}
                               data-node={context.id}
                             >
                               <div className="architecture-map__service-header">
@@ -385,9 +351,7 @@ export const Landing = () => {
                               <span className="architecture-map__tooltip">{context.db.tooltip}</span>
                             </div>
                             <span
-                              className={`architecture-map__lane-connector ${
-                                highlightedNodes.has(context.id) ? 'is-active' : ''
-                              }`}
+                              className={`architecture-map__lane-connector ${highlightedNodes.has(context.id) ? 'is-active' : ''}`}
                               aria-hidden="true"
                             ></span>
                           </div>
@@ -418,11 +382,10 @@ export const Landing = () => {
                       {operationsRail.map((tool) => (
                         <div
                           key={tool.id}
-                          className={`architecture-map__ops-card ${
-                            highlightedNodes.has(tool.id) ? 'is-highlighted' : ''
-                          }`}
+                          className={`architecture-map__ops-card ${highlightedNodes.has(tool.id) ? 'is-highlighted' : ''}`}
                           data-node={tool.id}
                         >
+                          <i className={`bi ${tool.icon}`} aria-hidden="true"></i>
                           <span className="architecture-map__ops-label">{tool.label}</span>
                           <span className="architecture-map__tooltip">{tool.tooltip}</span>
                         </div>
@@ -464,121 +427,16 @@ export const Landing = () => {
           </Container>
         </section>
 
+        {/* Tech stack overview section inserted below the architecture section */}
+        <section id="tech-stack" className="landing-section landing-section--compact">
+          <Container>
+            <TechStackOverview />
+          </Container>
+        </section>
+
       </main>
 
-      <Modal
-        show={showCaseStudy}
-        onHide={closeCaseStudy}
-        dialogClassName="case-study-modal__dialog"
-        className="case-study-modal"
-        aria-labelledby="case-study-title"
-        backdropClassName="case-study-modal__backdrop"
-      >
-        <Modal.Header closeButton>
-          <Modal.Title id="case-study-title">Play Economy · Behind the Scenes</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className="case-study-sheet">
-            <section className="case-study-sheet__section">
-              <h4>Context</h4>
-              <p>
-              Built outside coursework to practice shipping an event-driven flow end to end.
-              </p>
-            </section>
-
-            <section className="case-study-sheet__section">
-              <h4>Goals</h4>
-              <ul>
-                <li>Ship a purchase loop that works locally.</li>
-                <li>Keep each service owning its data so changes stay isolated.</li>
-                <li>Add traces and logs that tell the story.</li>
-              </ul>
-            </section>
-
-            <section className="case-study-sheet__section">
-              <h4>Constraints</h4>
-              <ul>
-                <li>No third-party payments—Trading owns the records.</li>
-                <li>Skipped the Outbox for v1; leaned on idempotent handlers and retries.</li>
-                <li>Kept the surface area small: .NET 8 + MongoDB + RabbitMQ/Azure SB, deployed on AKS with Helm.</li>
-              </ul>
-            </section>
-
-            <section className="case-study-sheet__section">
-              <h4>Architecture</h4>
-              <p>
-                Four services—Identity, Catalog, Inventory, Trading—each own their datastore. HTTP handles commands and reads; events move state across bounded contexts. The React SPA listens over SignalR for order status so the UI never polls.
-              </p>
-              <p className="case-study-sheet__action">
-                <a
-                  href="#architecture"
-                  className="case-study-sheet__link"
-                  onClick={goToArchitecture}
-                >
-                  View architecture map →
-                </a>
-              </p>
-            </section>
-
-            <section className="case-study-sheet__section case-study-walkthrough">
-              <h4>Walkthrough</h4>
-              <ol className="case-study-walkthrough__list">
-                <li className="case-study-walkthrough__item">
-                  <span className="case-study-walkthrough__badge">1</span>
-                  <div className="case-study-walkthrough__content">
-                    <strong className="case-study-walkthrough__title">Order kicks off</strong>
-                    <span className="case-study-walkthrough__body">SPA calls Orders to submit the purchase request.</span>
-                  </div>
-                </li>
-                <li className="case-study-walkthrough__item">
-                  <span className="case-study-walkthrough__badge">2</span>
-                  <div className="case-study-walkthrough__content">
-                    <strong className="case-study-walkthrough__title">Inventory reserves</strong>
-                    <span className="case-study-walkthrough__body">Orders raises <code>OrderSubmitted</code>; Inventory reserves stock or flags insufficient quantity.</span>
-                  </div>
-                </li>
-                <li className="case-study-walkthrough__item">
-                  <span className="case-study-walkthrough__badge">3</span>
-                  <div className="case-study-walkthrough__content">
-                    <strong className="case-study-walkthrough__title">Wallet settles</strong>
-                    <span className="case-study-walkthrough__body">Trading debits the wallet and emits balance outcomes using the shared correlation id.</span>
-                  </div>
-                </li>
-                <li className="case-study-walkthrough__item">
-                  <span className="case-study-walkthrough__badge">4</span>
-                  <div className="case-study-walkthrough__content">
-                    <strong className="case-study-walkthrough__title">Players get the update</strong>
-                    <span className="case-study-walkthrough__body">Orders finalizes the trade and SignalR broadcasts status straight to the SPA.</span>
-                  </div>
-                </li>
-              </ol>
-            </section>
-
-            <section className="case-study-sheet__section">
-              <h4>Trade-offs &amp; Next</h4>
-              <ul>
-                <li>Add Outbox to Orders/Trading for atomic state+event writes.</li>
-                <li>Introduce DLQs and alerting so failed saga steps surface sooner.</li>
-                <li>Explore holds to unblock player-to-player trades.</li>
-              </ul>
-            </section>
-
-            <section className="case-study-sheet__section case-study-sheet__quick-links">
-              <h4>Quick Links</h4>
-              <ul>
-                <li><a href="/seq/" onClick={closeCaseStudy}>🔗 Example trace</a></li>
-                <li><a href="https://github.com/dotnetmicroservice001" target="_blank" rel="noopener noreferrer">🔗 Repo / key files</a></li>
-              </ul>
-            </section>
-          </div>
-        </Modal.Body>
-        <Modal.Footer className="case-study-sheet__footer">
-          <button type="button" className="case-study-sheet__dismiss" onClick={closeCaseStudy}>
-            Back to site
-          </button>
-        </Modal.Footer>
-      </Modal>
-
+      {/* Scroll-to-top button */}
       {showScrollTop && (
         <button
           type="button"
