@@ -10,7 +10,7 @@ export const quests = [
     id: 2,
     title: 'Step 2: Browse live catalog listings',
     description: 'See accurate prices and availability the moment you open the marketplace.',
-    tech: ['MongoDB', 'Distributed cache'],
+    tech: ['MongoDB', 'CosmosDb', 'Distributed cache'],
     icon: 'collection'
   },
   {
@@ -27,9 +27,7 @@ export const quests = [
     title: 'Step 4: Track status in real time',
     description: 'Watch progress updates land instantly—no refresh button required.',
     tech: ['SignalR (real-time updates)',
-      'React SPA',
-      'OpenTelemetry',
-      'Prometheus', 'Jaeger tracing'],
+      'OpenTelemetry'],
     icon: 'diagram-3'
   }
 ];

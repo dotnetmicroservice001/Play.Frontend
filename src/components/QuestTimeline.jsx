@@ -74,7 +74,7 @@ export const QuestTimeline = () => {
               <span className="quest-timeline__dot" aria-hidden="true"></span>
               <div className="quest-timeline__card">
                 <QuestBadge
-                  title={quest.title}
+                  title={quest.title} // Title is passed here
                   description={quest.description}
                   tech={quest.tech}
                   icon={quest.icon}

@@ -9,7 +9,7 @@
 .navbar-light .navmenu__greeting {
   font-weight: 500;
   letter-spacing: 0.03em;
-  color: rgba(15, 23, 42, 0.82);
+  color: rgb(250, 251, 255);
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -22,7 +22,7 @@
 .navbar-light .dropdown-toggle:focus,
 .navbar-light .navmenu__greeting:hover,
 .navbar-light .navmenu__greeting:focus {
-  color: rgba(15, 23, 42, 1);
+  color: rgb(238, 234, 253);
 }
 
 .navmenu__collapse {
@@ -140,7 +140,7 @@ body.theme-dark .navmenu__profile-dropdown .dropdown-item:focus {
   justify-content: space-between;
   width: 50px;
   height: 26px;
-  background: rgba(76, 29, 149, 0.18);
+  background: rgba(219, 197, 250, 0.947);
   border-radius: 999px;
   padding: 4px;
   transition: background 0.2s ease;

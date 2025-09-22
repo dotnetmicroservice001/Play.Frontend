@@ -71,7 +71,7 @@ export const Home = () => {
       <section className="home-hero">
         <h1 className="home-hero__title">Welcome back, {userState.userName ?? 'player'}.</h1>
         <p className="home-hero__blurb">
-          Grab your gear, scan the latest drop, and keep the gil flowing.
+          Grab your gear, scan the latest drop, and let the Gil keep stacking.
         </p>
       </section>
 

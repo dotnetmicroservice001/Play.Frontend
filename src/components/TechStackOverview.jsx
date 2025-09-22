@@ -18,7 +18,6 @@ import { Container, Row, Col, Card } from 'react-bootstrap';
 // Import the icons. Place the corresponding SVG files in `src/assets/icons`.
 import DotnetIcon from '../assets/icons/dotnetcore.svg';
 import MongoDBIcon from '../assets/icons/mongodb.svg';
-import VsCodeIcon from '../assets/icons/vscode.svg';
 import PostmanIcon from '../assets/icons/postman.svg';
 import RabbitMQIcon from '../assets/icons/rabbitmq.svg';
 import NugetIcon from '../assets/icons/nuget.svg';
@@ -33,6 +32,8 @@ import OpenTelemetryIcon from '../assets/icons/opentelemetry.svg';
 import JaegerIcon from '../assets/icons/jaegertracing.svg';
 import AzureIcon from '../assets/icons/Azure.svg';
 import cosmosDbIcon from '../assets/icons/cosmosdb.svg';
+import EmissaryIcon from '../assets/icons/emissary.png';
+import AcrIcon from '../assets/icons/acr.png';
 
 
 const sections = [
@@ -51,7 +52,7 @@ const sections = [
       { text: 'Frontend integration', icon: 'bi-window' },
       { text: 'Real‑time communication', icon: 'bi-broadcast' }
     ],
-    icons: [DotnetIcon, MongoDBIcon, VsCodeIcon, PostmanIcon, RabbitMQIcon, NugetIcon]
+    icons: [DotnetIcon, MongoDBIcon, PostmanIcon, RabbitMQIcon, NugetIcon]
   },
   {
     title: 'Cloud Infrastructure & Deployment',
@@ -64,10 +65,10 @@ const sections = [
       { text: 'API Gateway', icon: 'bi-door-open' },
       { text: 'HTTPS and TLS', icon: 'bi-lock-fill' }
     ],
-    icons: [DockerIcon, AzureIcon, cosmosDbIcon, KubernetesIcon]
+    icons: [DockerIcon, AzureIcon, cosmosDbIcon, AcrIcon, KubernetesIcon, EmissaryIcon]
   },
   {
-    title: 'CI/CD & Helm',
+    title: 'CI/CD',
     items: [
       { text: 'Using Helm charts', icon: 'bi-stack' },
       { text: 'Versioning', icon: 'bi-clock-history' },
@@ -90,7 +91,8 @@ const sections = [
   }
 ];
 
-export const TechStackOverview = () => {
+export const TechStackOverview = () =>
+{
   return (
     <Container className="my-5">
       {sections.map((section, idx) => (
@@ -123,7 +125,7 @@ export const TechStackOverview = () => {
                 </div>
               </Col>
               {/* Right column: technology icons */}
-              <Col md={5} className="d-flex flex-wrap justify-content-center align-items-center">
+              <Col md={5} className="d-flex flex-wrap justify-content-end align-items-center">
                 {section.icons.map((iconSrc, k) => (
                   <img
                     key={k}

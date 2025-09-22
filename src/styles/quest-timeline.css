@@ -39,6 +39,7 @@
     opacity: 0;
     transform: translateY(24px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -121,7 +122,8 @@
 .quest-timeline__card {
   display: flex;
   justify-content: center;
-  max-width: 900px; /* Increase the maximum width of the card */
+  max-width: 900px;
+  /* Increase the maximum width of the card */
 }
 
 .quest-timeline__item--left .quest-timeline__card {
@@ -154,8 +156,10 @@
   background: linear-gradient(135deg, #ffffff, var(--timeline-surface));
   border: 1px solid rgba(26, 26, 36, 0.1);
   box-shadow: 0 12px 32px rgba(26, 26, 36, 0.12);
-  max-width: 900px; /* Increase the maximum width of the badge frame */
-  width: 100%; /* Ensure it takes up the full width within its container */
+  max-width: 900px;
+  /* Increase the maximum width of the badge frame */
+  width: 100%;
+  /* Ensure it takes up the full width within its container */
   margin: 0 auto;
 }
 
@@ -219,21 +223,28 @@
 
 .quest-badge__tech {
   display: grid;
-  gap: 0.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.9rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  /* 4 fixed columns */
   color: rgba(26, 26, 36, 0.72);
+  grid-auto-rows: 60px;
+}
+
+.quest-badge__tech li {
+  background: rgba(76, 29, 149, 0.08);
+  border: 1px solid rgba(76, 29, 149, 0.28);
 }
 
 .quest-badge__chip {
   display: inline-block;
   padding: 0.35rem 0.6rem;
-  background: rgba(76, 29, 149, 0.08);
-  border: 1px solid rgba(76, 29, 149, 0.28);
-  border-radius: 8px;
-  font-size: 0.84rem;
+  /* background: rgba(76, 29, 149, 0.08);
+  border: 1px solid rgba(76, 29, 149, 0.28); */
+
+  font-size: 0.9rem;
   color: var(--timeline-accent-ink);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+
 }
 
 .quest-timeline__caption {
@@ -309,8 +320,8 @@ body.theme-dark .quest-badge__details-summary:focus {
 }
 
 body.theme-dark .quest-badge__chip {
-  background: rgba(129, 140, 248, 0.24);
-  border: 1px solid rgba(167, 139, 250, 0.42);
+  /* background: rgba(129, 140, 248, 0.24); */
+  /* border: 1px solid rgba(167, 139, 250, 0.42); */
   color: rgba(243, 242, 255, 0.9);
 }
 
@@ -319,6 +330,15 @@ body.theme-dark .quest-timeline__item,
 body.theme-dark .quest-timeline__stage,
 body.theme-dark .quest-timeline__caption {
   color: rgba(232, 231, 255, 0.78);
+}
+
+body.theme-dark .quest-badge__tech li {
+  background: rgba(129, 140, 248, 0.24);
+  border: 1px solid rgba(167, 139, 250, 0.42);
+}
+
+body.theme-dark .quest-badge__tech {
+  grid-auto-rows: 60px;
 }
 
 @media (max-width: 768px) {
@@ -357,6 +377,7 @@ body.theme-dark .quest-timeline__caption {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .quest-timeline,
   .quest-badge,
   .quest-badge__frame {
