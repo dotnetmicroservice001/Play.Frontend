@@ -22,7 +22,7 @@ Then navigate to http://localhost:3000 in your browser.
 ## Build the docker image
 ```bash
 # Build the docker image in Bash
-version="1.0.0"
+version="1.0.2"
 ACR="acrpfpos"
 
 docker build -t "$ACR.azurecr.io/play.frontend:$version" .
