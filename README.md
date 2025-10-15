@@ -22,10 +22,10 @@ Then navigate to http://localhost:3000 in your browser.
 ## Build the docker image
 ```bash
 # Build the docker image in Bash
-version="1.0.2"
+version="1.0.4"
 ACR="acrpfpos"
 
-docker build -t "$ACR.azurecr.io/play.frontend:$version" .
+## docker build -t "$ACR.azurecr.io/play.frontend:$version" .
 
 ## amd 64 version
 docker buildx build --platform linux/amd64 \
@@ -47,7 +47,7 @@ docker push "$ACR.azurecr.io/play.frontend:$version"
 ## Install the Helm chart
 ```powershell
 namespace="frontend"
-helm install frontend-client ./helm --create-namespace -n $namespace
+helm upgrade frontend-client ./helm --create-namespace -n $namespace
 ```
 
 ## Available Scripts
