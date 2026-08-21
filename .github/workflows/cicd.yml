@@ -1,0 +1,73 @@
+name: CICD
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+
+  generate-version:
+    runs-on: ubuntu-latest
+    permissions:
+     contents: write
+    steps:
+    - uses: actions/checkout@v4
+    - name: Github Tag Bump
+      id: tag_bump
+      uses: anothrNick/github-tag-action@1.67.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        INITIAL_VERSION: 1.0.4
+        DEFAULT_BUMP: patch
+
+    outputs:
+      new-version: ${{ steps.tag_bump.outputs.new_tag }}
+
+  build-deploy-service:
+   runs-on: ubuntu-latest
+   needs: generate-version
+   env:
+    ACR_NAME: acrpfpos
+    AKS_RESOURCE_GROUP: rg-playground
+    AKS_CLUSTER_NAME: aks-playground
+    SERVICE_NAME: frontend
+
+   permissions:
+    id-token: write
+    contents: read
+
+   steps:
+    - uses: actions/checkout@v4
+
+    - name: Azure Login
+      uses: Azure/login@v2.3.0
+      with:
+       client-id: ${{ secrets.AZURE_CLIENT_ID }}
+       tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+       subscription-id: ${{ secrets.AZURE_SUBSCIPRTION_ID }}
+
+    - name: Login to container registry
+      run: az acr login --name ${{ env.ACR_NAME }}
+
+    - name: Build and push Docker images
+      uses: docker/build-push-action@v6.18.0
+      with:
+        tags: "${{ env.ACR_NAME }}.azurecr.io/play.frontend:${{ needs.generate-version.outputs.new-version }}"
+        push: true
+
+    - name: Get AKS credentials
+      run: az aks get-credentials --resource-group ${{ env.AKS_RESOURCE_GROUP }} --name ${{ env.AKS_CLUSTER_NAME }}
+
+    - name: Helm tool installer
+      uses: Azure/setup-helm@v3
+      with:
+        version: v3.18.3
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Deploy helm chart
+      run: |
+        helm upgrade frontend-client ./helm \
+        -n ${{ env.SERVICE_NAME }} \
+        --set image.tag=${{ needs.generate-version.outputs.new-version }} \
+        --install \
+        --wait
