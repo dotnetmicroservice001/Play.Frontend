@@ -25,7 +25,13 @@ service:
   type: ClusterIP
   port: 80
 
+strategy:
+  type: Recreate
+
 resources:
+  requests:
+    memory: "70Mi"
+    cpu: "10m"
   limits:
     memory: "128Mi"
     cpu: "150m"
