@@ -99,21 +99,109 @@ body.theme-dark .page-shell li {
 
 .footer {
   width: 100%;
-  white-space: nowrap;
   line-height: 1.6;
-  padding: 12px 0;
+  padding: 16px 0;
   background-color: #fff;
   border-top: 1px solid #e6e6e6;
+}
+
+.footer__inner {
+  display: grid;
+  gap: 2px;
+  justify-items: center;
+  text-align: center;
+  color: inherit;
+}
+
+.footer__meta {
+  display: grid;
+  gap: 1px;
+}
+
+.footer__text {
+  margin: 0;
+  font-size: 0.68rem;
+  color: rgba(13, 15, 20, 0.58);
+  line-height: 1.25;
+}
+
+.footer__contact {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+  font-size: 0.66rem;
+  color: rgba(13, 15, 20, 0.5);
+  line-height: 1.25;
+}
+
+.footer__contact-item + .footer__contact-item::before {
+  content: '•';
+  margin: 0 6px;
+  color: rgba(13, 15, 20, 0.3);
+}
+
+.footer__link {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.footer__link:hover,
+.footer__link:focus {
+  border-bottom-color: currentColor;
+}
+
+body.theme-dark .footer__inner {
+  color: rgba(244, 243, 255, 0.82);
+}
+
+body.theme-dark .footer__text {
+  color: rgba(226, 232, 240, 0.64);
+}
+
+body.theme-dark .footer__contact-item {
+  color: rgba(199, 196, 255, 0.82);
+}
+
+body.theme-dark .footer__contact-item + .footer__contact-item::before {
+  color: rgba(148, 163, 184, 0.45);
+}
+
+body.theme-dark .footer__link {
+  color: rgba(199, 196, 255, 0.9);
+}
+
+@media (max-width: 600px) {
+  .footer__contact {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .footer__contact-item + .footer__contact-item::before {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .footer__inner {
+    align-items: center;
+    text-align: center;
+  }
+
+  .footer__contact {
+    justify-content: center;
+  }
 }
 
 body.theme-dark .footer {
   background-color: rgba(5, 7, 14, 0.95);
   border-top-color: rgba(255, 255, 255, 0.12);
   color: rgba(244, 243, 255, 0.82);
-}
-
-body.theme-dark .footer a {
-  color: rgba(199, 196, 255, 0.85);
 }
 
 /* Base typography and colors */

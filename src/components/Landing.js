@@ -76,7 +76,7 @@ export const Landing = () => {
               <TextType
                 as="h1"
                 className="hero-typer"
-                text={'GAMEPLAY ECONOMY\nTrade and manage game items securely\nwith real-time feedback.'}
+                text={'GAMEPLAYECONOMY\nTrade and manage game items securely\nwith real-time feedback.'}
                 loop={false}
                 typingSpeed={54}
                 pauseDuration={900}

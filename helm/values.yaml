@@ -18,6 +18,9 @@ configValues:
   TRADING_SERVICE_URL: ${window.location.origin}/trading-svc
   PURCHASE_API_URL: ${window.location.origin}/trading-svc/purchase
   STORE_API_URL: ${window.location.origin}/trading-svc/store
+  PROMETHEUS_URL: ${window.location.origin}/prometheus/
+  JAEGER_URL: ${window.location.origin}/jaeger/
+  GRAFANA_URL: ${window.location.origin}/grafana/
 
 podAnnotations: {}
 

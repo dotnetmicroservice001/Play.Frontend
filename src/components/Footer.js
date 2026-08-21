@@ -4,13 +4,25 @@ export const Footer = () => {
   const year = new Date().getFullYear();
   return (
     <footer className="footer border-top text-muted">
-      <div className="container py-3 text-center small">
-        <div>© {year} GamePlay Economy. All rights reserved.</div>
-        <div>This website is a personal portfolio created for educational purposes.</div>
-        <div>
-          Contact: <a href="mailto:snehabasnet224@gmail.com">snehabasnet224@gmail.com</a>
-          {' '}| LinkedIn: <a href="https://www.linkedin.com/in/snehabasnet" target="_blank" rel="noreferrer">linkedin.com/in/snehabasnet</a>
-          {' '}| GitHub: <a href="https://github.com/basnets24" target="_blank" rel="noreferrer">github.com/basnets24</a>
+      <div className="container footer__inner small" aria-label="Site footer">
+        <div className="footer__meta">
+          <p className="footer__text">© {year} GamePlayEconomy. All rights reserved.</p>
+          <p className="footer__text">This website is a personal portfolio created for educational purposes.</p>
+          <ul className="footer__contact">
+            <li className="footer__contact-item">
+              <a className="footer__link" href="mailto:snehabasnet224@gmail.com">snehabasnet224@gmail.com</a>
+            </li>
+            <li className="footer__contact-item">
+              <a className="footer__link" href="https://www.linkedin.com/in/snehabasnet" target="_blank" rel="noreferrer">
+                linkedin.com/in/snehabasnet
+              </a>
+            </li>
+            <li className="footer__contact-item">
+              <a className="footer__link" href="https://github.com/basnets24" target="_blank" rel="noreferrer">
+                github.com/basnets24
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
     </footer>

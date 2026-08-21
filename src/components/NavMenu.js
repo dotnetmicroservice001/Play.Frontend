@@ -36,7 +36,7 @@ export class NavMenu extends Component
 
   async populateState()
   {
-    const [isAuthenticated, user] = await Promise.all([authService.isAuthenticated(), authService.getUser()])
+    const [isAuthenticated, user] = await Promise.all([authService.isAuthenticated(), authService.getUser()]);
     this.setState({
       isAuthenticated,
       userName: user && user.name,
@@ -54,12 +54,15 @@ export class NavMenu extends Component
         <Navbar
           bg={navbarVariant}
           variant={navbarVariant}
-          expand="lg"
+          expand
           sticky="top"
           className={`navmenu navmenu--${theme}`}
         >
           <Container>
-            <Navbar.Brand as={Link} to="/"><i className="bi bi-controller mr-2" aria-hidden="true"></i>GamePlay Economy</Navbar.Brand>
+            <Navbar.Brand as={Link} to="/">
+              <i className="bi bi-controller mr-2" aria-hidden="true"></i>
+              GamePlayEconomy
+            </Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav" className="navmenu__collapse">
               {this.checkAuthAndRenderMenuItems()}
@@ -75,29 +78,23 @@ export class NavMenu extends Component
     if (!this.state.isAuthenticated)
     {
       return this.anonymousView();
-    } else
-    {
-      return this.authenticatedView();
     }
+
+    return this.authenticatedView();
   }
 
   anonymousView()
   {
     const toggle = this.themeToggle();
-    const loginPath = `${AuthorizationPaths.Login}`;
-    const primaryLinks = this.renderPrimaryLinks(['home']);
+    const primaryLinks = this.renderPrimaryLinks(['login']);
+
     return (
       <Fragment>
-        <Nav className="navmenu__primary">
+        <Nav className="navmenu__primary navmenu__primary--inline">
           {primaryLinks}
         </Nav>
         <Nav className="navmenu__secondary">
           {toggle}
-          {this.devToolsDropdown()}
-          <Nav.Link as={Link} to={loginPath}>
-            <i className="bi bi-box-arrow-in-right mr-1" aria-hidden="true"></i>
-            Login
-          </Nav.Link>
         </Nav>
       </Fragment>
     );
@@ -105,7 +102,7 @@ export class NavMenu extends Component
 
   authenticatedView()
   {
-    if (this.state.role === "Admin")
+    if (this.state.role === 'Admin')
     {
       return (
         <Fragment>
@@ -121,7 +118,8 @@ export class NavMenu extends Component
         </Fragment>
       );
     }
-    else if (this.state.role === "Player")
+
+    if (this.state.role === 'Player')
     {
       return (
         <Fragment>
@@ -136,21 +134,19 @@ export class NavMenu extends Component
         </Fragment>
       );
     }
-    else
-    {
-      return (
-        <Fragment>
-          <Nav className="navmenu__primary">
-            {this.renderPrimaryLinks(['home'])}
-          </Nav>
-          <Nav className="navmenu__secondary">
-            {this.themeToggle()}
-            {this.devToolsDropdown()}
-            {this.profileAndLogoutItems()}
-          </Nav>
-        </Fragment>
-      );
-    }
+
+    return (
+      <Fragment>
+        <Nav className="navmenu__primary">
+          {this.renderPrimaryLinks(['home'])}
+        </Nav>
+        <Nav className="navmenu__secondary">
+          {this.themeToggle()}
+          {this.devToolsDropdown()}
+          {this.profileAndLogoutItems()}
+        </Nav>
+      </Fragment>
+    );
   }
 
   themeToggle()
@@ -178,42 +174,11 @@ export class NavMenu extends Component
 
   devToolsDropdown()
   {
-    const baseLink = typeof window !== 'undefined' ? window.location.origin : '';
     const { theme } = this.context;
     const isDark = theme === 'dark';
     const dropdownClassName = `navmenu__dropdown${isDark ? ' navmenu__dropdown--dark' : ''}`;
 
     const developerLinks = [
-      window.RABBITMQ_URL && {
-        href: window.RABBITMQ_URL,
-        label: 'RabbitMQ(dev)',
-        icon: 'bi bi-infinity'
-      },
-      window.CATALOG_SERVICE_URL && {
-        href: `${window.CATALOG_SERVICE_URL}/swagger`,
-        label: 'Catalog Swagger',
-        icon: 'bi bi-journal-code'
-      },
-      window.INVENTORY_SERVICE_URL && {
-        href: `${window.INVENTORY_SERVICE_URL}/swagger`,
-        label: 'Inventory Swagger',
-        icon: 'bi bi-journal-code'
-      },
-      window.IDENTITY_SERVICE_URL && {
-        href: `${window.IDENTITY_SERVICE_URL}/swagger`,
-        label: 'Identity Swagger',
-        icon: 'bi bi-journal-code'
-      },
-      window.TRADING_SERVICE_URL && {
-        href: `${window.TRADING_SERVICE_URL}/swagger`,
-        label: 'Trading Swagger',
-        icon: 'bi bi-journal-code'
-      },
-      window.SEQ_URL && {
-        href: window.SEQ_URL,
-        label: 'Seq logs',
-        icon: 'bi bi-clipboard-data'
-      },
       window.PROMETHEUS_URL && {
         href: window.PROMETHEUS_URL,
         label: 'Prometheus',
@@ -224,20 +189,10 @@ export class NavMenu extends Component
         label: 'Jaeger traces',
         icon: 'bi bi-diagram-3'
       },
-      baseLink && {
-        href: `${baseLink}/seq/`,
-        label: 'Seq',
-        icon: 'bi bi-clipboard-data'
-      },
-      baseLink && {
-        href: `${baseLink}/jaeger/`,
-        label: 'Jaeger',
-        icon: 'bi bi-diagram-3'
-      },
-      baseLink && {
-        href: `${baseLink}/prometheus/`,
-        label: 'Prometheus',
-        icon: 'bi bi-activity'
+      window.GRAFANA_URL && {
+        href: window.GRAFANA_URL,
+        label: 'Grafana',
+        icon: 'bi bi-bar-chart-line'
       }
     ].filter(Boolean);
 
@@ -285,6 +240,7 @@ export class NavMenu extends Component
     const homeDestination = this.state.isAuthenticated ? ApplicationPaths.HomePath : '/';
     const linkMap = {
       home: { to: homeDestination, icon: 'bi-house', label: 'Home' },
+      login: { to: AuthorizationPaths.Login, icon: 'bi-box-arrow-in-right', label: 'Login' },
       caseStudy: { to: { pathname: '/', hash: '#case-study' }, icon: 'bi-journal-richtext', label: 'Case Study' },
       store: { to: ApplicationPaths.StorePath, icon: 'bi-bag', label: 'Store' },
       inventory: { to: ApplicationPaths.InventoryPath, icon: 'bi-box-seam', label: 'Inventory' }
@@ -363,3 +319,5 @@ export class NavMenu extends Component
     );
   }
 }
+
+export default NavMenu;
