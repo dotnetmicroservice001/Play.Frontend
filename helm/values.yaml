@@ -33,10 +33,10 @@ strategy:
 
 resources:
   requests:
-    memory: "70Mi"
+    memory: "50Mi"
     cpu: "10m"
   limits:
-    memory: "128Mi"
+    memory: "90Mi"
     cpu: "150m"
 
 autoscaling:
