@@ -4,13 +4,11 @@ import { Link } from 'react-router-dom';
 import authService from './api-authorization/AuthorizeService';
 import { AuthorizationPaths } from './api-authorization/ApiAuthorizationConstants';
 import { ApplicationPaths } from './Constants';
-import { ThemeContext } from '../context/ThemeContext';
 import '../styles/navmenu.css';
 
 export class NavMenu extends Component
 {
   static displayName = NavMenu.name;
-  static contextType = ThemeContext;
 
   constructor(props)
   {
@@ -46,17 +44,14 @@ export class NavMenu extends Component
 
   render()
   {
-    const { theme } = this.context;
-    const navbarVariant = theme === 'dark' ? 'dark' : 'light';
-
     return (
       <header>
         <Navbar
-          bg={navbarVariant}
-          variant={navbarVariant}
+          bg="light"
+          variant="light"
           expand
           sticky="top"
-          className={`navmenu navmenu--${theme}`}
+          className="navmenu"
         >
           <Container>
             <Navbar.Brand as={Link} to="/">
@@ -85,16 +80,12 @@ export class NavMenu extends Component
 
   anonymousView()
   {
-    const toggle = this.themeToggle();
     const primaryLinks = this.renderPrimaryLinks(['login']);
 
     return (
       <Fragment>
         <Nav className="navmenu__primary navmenu__primary--inline">
           {primaryLinks}
-        </Nav>
-        <Nav className="navmenu__secondary">
-          {toggle}
         </Nav>
       </Fragment>
     );
@@ -111,7 +102,6 @@ export class NavMenu extends Component
             {this.manageDropdown()}
           </Nav>
           <Nav className="navmenu__secondary">
-            {this.themeToggle()}
             {this.devToolsDropdown()}
             {this.profileAndLogoutItems()}
           </Nav>
@@ -127,7 +117,6 @@ export class NavMenu extends Component
             {this.renderPrimaryLinks(['home', 'store', 'inventory'])}
           </Nav>
           <Nav className="navmenu__secondary">
-            {this.themeToggle()}
             {this.devToolsDropdown()}
             {this.profileAndLogoutItems()}
           </Nav>
@@ -141,7 +130,6 @@ export class NavMenu extends Component
           {this.renderPrimaryLinks(['home'])}
         </Nav>
         <Nav className="navmenu__secondary">
-          {this.themeToggle()}
           {this.devToolsDropdown()}
           {this.profileAndLogoutItems()}
         </Nav>
@@ -149,35 +137,8 @@ export class NavMenu extends Component
     );
   }
 
-  themeToggle()
-  {
-    const { theme, toggleTheme } = this.context;
-    const isDark = theme === 'dark';
-    const label = `Switch to ${isDark ? 'light' : 'dark'} mode`;
-
-    return (
-      <Nav.Link
-        as="button"
-        type="button"
-        className="theme-toggle"
-        onClick={toggleTheme}
-        aria-label={label}
-      >
-        <span className="theme-toggle__track" aria-hidden="true">
-          <span className="theme-toggle__thumb" data-theme={theme}>
-            <i className={`bi ${isDark ? 'bi-moon-stars' : 'bi-sun'}`} aria-hidden="true"></i>
-          </span>
-        </span>
-      </Nav.Link>
-    );
-  }
-
   devToolsDropdown()
   {
-    const { theme } = this.context;
-    const isDark = theme === 'dark';
-    const dropdownClassName = `navmenu__dropdown${isDark ? ' navmenu__dropdown--dark' : ''}`;
-
     const developerLinks = [
       window.PROMETHEUS_URL && {
         href: window.PROMETHEUS_URL,
@@ -218,7 +179,7 @@ export class NavMenu extends Component
         title={<span><i className="bi bi-tools mr-1" aria-hidden="true"></i>Dev Tools</span>}
         id="dev-tools-dropdown"
         alignRight
-        className={dropdownClassName}
+        className="navmenu__dropdown"
       >
         {uniqueLinks.map((link) => (
           <NavDropdown.Item
@@ -264,15 +225,11 @@ export class NavMenu extends Component
       return null;
     }
 
-    const { theme } = this.context;
-    const isDark = theme === 'dark';
-    const dropdownClassName = `navmenu__manage navmenu__dropdown${isDark ? ' navmenu__dropdown--dark' : ''}`;
-
     return (
       <NavDropdown
         title={<span><i className="bi bi-gear mr-1" aria-hidden="true"></i>Manage</span>}
         id="manage-dropdown"
-        className={dropdownClassName}
+        className="navmenu__manage navmenu__dropdown"
       >
         <NavDropdown.Item as={Link} to={ApplicationPaths.CatalogPath}>
           <i className="bi bi-grid mr-2" aria-hidden="true"></i>
@@ -289,9 +246,6 @@ export class NavMenu extends Component
   profileAndLogoutItems()
   {
     const logoutPath = { pathname: `${AuthorizationPaths.LogOut}`, state: { local: true } };
-    const { theme } = this.context;
-    const isDark = theme === 'dark';
-    const dropdownClassName = `navmenu__profile-dropdown navmenu__dropdown${isDark ? ' navmenu__dropdown--dark' : ''}`;
     return (
       <Fragment>
         <NavDropdown
@@ -303,8 +257,7 @@ export class NavMenu extends Component
           }
           id="profile-dropdown"
           alignRight
-          className={dropdownClassName}
-          menuVariant={isDark ? 'dark' : undefined}
+          className="navmenu__profile-dropdown navmenu__dropdown"
         >
           <NavDropdown.Item
             as={Link}
