@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { quests } from '../data/quests';
 import { QuestBadge } from './QuestBadge';
-import '../styles/quest-timeline.css';
 
 export const QuestTimeline = () => {
   const itemRefs = useRef([]);

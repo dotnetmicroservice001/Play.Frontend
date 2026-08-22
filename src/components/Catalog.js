@@ -4,8 +4,6 @@ import ItemModal from './form/ItemModal';
 import GrantItemModal from './form/GrantItemModal';
 import authService from './api-authorization/AuthorizeService';
 
-import '../styles/catalog.css';
-
 const initialState = {
   items: [],
   loading: true,
@@ -91,7 +89,7 @@ export const Catalog = () => {
   const renderTable = () => {
     if (items.length === 0) {
       return (
-        <div className="catalog-empty">
+        <div className="data-empty">
           <h3>No catalog items yet</h3>
           <p>Add an item to make it available in the store.</p>
         </div>
@@ -99,14 +97,14 @@ export const Catalog = () => {
     }
 
     return (
-      <div className="catalog-table-wrapper">
-        <table className="catalog-table" aria-label="Catalog items">
+      <div className="data-table-wrapper">
+        <table className="data-table" aria-label="Catalog items">
           <thead>
             <tr>
               <th scope="col">Item</th>
               <th scope="col">Description</th>
               <th scope="col">Price</th>
-              <th scope="col" className="catalog-table__actions">Actions</th>
+              <th scope="col" className="data-table__actions">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -115,8 +113,8 @@ export const Catalog = () => {
                 <td data-title="Item">{item.name}</td>
                 <td data-title="Description">{item.description}</td>
                 <td data-title="Price">{item.price}</td>
-                <td data-title="Actions" className="catalog-table__actions">
-                  <div className="catalog-table__action-group">
+                <td data-title="Actions" className="data-table__actions">
+                  <div className="data-table__action-group">
                     <ItemModal
                       isNew={false}
                       item={item}
@@ -139,37 +137,37 @@ export const Catalog = () => {
   };
 
   return (
-    <div className="catalog">
-      <section className="catalog__header">
+    <div className="data-page">
+      <section className="data-page__header">
         <div>
-          <p className="catalog__eyebrow">Catalog</p>
-          <h1 className="catalog__title">Manage store catalog</h1>
-          <p className="catalog__subtitle">
+          <p className="data-page__eyebrow">Catalog</p>
+          <h1 className="data-page__title">Manage store catalog</h1>
+          <p className="data-page__subtitle">
             Edit items, grant loot to players, and keep the store aligned with the latest drops.
           </p>
         </div>
         <ItemModal isNew addItemToState={addItemToState} updateItemIntoState={refreshItems} />
       </section>
 
-      <section className="catalog__stats">
-        <div className="catalog__stat">
-          <span className="catalog__stat-label">Items listed</span>
-          <span className="catalog__stat-value">{stats.totalItems}</span>
+      <section className="data-page__stats">
+        <div className="data-page__stat">
+          <span className="data-page__stat-label">Items listed</span>
+          <span className="data-page__stat-value">{stats.totalItems}</span>
         </div>
-        <div className="catalog__stat">
-          <span className="catalog__stat-label">Highest price</span>
-          <span className="catalog__stat-value">{stats.highestPrice}</span>
+        <div className="data-page__stat">
+          <span className="data-page__stat-label">Highest price</span>
+          <span className="data-page__stat-value">{stats.highestPrice}</span>
         </div>
-        <div className="catalog__stat">
-          <span className="catalog__stat-label">Average price</span>
-          <span className="catalog__stat-value">{stats.averagePrice}</span>
+        <div className="data-page__stat">
+          <span className="data-page__stat-label">Average price</span>
+          <span className="data-page__stat-value">{stats.averagePrice}</span>
         </div>
       </section>
 
-      <section className="catalog__content">
+      <section className="data-page__content">
         {loading && (
-          <div className="catalog__loading" role="status" aria-live="polite">
-            <span className="catalog__spinner" aria-hidden="true"></span>
+          <div className="data-page__loading" role="status" aria-live="polite">
+            <span className="data-page__spinner" aria-hidden="true"></span>
             Loading items…
           </div>
         )}
@@ -177,7 +175,7 @@ export const Catalog = () => {
         {!loading && loadedSuccess && renderTable()}
 
         {!loading && !loadedSuccess && (
-          <div className="catalog-empty">
+          <div className="data-empty">
             <h3>Could not load items</h3>
             <p>Please try again in a few moments.</p>
           </div>

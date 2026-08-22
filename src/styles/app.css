@@ -2,18 +2,20 @@ html, body, #root {
   height: 100%;
 }
 
-/* Theme variables */
-:root {
-  --color-bg: #ffffff;
-  --color-fg: #111111;
-  --color-border: #e6e6e6;
-  --color-border-strong: #cccccc;
-  --color-black: #000000;
-  --color-white: #ffffff;
-  --color-surface: #ffffff;
-  --color-surface-muted: rgba(248, 249, 255, 0.96);
-  --color-shadow-soft: rgba(15, 23, 42, 0.12);
-  --color-shadow-strong: rgba(15, 23, 42, 0.18);
+body {
+  margin: 0;
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
 }
 
 .app-wrapper {
@@ -79,7 +81,7 @@ html, body, #root {
 .footer__text {
   margin: 0;
   font-size: 0.68rem;
-  color: rgba(13, 15, 20, 0.58);
+  color: rgba(var(--ink-rgb), 0.58);
   line-height: 1.25;
 }
 
@@ -92,14 +94,14 @@ html, body, #root {
   gap: 4px;
   justify-content: center;
   font-size: 0.66rem;
-  color: rgba(13, 15, 20, 0.5);
+  color: rgba(var(--ink-rgb), 0.5);
   line-height: 1.25;
 }
 
 .footer__contact-item + .footer__contact-item::before {
   content: '•';
   margin: 0 6px;
-  color: rgba(13, 15, 20, 0.3);
+  color: rgba(var(--ink-rgb), 0.3);
 }
 
 .footer__link {
@@ -134,12 +136,8 @@ html, body, #root {
     justify-content: center;
   }
 }
-/* Base typography and colors */
-body {
-  background-color: var(--color-bg);
-  color: var(--color-fg);
-}
 
+/* Links */
 a {
   color: var(--color-fg);
   text-decoration: none;

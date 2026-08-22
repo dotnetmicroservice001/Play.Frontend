@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import authService from './api-authorization/AuthorizeService';
 import { ApplicationPaths } from './Constants';
 
-import '../styles/home.css';
 
 export const Home = () => {
   const [userState, setUserState] = useState({

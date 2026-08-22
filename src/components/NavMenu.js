@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import authService from './api-authorization/AuthorizeService';
 import { AuthorizationPaths } from './api-authorization/ApiAuthorizationConstants';
 import { ApplicationPaths } from './Constants';
-import '../styles/navmenu.css';
 
 export class NavMenu extends Component
 {

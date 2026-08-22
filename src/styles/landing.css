@@ -2,16 +2,11 @@
 
 :root {
   --landing-base: #f9fbff;
-  --landing-ink: #0d0f14;
-  --landing-accent: #4c1d95;
-  --landing-accent-hover: #4338ca;
-  --landing-accent-active: #312e81;
-  --landing-accent-tint: rgba(76, 29, 149, 0.12);
   --landing-grid-light: rgba(76, 29, 149, 0.1);
 }
 
 .landing-page {
-  color: var(--landing-ink);
+  color: var(--ink);
   overflow-x: hidden;
   font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
   line-height: 1.65;
@@ -99,7 +94,7 @@
   border-radius: 28px;
   padding: clamp(20px, 3.5vw, 32px);
   box-shadow: 0 28px 48px rgba(15, 23, 42, 0.12);
-  color: var(--landing-ink);
+  color: var(--ink);
   margin: 0 auto;
 }
 
@@ -125,7 +120,7 @@
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: rgba(13, 15, 20, 0.6);
+  color: rgba(var(--ink-rgb), 0.6);
   margin-bottom: 16px;
   font-family: 'Space Grotesk', sans-serif;
   font-weight: 600;
@@ -137,7 +132,7 @@
   line-height: 1.25;
   margin-bottom: 20px;
   font-weight: 600;
-  color: var(--landing-ink);
+  color: var(--ink);
   text-transform: none;
   text-shadow: none;
 }
@@ -145,7 +140,7 @@
 .landing-hero__subtitle {
   font-size: 1.05rem;
   margin-bottom: 32px;
-  color: rgba(13, 15, 20, 0.72);
+  color: rgba(var(--ink-rgb), 0.72);
 }
 
 .landing-hero__cta-row {
@@ -161,9 +156,9 @@
   gap: 8px;
   padding: 10px 20px;
   border-radius: 999px;
-  border: 1px solid rgba(13, 15, 20, 0.2);
+  border: 1px solid rgba(var(--ink-rgb), 0.2);
   background: rgba(255, 255, 255, 0.88);
-  color: rgba(13, 15, 20, 0.9);
+  color: rgba(var(--ink-rgb), 0.9);
   font-family: 'Space Grotesk', sans-serif;
   font-weight: 600;
   text-transform: uppercase;
@@ -182,8 +177,8 @@
   transform: translateY(-1px);
   background: rgba(76, 29, 149, 0.12);
   border-color: rgba(76, 29, 149, 0.35);
-  color: rgba(13, 15, 20, 0.95);
-  box-shadow: 0 12px 28px rgba(13, 15, 20, 0.16);
+  color: rgba(var(--ink-rgb), 0.95);
+  box-shadow: 0 12px 28px rgba(var(--ink-rgb), 0.16);
 }
 
 .hero-cta:focus {
@@ -225,7 +220,7 @@
 .outcomes__subtitle {
   margin: 0 auto;
   max-width: 640px;
-  color: rgba(13, 15, 20, 0.68);
+  color: rgba(var(--ink-rgb), 0.68);
   font-size: 1rem;
 }
 
@@ -241,7 +236,7 @@
   align-items: flex-start;
   gap: 18px;
   background: rgba(255, 255, 255, 0.98);
-  border: 1px solid rgba(13, 15, 20, 0.08);
+  border: 1px solid rgba(var(--ink-rgb), 0.08);
   border-radius: 24px;
   padding: 26px 24px;
   box-shadow: 0 18px 34px rgba(15, 23, 42, 0.09);
@@ -304,7 +299,7 @@
 
 .outcomes__card-body {
   margin: 0;
-  color: rgba(13, 15, 20, 0.72);
+  color: rgba(var(--ink-rgb), 0.72);
   font-size: 0.98rem;
   line-height: 1.6;
 }
@@ -334,7 +329,7 @@
   position: relative;
   width: 100%;
   min-height: 320px;
-  border: 1px solid rgba(13, 15, 20, 0.1);
+  border: 1px solid rgba(var(--ink-rgb), 0.1);
   background: linear-gradient(135deg, rgba(248, 248, 255, 0.95), rgba(237, 239, 255, 0.85))
     , linear-gradient(90deg, rgba(76, 29, 149, 0.05) 1px, transparent 1px)
     , linear-gradient(rgba(76, 29, 149, 0.05) 1px, transparent 1px);
@@ -364,13 +359,13 @@
   letter-spacing: 0.05em;
   text-transform: uppercase;
   gap: 12px;
-  color: var(--landing-ink);
+  color: var(--ink);
 }
 
 .trade-ticker {
   margin: 24px auto 0;
-  border-top: 1px solid rgba(13, 15, 20, 0.08);
-  border-bottom: 1px solid rgba(13, 15, 20, 0.08);
+  border-top: 1px solid rgba(var(--ink-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--ink-rgb), 0.08);
   background: linear-gradient(90deg, rgba(76, 29, 149, 0.08), transparent 60%);
   overflow: hidden;
   position: relative;
@@ -387,7 +382,7 @@
   padding: 12px 0;
   font-family: 'Space Grotesk', sans-serif;
   font-weight: 600;
-  color: rgba(13, 15, 20, 0.62);
+  color: rgba(var(--ink-rgb), 0.62);
 }
 
 .trade-ticker__item {
@@ -399,7 +394,7 @@
 .trade-ticker__item::before {
   content: '◆';
   margin-right: 12px;
-  color: var(--landing-accent);
+  color: var(--accent);
 }
 
 @keyframes ticker-scroll {
@@ -490,7 +485,7 @@
 .architecture-map__overlay-btn.is-active,
 .architecture-map__overlay-btn:hover {
   border-color: rgba(76, 29, 149, 0.45);
-  color: var(--landing-accent);
+  color: var(--accent);
   box-shadow: 0 12px 24px rgba(76, 29, 149, 0.18);
 }
 
@@ -540,11 +535,11 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-  border-left: 3px solid var(--landing-accent);
+  border-left: 3px solid var(--accent);
   background: rgba(248, 249, 255, 0.94);
   border-radius: 16px;
   box-shadow: 0 16px 32px rgba(15, 23, 42, 0.12);
-  color: var(--landing-ink);
+  color: var(--ink);
 }
 
 .architecture-map__box--edge::before,
@@ -557,7 +552,7 @@
   left: calc(100% + 14px);
   width: clamp(28px, 5vw, 60px);
   height: 2px;
-  background: linear-gradient(90deg, rgba(13, 15, 20, 0.3), rgba(13, 15, 20, 0.08));
+  background: linear-gradient(90deg, rgba(var(--ink-rgb), 0.3), rgba(var(--ink-rgb), 0.08));
   transform: translateY(-50%);
   border-radius: 999px;
   pointer-events: none;
@@ -583,7 +578,7 @@
   position: absolute;
   left: 0;
   bottom: calc(100% + 10px);
-  background: rgba(13, 15, 20, 0.92);
+  background: rgba(var(--ink-rgb), 0.92);
   color: #ffffff;
   font-size: 0.75rem;
   padding: 8px 10px;
@@ -636,7 +631,7 @@
   border: 1px solid #e6e8ee;
   background: #ffffff;
   box-shadow: 0 20px 32px rgba(15, 23, 42, 0.1);
-  color: var(--landing-ink);
+  color: var(--ink);
 }
 
 .architecture-map__service-header {
@@ -651,12 +646,12 @@
   letter-spacing: 0.05em;
   font-weight: 600;
   text-transform: uppercase;
-  color: var(--landing-ink);
+  color: var(--ink);
 }
 
 .architecture-map__lane-subtitle {
   font-size: 0.85rem;
-  color: rgba(13, 15, 20, 0.65);
+  color: rgba(var(--ink-rgb), 0.65);
 }
 
 .architecture-map__lane-connector {
@@ -737,7 +732,7 @@
   letter-spacing: 0.05em;
   font-family: 'Space Grotesk', sans-serif;
   box-shadow: 0 12px 22px rgba(76, 29, 149, 0.15);
-  color: var(--landing-accent);
+  color: var(--accent);
 }
 
 .architecture-map__ops {
@@ -759,7 +754,7 @@
   text-transform: uppercase;
   font-family: 'Space Grotesk', sans-serif;
   font-weight: 600;
-  color: var(--landing-ink);
+  color: var(--ink);
 }
 
 .architecture-map__ribbon {
@@ -796,7 +791,7 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: var(--landing-accent);
+  background: var(--accent);
   color: #fff;
   display: inline-flex;
   align-items: center;
@@ -931,8 +926,8 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  border-bottom: 1px solid rgba(13, 15, 20, 0.08);
-  color: var(--landing-ink);
+  border-bottom: 1px solid rgba(var(--ink-rgb), 0.08);
+  color: var(--ink);
   background: transparent;
 }
 
@@ -1028,7 +1023,7 @@
 
 .case-study-modal .modal-header,
 .case-study-modal .modal-footer {
-  border-color: rgba(13, 15, 20, 0.1);
+  border-color: rgba(var(--ink-rgb), 0.1);
   padding: 1.25rem 1.75rem;
 }
 
@@ -1071,7 +1066,7 @@
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.18em;
-  color: rgba(13, 15, 20, 0.6);
+  color: rgba(var(--ink-rgb), 0.6);
 }
 
 .case-study-sheet__section {
@@ -1085,13 +1080,13 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   font-family: 'Space Grotesk', sans-serif;
-  color: rgba(13, 15, 20, 0.72);
+  color: rgba(var(--ink-rgb), 0.72);
 }
 
 .case-study-sheet__section p {
   margin: 0;
   font-size: 0.95rem;
-  color: rgba(13, 15, 20, 0.72);
+  color: rgba(var(--ink-rgb), 0.72);
   line-height: 1.6;
 }
 
@@ -1101,7 +1096,7 @@
   display: grid;
   gap: 6px;
   font-size: 0.95rem;
-  color: rgba(13, 15, 20, 0.72);
+  color: rgba(var(--ink-rgb), 0.72);
 }
 
 .case-study-walkthrough {
@@ -1145,7 +1140,7 @@
 .case-study-walkthrough__content {
   display: grid;
   gap: 4px;
-  color: rgba(13, 15, 20, 0.78);
+  color: rgba(var(--ink-rgb), 0.78);
 }
 
 .case-study-walkthrough__title {
@@ -1176,7 +1171,7 @@
   border: none;
   background: none;
   padding: 0;
-  color: var(--landing-accent);
+  color: var(--accent);
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1196,7 +1191,7 @@
 }
 
 .case-study-sheet__quick-links a {
-  color: var(--landing-accent);
+  color: var(--accent);
   text-decoration: none;
   border-bottom: 1px solid transparent;
   transition: border-color 0.2s ease;
@@ -1214,7 +1209,7 @@
 }
 
 .case-study-sheet__dismiss {
-  border: 1px solid rgba(13, 15, 20, 0.2);
+  border: 1px solid rgba(var(--ink-rgb), 0.2);
   background: transparent;
   border-radius: 999px;
   padding: 10px 20px;
@@ -1222,7 +1217,7 @@
   text-transform: uppercase;
   letter-spacing: 0.1em;
   font-weight: 600;
-  color: rgba(13, 15, 20, 0.8);
+  color: rgba(var(--ink-rgb), 0.8);
   cursor: pointer;
   transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -1232,8 +1227,8 @@
   transform: translateY(-1px);
   background: rgba(76, 29, 149, 0.12);
   border-color: rgba(76, 29, 149, 0.32);
-  color: rgba(13, 15, 20, 0.88);
-  box-shadow: 0 10px 20px rgba(13, 15, 20, 0.18);
+  color: rgba(var(--ink-rgb), 0.88);
+  box-shadow: 0 10px 20px rgba(var(--ink-rgb), 0.18);
   outline: none;
 }
 
@@ -1328,7 +1323,7 @@
  *
  * The following styles integrate the tech stack cards into your landing
  * page.  They leverage your existing CSS custom properties
- * (e.g. --landing-accent) so the section harmonises with the rest of
+ * (e.g. --accent) so the section harmonises with the rest of
  * your design without overriding global definitions.
  */
 
@@ -1344,7 +1339,7 @@
  * border and shadow. */
 .tech-stack-section .card {
   background: rgba(255, 255, 255, 0.98);
-  border: 1px solid rgba(13, 15, 20, 0.08);
+  border: 1px solid rgba(var(--ink-rgb), 0.08);
   border-radius: 1.25rem; /* 20px */
   box-shadow: 0 20px 36px rgba(15, 23, 42, 0.08);
 }
@@ -1354,7 +1349,7 @@
 .techstack-header {
   display: flex;
   align-items: center;
-  background: var(--landing-accent-tint);
+  background: var(--accent-tint);
   border-bottom: none;
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
@@ -1365,13 +1360,13 @@
 .techstack-header__bar {
   width: 6px;
   height: 24px;
-  background: var(--landing-accent);
+  background: var(--accent);
   margin-right: 0.75rem;
   border-radius: 4px;
 }
 
 .techstack-header__title {
-  color: var(--landing-accent);
+  color: var(--accent);
   font-size: 0.95rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -1387,14 +1382,14 @@
   padding: 0.45rem 0.8rem;
   border-radius: 999px;
   background: var(--landing-grid-light);
-  border: 1px solid var(--landing-accent-tint);
-  color: var(--landing-ink);
+  border: 1px solid var(--accent-tint);
+  color: var(--ink);
   font-size: 0.85rem;
   font-weight: 500;
 }
 
 .techstack-chip i {
-  color: var(--landing-accent);
+  color: var(--accent);
 }
 
 /* Section heading styles for the tech stack.  Apply consistent
@@ -1404,7 +1399,7 @@
   font-size: 1.3rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--landing-accent);
+  color: var(--accent);
   margin-bottom: 1rem;
 }
 /* Increase spacing between chips on medium and larger screens.  You can

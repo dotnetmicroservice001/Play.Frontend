@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import authService from './api-authorization/AuthorizeService';
 import { ApplicationPaths } from './Constants';
-import '../styles/inventory.css';
 
 const initialState = {
   items: [],
@@ -63,7 +62,7 @@ export const Inventory = () => {
   const renderTable = () => {
     if (!items || items.length === 0) {
       return (
-        <div className="inventory-empty">
+        <div className="data-empty">
           <h3>No items yet</h3>
           <p>Once Trading grants an item, it will appear here with the latest quantity and description.</p>
         </div>
@@ -71,8 +70,8 @@ export const Inventory = () => {
     }
 
     return (
-      <div className="inventory-table-wrapper">
-        <table className="inventory-table" aria-label="Inventory items">
+      <div className="data-table-wrapper">
+        <table className="data-table" aria-label="Inventory items">
           <thead>
             <tr>
               <th scope="col">Item</th>
@@ -95,35 +94,35 @@ export const Inventory = () => {
   };
 
   return (
-    <div className="inventory">
-      <section className="inventory__header">
-        <p className="inventory__eyebrow">Inventory</p>
-        <h1 className="inventory__title">
+    <div className="data-page">
+      <section className="data-page__header">
+        <p className="data-page__eyebrow">Inventory</p>
+        <h1 className="data-page__title">
           {cameFromUsersPage ? `${userContext.username}'s inventory` : 'Your inventory'}
         </h1>
-        <p className="inventory__subtitle">
+        <p className="data-page__subtitle">
           Track everything Trading has granted. Quantities update in real time.
         </p>
-        <div className="inventory__stats">
+        <div className="data-page__stats">
           <span>
-            <strong>{totals.distinctItems}</strong> items 
+            <strong>{totals.distinctItems}</strong> items
           </span>
           <span>
             <strong>{totals.totalQuantity}</strong> total quantity
           </span>
         </div>
-        <div className="inventory__cta-row">
-          <Link className="inventory__cta" to={ApplicationPaths.StorePath}>
+        <div className="data-page__cta-row">
+          <Link className="data-page__cta" to={ApplicationPaths.StorePath}>
             <i className="bi bi-bag" aria-hidden="true"></i>
             Go to store
           </Link>
         </div>
       </section>
 
-      <section className="inventory__content">
+      <section className="data-page__content">
         {loading && (
-          <div className="inventory__loading" role="status" aria-live="polite">
-            <span className="inventory__spinner" aria-hidden="true"></span>
+          <div className="data-page__loading" role="status" aria-live="polite">
+            <span className="data-page__spinner" aria-hidden="true"></span>
             Loading inventory…
           </div>
         )}
@@ -131,7 +130,7 @@ export const Inventory = () => {
         {!loading && loadedSuccess && renderTable()}
 
         {!loading && !loadedSuccess && (
-          <div className="inventory-empty">
+          <div className="data-empty">
             <h3>Could not load items</h3>
             <p>Something went wrong while reaching the inventory service. Try refreshing in a moment.</p>
           </div>

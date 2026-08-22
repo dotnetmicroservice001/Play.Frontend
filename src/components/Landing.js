@@ -5,7 +5,6 @@ import { AuthorizationPaths } from './api-authorization/ApiAuthorizationConstant
 import { QuestTimeline } from './QuestTimeline';
 import { TechStackOverview } from './TechStackOverview';
 import TextType from './TextType';
-import '../styles/landing.css';
 import architectureImage from '../images/architecture.png';
 
 // Cards describing the main user outcomes
