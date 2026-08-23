@@ -30,9 +30,10 @@
   pointer-events: none;
 }
 
-.data-page__header,
-.data-page__stats,
-.data-page__content {
+/* Every direct child (header, stats, content, and any page-specific
+   extras like Inventory's "back to users" button) shares one centered
+   column instead of each needing its own max-width rule. */
+.data-page > * {
   position: relative;
   z-index: 1;
   width: 100%;

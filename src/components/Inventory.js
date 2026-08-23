@@ -104,12 +104,14 @@ export const Inventory = () => {
           Track everything Trading has granted. Quantities update in real time.
         </p>
         <div className="data-page__stats">
-          <span>
-            <strong>{totals.distinctItems}</strong> items
-          </span>
-          <span>
-            <strong>{totals.totalQuantity}</strong> total quantity
-          </span>
+          <div className="data-page__stat">
+            <span className="data-page__stat-label">Items</span>
+            <span className="data-page__stat-value">{totals.distinctItems}</span>
+          </div>
+          <div className="data-page__stat">
+            <span className="data-page__stat-label">Total quantity</span>
+            <span className="data-page__stat-value">{totals.totalQuantity}</span>
+          </div>
         </div>
         <div className="data-page__cta-row">
           <Link className="data-page__cta" to={ApplicationPaths.StorePath}>
@@ -138,9 +140,11 @@ export const Inventory = () => {
       </section>
 
       {cameFromUsersPage && (
-        <button type="button" className="inventory__back" onClick={() => history.goBack()}>
-          ← Back to users
-        </button>
+        <div className="data-page__back-row">
+          <button type="button" className="inventory__back" onClick={() => history.goBack()}>
+            ← Back to users
+          </button>
+        </div>
       )}
     </div>
   );

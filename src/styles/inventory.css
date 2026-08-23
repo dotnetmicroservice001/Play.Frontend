@@ -1,25 +1,32 @@
 /* Inventory-specific overrides on top of the shared .data-page pattern (see shared/data-page.css). */
 
-.data-page__stats strong {
-  font-size: 1.05rem;
-  margin-right: 6px;
-}
-
 .inventory__back {
-  justify-self: start;
-  border: none;
-  background: rgba(var(--ink-rgb), 0.08);
-  color: rgba(var(--ink-rgb), 0.8);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 2px solid var(--ink);
+  background: #ffffff;
+  color: var(--ink);
   padding: 8px 16px;
-  border-radius: 999px;
+  border-radius: 8px;
   font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
+  box-shadow: 3px 3px 0 rgba(var(--purple-600-rgb), 0.9);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
 }
 
-.inventory__back:hover {
-  background: rgba(var(--ink-rgb), 0.14);
-  transform: translateY(-1px);
+.inventory__back:hover,
+.inventory__back:focus {
+  background: rgb(var(--purple-50-rgb));
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 rgba(var(--purple-600-rgb), 0.9);
+  outline: none;
+}
+
+.inventory__back:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 rgba(var(--purple-600-rgb), 0.9);
 }
