@@ -12,6 +12,9 @@ const initialState = {
 
 export const Catalog = () => {
   const [{ items, loading, loadedSuccess }, setState] = useState(initialState);
+  const [search, setSearch] = useState('');
+  const [sortBy, setSortBy] = useState('name');
+  const [justAddedId, setJustAddedId] = useState(null);
 
   const refreshItems = async () => {
     setState((current) => ({ ...current, loading: true }));
@@ -38,12 +41,22 @@ export const Catalog = () => {
     refreshItems();
   }, []);
 
+  useEffect(() => {
+    if (!justAddedId) {
+      return undefined;
+    }
+
+    const timeout = setTimeout(() => setJustAddedId(null), 1800);
+    return () => clearTimeout(timeout);
+  }, [justAddedId]);
+
   const addItemToState = (item) => {
     setState((current) => ({
       items: [...current.items.filter((existing) => existing.id !== item.id), item],
       loading: false,
       loadedSuccess: true,
     }));
+    setJustAddedId(item.id);
   };
 
   const stats = useMemo(() => {
@@ -55,6 +68,18 @@ export const Catalog = () => {
 
     return { totalItems, highestPrice, averagePrice };
   }, [items]);
+
+  const filteredItems = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    const filtered = query ? items.filter((item) => item.name?.toLowerCase().includes(query)) : items;
+
+    return [...filtered].sort((a, b) => {
+      if (sortBy === 'price') {
+        return (b.price ?? 0) - (a.price ?? 0);
+      }
+      return (a.name ?? '').localeCompare(b.name ?? '');
+    });
+  }, [items, search, sortBy]);
 
   const handleDelete = async (id) => {
     const confirmed = window.confirm('Do you really wish to delete it?');
@@ -86,10 +111,11 @@ export const Catalog = () => {
     }
   };
 
-  const renderTable = () => {
+  const renderContent = () => {
     if (items.length === 0) {
       return (
         <div className="data-empty">
+          <i className="bi bi-boxes catalog-empty__icon" aria-hidden="true"></i>
           <h3>No catalog items yet</h3>
           <p>Add an item to make it available in the store.</p>
         </div>
@@ -97,42 +123,84 @@ export const Catalog = () => {
     }
 
     return (
-      <div className="data-table-wrapper">
-        <table className="data-table" aria-label="Catalog items">
-          <thead>
-            <tr>
-              <th scope="col">Item</th>
-              <th scope="col">Description</th>
-              <th scope="col">Price</th>
-              <th scope="col" className="data-table__actions">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((item) => (
-              <tr key={item.id}>
-                <td data-title="Item">{item.name}</td>
-                <td data-title="Description">{item.description}</td>
-                <td data-title="Price">{item.price}</td>
-                <td data-title="Actions" className="data-table__actions">
-                  <div className="data-table__action-group">
-                    <ItemModal
-                      isNew={false}
-                      item={item}
-                      updateItemIntoState={refreshItems}
-                      addItemToState={addItemToState}
-                    />
-                    <GrantItemModal item={item} />
-                    <Button variant="danger" onClick={() => handleDelete(item.id)}>
-                      <i className="bi bi-trash mr-2" aria-hidden="true"></i>
-                      Delete
-                    </Button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <>
+        <div className="catalog-toolbar">
+          <div className="catalog-toolbar__search">
+            <i className="bi bi-search" aria-hidden="true"></i>
+            <input
+              type="text"
+              placeholder="Search catalog…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              aria-label="Search catalog"
+            />
+          </div>
+          <label className="catalog-toolbar__sort">
+            <span>Sort</span>
+            <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+              <option value="name">Name (A–Z)</option>
+              <option value="price">Price (high–low)</option>
+            </select>
+          </label>
+        </div>
+
+        {filteredItems.length === 0 ? (
+          <div className="data-empty">
+            <h3>No matches</h3>
+            <p>No items match “{search}”. Try a different search.</p>
+            <button type="button" className="catalog-clear-search" onClick={() => setSearch('')}>
+              Clear search
+            </button>
+          </div>
+        ) : (
+          <div className="data-table-wrapper">
+            <table className="data-table" aria-label="Catalog items">
+              <thead>
+                <tr>
+                  <th scope="col">Item</th>
+                  <th scope="col">Description</th>
+                  <th scope="col">Price</th>
+                  <th scope="col" className="data-table__actions">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredItems.map((item) => (
+                  <tr key={item.id} className={item.id === justAddedId ? 'catalog-row--new' : undefined}>
+                    <td data-title="Item" className="catalog-table__name">{item.name}</td>
+                    <td data-title="Description" className="catalog-table__description" title={item.description}>
+                      {item.description}
+                    </td>
+                    <td data-title="Price">
+                      <span className="catalog-table__price">{item.price}</span>
+                    </td>
+                    <td data-title="Actions" className="data-table__actions">
+                      <div className="data-table__action-group catalog-table__actions">
+                        <ItemModal
+                          isNew={false}
+                          compact
+                          item={item}
+                          updateItemIntoState={refreshItems}
+                          addItemToState={addItemToState}
+                        />
+                        <GrantItemModal item={item} compact />
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          onClick={() => handleDelete(item.id)}
+                          aria-label={`Delete ${item.name}`}
+                          title="Delete"
+                        >
+                          <i className="bi bi-trash" aria-hidden="true"></i>
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </>
     );
   };
 
@@ -172,7 +240,7 @@ export const Catalog = () => {
           </div>
         )}
 
-        {!loading && loadedSuccess && renderTable()}
+        {!loading && loadedSuccess && renderContent()}
 
         {!loading && !loadedSuccess && (
           <div className="data-empty">

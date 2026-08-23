@@ -160,19 +160,20 @@
   align-items: center;
   gap: 4px;
   padding: 3px 9px;
-  border: 1.5px solid var(--ink);
+  border: 2px solid var(--ink);
   border-radius: 999px;
-  background: rgb(var(--purple-50-rgb));
+  background: var(--accent);
   font-size: 0.68rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: rgba(var(--ink-rgb), 0.65);
+  color: #ffffff;
+  box-shadow: 2px 2px 0 rgba(var(--purple-600-rgb), 0.9);
 }
 
 .store-card__owned i {
   font-size: 0.75rem;
-  color: rgb(var(--purple-400-rgb));
+  color: #ffffff;
 }
 
 .store-detail {

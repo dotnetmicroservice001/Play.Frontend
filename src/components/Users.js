@@ -13,6 +13,7 @@ const initialState = {
 
 export const Users = () => {
   const [{ users, loading, loadedSuccess }, setState] = useState(initialState);
+  const [search, setSearch] = useState('');
 
   const refreshUsers = async () => {
     setState((current) => ({ ...current, loading: true }));
@@ -46,6 +47,11 @@ export const Users = () => {
     return { totalUsers, totalGil, averageGil };
   }, [users]);
 
+  const filteredUsers = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    return query ? users.filter((user) => user.email?.toLowerCase().includes(query)) : users;
+  }, [users, search]);
+
   const handleDelete = async (id) => {
     const confirmed = window.confirm('Do you really wish to delete it?');
     if (!confirmed) {
@@ -76,7 +82,7 @@ export const Users = () => {
     }
   };
 
-  const renderTable = () => {
+  const renderContent = () => {
     if (users.length === 0) {
       return (
         <div className="data-empty">
@@ -87,47 +93,77 @@ export const Users = () => {
     }
 
     return (
-      <div className="data-table-wrapper">
-        <table className="data-table" aria-label="Users">
-          <thead>
-            <tr>
-              <th scope="col">Id</th>
-              <th scope="col">Email</th>
-              <th scope="col">Gil</th>
-              <th scope="col">Inventory</th>
-              <th scope="col" className="data-table__actions">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user) => (
-              <tr key={user.id}>
-                <td data-title="Id">{user.id}</td>
-                <td data-title="Email">{user.email}</td>
-                <td data-title="Gil">{user.gil}</td>
-                <td data-title="Inventory">
-                  <Link
-                    to={{
-                      pathname: '/inventory',
-                      user,
-                    }}
-                  >
-                    <Image src={inventoryLogo} height={35} alt="View inventory" />
-                  </Link>
-                </td>
-                <td data-title="Actions" className="data-table__actions">
-                  <div className="data-table__action-group">
-                    <UserModal user={user} updateUserIntoState={refreshUsers} />
-                    <Button variant="danger" onClick={() => handleDelete(user.id)}>
-                      <i className="bi bi-trash mr-2" aria-hidden="true"></i>
-                      Delete
-                    </Button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <>
+        <div className="users-toolbar">
+          <div className="users-toolbar__search">
+            <i className="bi bi-search" aria-hidden="true"></i>
+            <input
+              type="text"
+              placeholder="Search by email…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              aria-label="Search users"
+            />
+          </div>
+        </div>
+
+        {filteredUsers.length === 0 ? (
+          <div className="data-empty">
+            <h3>No matches</h3>
+            <p>No users match “{search}”. Try a different search.</p>
+            <button type="button" className="users-clear-search" onClick={() => setSearch('')}>
+              Clear search
+            </button>
+          </div>
+        ) : (
+          <div className="data-table-wrapper">
+            <table className="data-table" aria-label="Users">
+              <thead>
+                <tr>
+                  <th scope="col">Id</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Gil</th>
+                  <th scope="col">Inventory</th>
+                  <th scope="col" className="data-table__actions">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredUsers.map((user) => (
+                  <tr key={user.id}>
+                    <td data-title="Id">{user.id}</td>
+                    <td data-title="Email">{user.email}</td>
+                    <td data-title="Gil">{user.gil}</td>
+                    <td data-title="Inventory">
+                      <Link
+                        to={{
+                          pathname: '/inventory',
+                          user,
+                        }}
+                      >
+                        <Image src={inventoryLogo} height={35} alt="View inventory" />
+                      </Link>
+                    </td>
+                    <td data-title="Actions" className="data-table__actions">
+                      <div className="data-table__action-group users-table__actions">
+                        <UserModal user={user} compact updateUserIntoState={refreshUsers} />
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          onClick={() => handleDelete(user.id)}
+                          aria-label={`Delete ${user.email}`}
+                          title="Delete"
+                        >
+                          <i className="bi bi-trash" aria-hidden="true"></i>
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </>
     );
   };
 
@@ -166,7 +202,7 @@ export const Users = () => {
           </div>
         )}
 
-        {!loading && loadedSuccess && renderTable()}
+        {!loading && loadedSuccess && renderContent()}
 
         {!loading && !loadedSuccess && (
           <div className="data-empty">

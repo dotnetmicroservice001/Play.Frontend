@@ -12,6 +12,7 @@ export default class ItemModal extends Component {
     }
     render() {
         const isNew = this.props.isNew;
+        const compact = this.props.compact;
         let title = 'Edit Item';
         let button = '';
         if (isNew) {
@@ -20,6 +21,13 @@ export default class ItemModal extends Component {
                 variant="primary"
                 onClick={this.toggle}
                 style={{ minWidth: "200px" }}><i className="bi bi-plus-lg mr-2" aria-hidden="true"></i>Add</Button>;
+        } else if (compact) {
+            button = <Button
+                variant="primary"
+                size="sm"
+                onClick={this.toggle}
+                aria-label={`Edit ${this.props.item.name}`}
+                title="Edit"><i className="bi bi-pencil-square" aria-hidden="true"></i></Button>;
         } else {
             button = <Button
                 variant="primary"
