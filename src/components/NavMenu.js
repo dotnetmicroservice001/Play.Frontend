@@ -54,7 +54,7 @@ export class NavMenu extends Component
         >
           <Container>
             <Navbar.Brand as={Link} to="/">
-              <i className="bi bi-controller mr-2" aria-hidden="true"></i>
+              <img src="/favicon.png" alt="" className="navmenu__logo" />
               GamePlayEconomy
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />

@@ -72,6 +72,7 @@ export const Landing = () => {
         <section id="demo" className="hero-bleed landing-hero">
           <Container>
             <div className="landing-hero__content landing-hero__content--stack">
+              <img src="/favicon.png" alt="GamePlayEconomy" className="landing-hero__logo" />
               <h1 className="landing-hero__warp">
                 <WarpText
                   text="GAMEPLAYECONOMY"
@@ -124,17 +125,26 @@ export const Landing = () => {
                   </Container>
                   </section>
 
-                  {/* User outcomes section */}
+                  {/* Placeholder anchor for case study navigation */}
+        <div id="case-study" className="case-study-anchor" aria-hidden="true"></div>
+
+        {/* Quests timeline section */}
+        <section id="quests" className="landing-section landing-section--gradient">
+          <Container>
+            <QuestTimeline />
+          </Container>
+        </section>
+
+        {/* User outcomes section */}
               <section id="outcomes" className="landing-section landing-section--compact">
                 <Container>
                 <div className="outcomes">
-                  <h2 className="outcomes__title">What you can do</h2>
-                  <p className="outcomes__subtitle">Everything players expect from a modern marketplace—delivered with one login.</p>
+                  <h2 className="outcomes__title">Player Abilities</h2>
+                  <p className="outcomes__subtitle">Everything unlocked the moment you sign in.</p>
                   <div className="outcomes__grid" role="list">
                   {userOutcomeCards.map((card) => (
                     <div key={card.id} className="outcomes__card" role="listitem">
                     <div className="outcomes__card-icon" aria-hidden="true">
-                      <span className="outcomes__card-icon-sheen"></span>
                       <i className={`bi ${card.icon}`}></i>
                     </div>
                     <div className="outcomes__card-content">
@@ -148,17 +158,7 @@ export const Landing = () => {
                 </Container>
               </section>
 
-              {/* Placeholder anchor for case study navigation */}
-        <div id="case-study" className="case-study-anchor" aria-hidden="true"></div>
-
-        {/* Quests timeline section */}
-        <section id="quests" className="landing-section landing-section--gradient">
-          <Container>
-            <QuestTimeline />
-          </Container>
-        </section>
-
-        {/* Architecture section */}
+              {/* Architecture section */}
           <section className="landing-section landing-section--gradient" id="architecture">
             <Container>
               <details
@@ -169,7 +169,7 @@ export const Landing = () => {
               >
                 <summary className="architecture-details__summary">How it's built</summary>
                 <div className="architecture-details__content">
-            <h1 className="techstack-header__title techstack-header__title--large" style={{ fontSize: '1.7rem' }}>ARCHITECTURE</h1>
+            <h1 className="architecture-details__title">Architecture</h1>
             <div className="architecture-details__image">
               <img
                 src={architectureImage}

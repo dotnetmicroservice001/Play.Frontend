@@ -46,7 +46,7 @@
 .quest-timeline__header {
   position: relative;
   z-index: 1;
-  max-width: 640px;
+  max-width: 700px;
   margin: 0 auto 2.5rem;
 }
 
@@ -63,6 +63,13 @@
   font-size: 1rem;
   color: rgba(26, 26, 36, 0.72);
   line-height: 1.6;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .quest-timeline__subtitle {
+    white-space: normal;
+  }
 }
 
 .quest-timeline__stage {
@@ -161,9 +168,22 @@
 }
 
 .quest-badge__icon {
-  font-size: 2rem;
-  color: var(--timeline-accent);
+  width: 56px;
+  height: 56px;
+  border-radius: 6px;
+  background: rgb(var(--purple-100-rgb));
+  border: 3px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  image-rendering: pixelated;
+  box-shadow: 4px 4px 0 rgba(var(--purple-600-rgb), 0.9);
   margin-bottom: 0.85rem;
+}
+
+.quest-badge__icon i {
+  font-size: 1.6rem;
+  color: var(--ink);
 }
 
 .quest-badge__title {
@@ -220,28 +240,27 @@
 
 .quest-badge__tech {
   display: grid;
-  gap: 0.9rem;
+  gap: 0.6rem;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  /* 4 fixed columns */
   color: rgba(26, 26, 36, 0.72);
-  grid-auto-rows: 60px;
 }
 
 .quest-badge__tech li {
-  background: rgba(var(--purple-600-rgb), 0.08);
-  border: 1px solid rgba(var(--purple-600-rgb), 0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(var(--purple-50-rgb));
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  padding: 0.5rem 0.6rem;
+  box-shadow: 2px 2px 0 rgba(var(--purple-600-rgb), 0.9);
 }
 
 .quest-badge__chip {
-  display: inline-block;
-  padding: 0.35rem 0.6rem;
-  /* background: rgba(var(--purple-600-rgb), 0.08);
-  border: 1px solid rgba(var(--purple-600-rgb), 0.28); */
-
   font-size: 0.9rem;
-  color: var(--timeline-accent-ink);
+  color: var(--ink);
   text-transform: uppercase;
-
+  text-align: center;
 }
 
 .quest-timeline__caption {

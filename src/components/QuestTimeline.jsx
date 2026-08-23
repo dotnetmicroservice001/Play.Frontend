@@ -53,7 +53,7 @@ export const QuestTimeline = () => {
     <section className={`quest-timeline quest-timeline--vertical ${entered ? 'quest-timeline--entered' : ''}`}>
       <div className="quest-timeline__header text-center">
         <h2 className="quest-timeline__title">Quest Timeline</h2>
-        <p className="quest-timeline__subtitle">Four moments take you from sign-in to a confirmed order—no waiting, no manual refresh.</p>
+        <p className="quest-timeline__subtitle">Four moments take you from sign-in to a confirmed order, no waiting, no manual refresh.</p>
       </div>
 
       <div className="quest-timeline__stage" role="list" aria-label="Play Economy quest timeline">
@@ -86,7 +86,7 @@ export const QuestTimeline = () => {
         })}
       </div>
 
-      <p className="quest-timeline__caption">You take the action—secure sign-in, live catalog, orchestrated purchase, instant status make it feel effortless.</p>
+      <p className="quest-timeline__caption">You take the action, secure sign-in, live catalog, orchestrated purchase, instant status make it feel effortless.</p>
 
     </section>
   );
