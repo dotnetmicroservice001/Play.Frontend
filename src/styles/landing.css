@@ -75,7 +75,8 @@
   margin-bottom: 32px;
 }
 
-.landing-hero::before {
+.landing-hero::before,
+#outcomes::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -86,68 +87,61 @@
   pointer-events: none;
 }
 
+/* Same grid tiling as the hero, carried down through the outcomes section
+   so the two sections read as one continuous background instead of the
+   grid stopping abruptly at the hero's bottom edge. */
+#outcomes {
+  position: relative;
+}
+
+#outcomes .outcomes {
+  position: relative;
+  z-index: 1;
+}
+
+/* No card here on purpose — the hero now sits directly on the section's
+   background wash (.hero-bleed) instead of a boxed white panel. */
 .landing-hero__content {
   position: relative;
   z-index: 1;
-  background: #ffffff;
-  border: 1px solid #e6e8ee;
-  border-radius: 28px;
-  padding: clamp(20px, 3.5vw, 32px);
-  box-shadow: 0 28px 48px rgba(15, 23, 42, 0.12);
   color: var(--ink);
   margin: 0 auto;
 }
 
 .landing-hero__content--stack {
-  max-width: 1000px;
+  max-width: 760px;
   margin: 0 auto;
-  text-align: left;
+  text-align: center;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Wraps <WarpText> so the page still has a real <h1> for accessibility/SEO
+   even though the headline itself is drawn on a <canvas>. */
+.landing-hero__warp {
+  width: 100%;
+  margin: 0;
 }
 
 .hero-typer {
   font-family: 'Space Mono', 'Fira Code', 'Courier New', monospace;
-  font-size: clamp(1.28rem, 2.4vw, 2.1rem);
-  line-height: 1.45;
+  font-size: clamp(0.92rem, 1.6vw, 1.3rem);
+  line-height: 1.5;
   letter-spacing: 0.02em;
   text-transform: none;
   text-shadow: none;
-}
-
-.landing-hero__eyebrow {
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: rgba(var(--ink-rgb), 0.65);
-  margin-bottom: 16px;
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 600;
-}
-
-.landing-hero__title {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: clamp(2.05rem, 3vw, 3rem);
-  line-height: 1.25;
-  margin-bottom: 20px;
-  font-weight: 600;
-  color: var(--ink);
-  text-transform: none;
-  text-shadow: none;
-}
-
-.landing-hero__subtitle {
-  font-size: 1.05rem;
-  margin-bottom: 32px;
   color: rgba(var(--ink-rgb), 0.72);
+  max-width: 620px;
 }
 
 .landing-hero__cta-row {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 12px;
-  margin-top: 12px;
+  margin-top: 4px;
 }
 
 .hero-cta {
@@ -325,43 +319,6 @@
   }
 }
 
-.landing-hero__visual {
-  position: relative;
-  width: 100%;
-  min-height: 320px;
-  border: 1px solid rgba(var(--ink-rgb), 0.1);
-  background: linear-gradient(135deg, rgba(var(--purple-50-rgb), 0.95), rgba(var(--purple-50-rgb), 0.85))
-    , linear-gradient(90deg, rgba(var(--purple-600-rgb), 0.05) 1px, transparent 1px)
-    , linear-gradient(rgba(var(--purple-600-rgb), 0.05) 1px, transparent 1px);
-  background-size: 100% 100%, 20px 20px, 20px 20px;
-  box-shadow: 10px 12px 32px rgba(15, 23, 42, 0.12);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.landing-hero__visual::after {
-  content: '';
-  position: absolute;
-  inset: 32px;
-  border: 1px dashed rgba(var(--purple-600-rgb), 0.35);
-  pointer-events: none;
-}
-
-.landing-hero__visual-cta {
-  display: inline-flex;
-  align-items: center;
-  padding: 12px 16px;
-  border: 1px solid rgba(var(--purple-600-rgb), 0.22);
-  background: rgba(255, 255, 255, 0.92);
-  box-shadow: 4px 8px 20px rgba(15, 23, 42, 0.15);
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  gap: 12px;
-  color: var(--ink);
-}
-
 .trade-ticker {
   margin: 24px auto 0;
   border-top: 1px solid rgba(var(--ink-rgb), 0.08);
@@ -410,28 +367,11 @@
   .landing-hero {
     padding: 72px 0 48px;
   }
-
-  .landing-hero__visual {
-    margin-top: 32px;
-    min-height: 280px;
-  }
 }
 
 @media (max-width: 768px) {
-  .landing-hero__title {
-    font-size: clamp(1.8rem, 5vw, 2.4rem);
-  }
-
-  .landing-hero__subtitle {
-    font-size: 0.95rem;
-  }
-
-  .landing-hero__content--stack {
-    gap: 20px;
-  }
-
   .hero-typer {
-    font-size: clamp(1.1rem, 4.5vw, 1.7rem);
+    font-size: clamp(0.85rem, 4vw, 1.15rem);
   }
 
   .trade-ticker__inner {

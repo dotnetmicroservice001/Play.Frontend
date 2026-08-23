@@ -1,6 +1,6 @@
 /* Quest timeline styling */
 .quest-timeline {
-  --timeline-bg: var(--color-white);
+  --timeline-bg: rgba(var(--purple-50-rgb), 0.4);
   --timeline-text: var(--color-fg);
   --timeline-surface: rgba(255, 255, 255, 0.92);
   --timeline-accent: var(--accent);
@@ -8,9 +8,6 @@
 
   position: relative;
   padding: clamp(48px, 6vw, 64px) 0;
-  border-radius: 28px;
-  box-shadow: 0 28px 48px rgba(15, 23, 42, 0.08);
-  border: 1px solid #e6e8ee;
   overflow: hidden;
   background: var(--timeline-bg);
 }

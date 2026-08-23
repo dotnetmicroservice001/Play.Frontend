@@ -5,6 +5,7 @@ import { AuthorizationPaths } from './api-authorization/ApiAuthorizationConstant
 import { QuestTimeline } from './QuestTimeline';
 import { TechStackOverview } from './TechStackOverview';
 import TextType from './TextType';
+import WarpText from './WarpText';
 import architectureImage from '../images/architecture.png';
 
 // Cards describing the main user outcomes
@@ -71,11 +72,26 @@ export const Landing = () => {
         <section id="demo" className="hero-bleed landing-hero">
           <Container>
             <div className="landing-hero__content landing-hero__content--stack">
-              <div className="landing-hero__eyebrow">Virtual Marketplace</div>
+              <h1 className="landing-hero__warp">
+                <WarpText
+                  text="GAMEPLAYECONOMY"
+                  color="var(--ink)"
+                  fontWeight={700}
+                  fontSize="clamp(2.4rem, 7vw, 5.5rem)"
+                  warpStrength={0.025}
+                  warpScale={0.6}
+                  speed={0.55}
+                  pointerInfluence={0.42}
+                  pointerStrength={0.38}
+                  refraction={0.005}
+                  ripple
+                  style={{ height: 'clamp(120px, 18vw, 220px)' }}
+                />
+              </h1>
               <TextType
-                as="h1"
+                as="p"
                 className="hero-typer"
-                text={'GAMEPLAYECONOMY\nTrade and manage game items securely\nwith real-time feedback.'}
+                text="The store interface for your game inventory."
                 loop={false}
                 typingSpeed={54}
                 pauseDuration={900}
@@ -84,9 +100,6 @@ export const Landing = () => {
                 cursorBlinkDuration={0.8}
                 cursorCharacter="▍"
               />
-              <p className="landing-hero__subtitle">
-                Sign in, browse the catalog, and follow every purchase update without refreshing the page.
-              </p>
               <div className="landing-hero__cta-row">
                 <button
                   type="button"
