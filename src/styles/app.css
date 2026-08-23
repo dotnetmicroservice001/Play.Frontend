@@ -249,6 +249,24 @@ a:hover {
   border-color: #000000 !important;
 }
 
+/* Alert success/danger: react-bootstrap's Alert was the one place still
+   leaking Bootstrap's stock red/green (#f8d7da/#721c24, #d4edda/#155724).
+   Buttons stay monochrome on purpose (see .btn-danger above), but alerts
+   need a real red/green cue for usability, so instead they get a deeper,
+   richer version of that same red/green — consistent with the rest of
+   the app's palette instead of default Bootstrap colors. */
+.alert-danger {
+  background-color: var(--danger-bg) !important;
+  border-color: var(--danger-border) !important;
+  color: var(--danger) !important;
+}
+
+.alert-success {
+  background-color: var(--success-bg) !important;
+  border-color: var(--success-border) !important;
+  color: var(--success) !important;
+}
+
 /* Softer look: rounded buttons and inputs */
 .btn {
   border-radius: 10px !important;

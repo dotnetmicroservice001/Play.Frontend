@@ -9,7 +9,7 @@
 .navbar-light .navmenu__greeting {
   font-weight: 500;
   letter-spacing: 0.03em;
-  color: rgb(250, 251, 255);
+  color: rgb(var(--purple-50-rgb));
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -22,7 +22,7 @@
 .navbar-light .dropdown-toggle:focus,
 .navbar-light .navmenu__greeting:hover,
 .navbar-light .navmenu__greeting:focus {
-  color: rgb(238, 234, 253);
+  color: rgb(var(--purple-100-rgb));
 }
 
 .navmenu__collapse {
