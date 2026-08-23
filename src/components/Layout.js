@@ -3,8 +3,9 @@ import { Container } from 'react-bootstrap';
 import { useLocation } from 'react-router-dom';
 import { NavMenu } from './NavMenu';
 import { Footer } from './Footer';
+import { ApplicationPaths } from './Constants';
 
-const FULL_WIDTH_ROUTES = new Set(['/']);
+const FULL_WIDTH_ROUTES = new Set(['/', ApplicationPaths.HomePath]);
 
 export const Layout = ({ children }) => {
   const location = useLocation();

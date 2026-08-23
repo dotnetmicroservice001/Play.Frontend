@@ -1,11 +1,33 @@
 .home {
+  position: relative;
   padding: clamp(32px, 5vw, 56px) clamp(24px, 6vw, 72px);
-  background: var(--page-bg-gradient);
+  background: linear-gradient(180deg, rgba(var(--purple-100-rgb), 0.22) 0%, rgba(var(--purple-50-rgb), 0.55) 100%);
   min-height: calc(100vh - 120px);
-  display: grid;
-  gap: clamp(32px, 4vw, 48px);
   color: var(--ink);
   font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  overflow: hidden;
+}
+
+/* Same grid tiling used on the landing hero/outcomes sections, carried
+   over here so the post-login dashboard reads as part of the same site. */
+.home::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(90deg, var(--landing-grid-light) 1px, transparent 1px),
+    linear-gradient(var(--landing-grid-light) 1px, transparent 1px);
+  background-size: 32px 32px;
+  opacity: 0.32;
+  pointer-events: none;
+}
+
+.home__content {
+  position: relative;
+  z-index: 1;
+  max-width: 1040px;
+  margin: 0 auto;
+  display: grid;
+  gap: clamp(32px, 4vw, 48px);
 }
 
 .home-hero {
@@ -18,6 +40,7 @@
   margin: 0;
   font-family: 'Space Grotesk', sans-serif;
   font-size: clamp(2rem, 5vw, 2.4rem);
+  font-weight: 600;
   line-height: 1.25;
   color: inherit;
 }
@@ -28,15 +51,70 @@
   color: rgba(var(--ink-rgb), 0.72);
 }
 
+/* Live account summary — real numbers from the Store service, not
+   placeholder copy. Mirrors the .data-page__stat pattern used on
+   Store/Inventory/Catalog/Users so a stat tile looks the same everywhere
+   in the app. */
+.home-stats__grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 22px;
+}
+
+.home-stats__tile {
+  display: grid;
+  gap: 4px;
+  padding: 14px 20px;
+  border-radius: 8px;
+  background: rgb(var(--purple-50-rgb));
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 rgba(var(--purple-600-rgb), 0.9);
+  min-width: 140px;
+}
+
+.home-stats__label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(var(--ink-rgb), 0.55);
+}
+
+.home-stats__value {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.home-stats__loading {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95rem;
+  color: rgba(var(--ink-rgb), 0.7);
+}
+
+.home-stats__spinner {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 3px solid rgba(var(--purple-500-rgb), 0.18);
+  border-top-color: rgba(var(--purple-600-rgb), 0.85);
+  /* Reuses the spin animation already defined in shared/data-page.css —
+     no need for a second, identical @keyframes block. */
+  animation: data-page-spin 0.8s linear infinite;
+}
+
+.home-stats__error {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--danger);
+}
+
 .home-actions {
   display: grid;
   gap: 18px;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-}
-
-.home-pixel-card {
-  width: 100%;
-  height: 100%;
 }
 
 .home-actions__card {
@@ -49,30 +127,38 @@
   width: 100%;
   height: 100%;
   text-align: center;
-  border-radius: 18px;
-  border: 1px solid rgba(var(--ink-rgb), 0.2);
-  background: var(--ink);
-  color: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 20px 36px rgba(var(--ink-rgb), 0.32);
+  border-radius: 10px;
+  border: 3px solid var(--ink);
+  background: #ffffff;
+  color: var(--ink);
+  box-shadow: 6px 6px 0 rgba(var(--purple-600-rgb), 0.9);
   text-decoration: none;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
 }
 
 .home-actions__card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(var(--accent-blue-rgb), 0.45);
-  box-shadow: 0 28px 44px rgba(15, 23, 42, 0.4);
+  transform: translate(-3px, -3px);
+  background: rgb(var(--purple-50-rgb));
+  box-shadow: 9px 9px 0 rgba(var(--purple-600-rgb), 0.9);
+}
+
+.home-actions__card:active {
+  transform: translate(3px, 3px);
+  box-shadow: 2px 2px 0 rgba(var(--purple-600-rgb), 0.9);
 }
 
 .home-actions__icon {
   width: 56px;
   height: 56px;
-  border-radius: 14px;
-  background: rgba(var(--accent-blue-rgb), 0.16);
-  color: rgba(var(--accent-blue-rgb), 0.9);
+  border-radius: 6px;
+  background: rgb(var(--purple-100-rgb));
+  border: 3px solid var(--ink);
+  color: var(--ink);
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  image-rendering: pixelated;
+  box-shadow: 4px 4px 0 rgba(var(--purple-600-rgb), 0.9);
   font-size: 1.8rem;
 }
 
@@ -83,13 +169,14 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   font-weight: 700;
+  color: var(--ink);
 }
 
 .home-actions__copy {
   margin: 0;
   font-size: 1.08rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.78);
+  color: rgba(var(--ink-rgb), 0.72);
   line-height: 1.55;
 }
 
@@ -118,17 +205,27 @@
   display: inline-flex;
   align-items: center;
   padding: 6px 16px;
-  border-radius: 12px;
-  background: var(--ink);
-  color: #fff;
+  border-radius: 6px;
+  border: 2px solid var(--ink);
+  background: rgb(var(--purple-50-rgb));
+  color: var(--ink);
   text-decoration: none;
   font-family: 'Space Grotesk', sans-serif;
   font-size: 0.82rem;
   letter-spacing: 0.05em;
+  box-shadow: 2px 2px 0 rgba(var(--purple-600-rgb), 0.9);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
 }
 
 .home-admin__chip:hover {
-  background: rgba(var(--ink-rgb), 0.82);
+  transform: translate(-2px, -2px);
+  background: rgb(var(--purple-100-rgb));
+  box-shadow: 4px 4px 0 rgba(var(--purple-600-rgb), 0.9);
+}
+
+.home-admin__chip:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 rgba(var(--purple-600-rgb), 0.9);
 }
 
 .home-devnote {
