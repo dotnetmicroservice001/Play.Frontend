@@ -178,45 +178,80 @@ a:hover {
   }
 }
 
-/* Any buttons placed in navbar use inverted (light) style */
+/* Any buttons placed in navbar use inverted (light) pixel-tile style */
 .navbar .btn-primary,
 .navbar .btn-primary:focus,
 .navbar .btn-primary:active {
   background-color: #ffffff !important;
-  border-color: #ffffff !important;
-  color: #111111 !important;
+  border-color: var(--ink) !important;
+  color: var(--ink) !important;
+  box-shadow: 3px 3px 0 rgba(var(--purple-300-rgb), 0.9) !important;
 }
 .navbar .btn-primary:hover {
-  background-color: #eaeaea !important;
-  border-color: #eaeaea !important;
+  background-color: rgb(var(--purple-50-rgb)) !important;
+  border-color: var(--ink) !important;
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 rgba(var(--purple-300-rgb), 0.9) !important;
+}
+.navbar .btn-primary:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 rgba(var(--purple-300-rgb), 0.9) !important;
 }
 
-/* Buttons: black primary for modern B/W feel */
+/* Buttons: pixel-tile treatment — ink border, hard offset shadow, sharp
+   corners — matching the CTAs used across landing/home/data pages. */
+.btn {
+  border-radius: 8px !important;
+  border-width: 2px !important;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
 .btn-primary,
 .btn-primary:focus,
 .btn-primary:active {
-  background-color: var(--color-fg) !important;
-  border-color: var(--color-fg) !important;
-  color: var(--color-white) !important;
+  background-color: rgb(var(--purple-300-rgb)) !important;
+  border-color: var(--ink) !important;
+  color: var(--ink) !important;
+  box-shadow: 3px 3px 0 rgba(var(--purple-600-rgb), 0.9) !important;
 }
 
 .btn-primary:hover {
-  background-color: var(--color-black) !important;
-  border-color: var(--color-black) !important;
+  background-color: rgb(var(--purple-200-rgb)) !important;
+  border-color: var(--ink) !important;
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 rgba(var(--purple-600-rgb), 0.9) !important;
 }
 
-/* Danger buttons adapted to monochrome */
+.btn-primary:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 rgba(var(--purple-600-rgb), 0.9) !important;
+}
+
+/* Danger buttons keep the app's wine accent instead of Bootstrap red,
+   with the same pixel-tile border/shadow language. */
 .btn-danger,
 .btn-danger:focus,
 .btn-danger:active {
-  background-color: #222222 !important;
-  border-color: #222222 !important;
-  color: var(--color-white) !important;
+  background-color: var(--danger) !important;
+  border-color: var(--ink) !important;
+  color: #ffffff !important;
+  box-shadow: 3px 3px 0 rgba(122, 18, 68, 0.55) !important;
 }
 
 .btn-danger:hover {
-  background-color: #000000 !important;
-  border-color: #000000 !important;
+  background-color: #611036 !important;
+  border-color: var(--ink) !important;
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 rgba(122, 18, 68, 0.55) !important;
+}
+
+.btn-danger:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 rgba(122, 18, 68, 0.55) !important;
 }
 
 /* Alert success/danger: react-bootstrap's Alert was the one place still
@@ -235,11 +270,6 @@ a:hover {
   background-color: var(--success-bg) !important;
   border-color: var(--success-border) !important;
   color: var(--success) !important;
-}
-
-/* Softer look: rounded buttons and inputs */
-.btn {
-  border-radius: 10px !important;
 }
 
 /* Forms */

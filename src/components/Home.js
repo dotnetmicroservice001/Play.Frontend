@@ -130,7 +130,10 @@ export const Home = () => {
     <div className="home">
       <div className="home__content">
         <section className="home-hero">
-          <h1 className="home-hero__title">Welcome back, {greetingName}.</h1>
+          <div className="home-hero__row">
+            <p className="home-hero__eyebrow">Home</p>
+            <h1 className="home-hero__title">Welcome back, {greetingName}.</h1>
+          </div>
           <p className="home-hero__blurb">
             Check your inventory, browse the store, and keep track of every purchase in real time.
           </p>

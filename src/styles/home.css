@@ -31,9 +31,25 @@
 }
 
 .home-hero {
-  max-width: 680px;
   display: grid;
   gap: 12px;
+}
+
+.home-hero__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.home-hero__eyebrow {
+  margin: 0;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: rgba(var(--ink-rgb), 0.55);
 }
 
 .home-hero__title {
@@ -43,9 +59,11 @@
   font-weight: 600;
   line-height: 1.25;
   color: inherit;
+  text-align: right;
 }
 
 .home-hero__blurb {
+  max-width: 680px;
   margin: 0;
   font-size: 1rem;
   color: rgba(var(--ink-rgb), 0.72);

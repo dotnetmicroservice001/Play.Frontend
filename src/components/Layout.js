@@ -5,7 +5,14 @@ import { NavMenu } from './NavMenu';
 import { Footer } from './Footer';
 import { ApplicationPaths } from './Constants';
 
-const FULL_WIDTH_ROUTES = new Set(['/', ApplicationPaths.HomePath]);
+const FULL_WIDTH_ROUTES = new Set([
+  '/',
+  ApplicationPaths.HomePath,
+  ApplicationPaths.StorePath,
+  ApplicationPaths.CatalogPath,
+  ApplicationPaths.InventoryPath,
+  ApplicationPaths.UsersPath
+]);
 
 export const Layout = ({ children }) => {
   const location = useLocation();
