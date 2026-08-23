@@ -53,6 +53,13 @@
   min-width: 180px;
 }
 
+/* Caps the eyebrow/title/subtitle block so a long subtitle always wraps
+   within itself instead of pushing the header's action button onto its
+   own line once the two no longer fit side by side. */
+.data-page__header-text {
+  max-width: 700px;
+}
+
 .data-page__eyebrow {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 0.75rem;
@@ -72,6 +79,45 @@
   margin: 0;
   font-size: 1rem;
   color: rgba(var(--ink-rgb), 0.7);
+}
+
+/* Gil balance shown as a wallet chip in the header, matching the Home
+   dashboard's .home-wallet treatment. */
+.data-page__wallet {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: 3px solid var(--ink);
+  background: rgb(var(--purple-50-rgb));
+  box-shadow: 4px 4px 0 rgba(var(--purple-600-rgb), 0.9);
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.data-page__wallet-icon {
+  font-size: 1.25rem;
+  color: var(--accent);
+}
+
+.data-page__wallet-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.data-page__wallet-spinner {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 3px solid rgba(var(--purple-500-rgb), 0.18);
+  border-top-color: rgba(var(--purple-600-rgb), 0.85);
+  animation: data-page-spin 0.8s linear infinite;
+}
+
+.data-page__wallet-error {
+  font-size: 1.1rem;
+  color: rgba(var(--ink-rgb), 0.4);
 }
 
 .data-page__stats {
@@ -102,10 +148,6 @@
   font-size: 1.1rem;
   font-weight: 600;
   color: var(--accent);
-}
-
-.data-page__cta-row {
-  margin-top: 18px;
 }
 
 .data-page__cta {

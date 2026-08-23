@@ -1,8 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
-import PurchaseModal from './form/PurchaseModal';
+import React, { useEffect, useState } from 'react';
+import PurchaseForm from './form/PurchaseForm';
 import authService from './api-authorization/AuthorizeService';
-import { ApplicationPaths } from './Constants';
 
 const initialState = {
   items: [],
@@ -13,6 +11,7 @@ const initialState = {
 
 export const Store = () => {
   const [{ items, userGil, loading, loadedSuccess }, setState] = useState(initialState);
+  const [selectedItemId, setSelectedItemId] = useState(null);
 
   const refreshItems = async () => {
     setState((current) => ({ ...current, loading: true }));
@@ -43,48 +42,54 @@ export const Store = () => {
     refreshItems();
   }, []);
 
-  const totals = useMemo(() => {
-    const totalListed = items.length;
-    const ownedTotal = items.reduce((sum, item) => sum + (item.ownedQuantity ?? 0), 0);
-    return { totalListed, ownedTotal };
-  }, [items]);
+  const selectedItem = items.find((item) => item.id === selectedItemId) ?? null;
+  const closeDetail = () => setSelectedItemId(null);
 
-  const renderTable = () => {
+  const renderGrid = () => {
     if (items.length === 0) {
       return (
         <div className="data-empty">
           <h3>No catalog items yet</h3>
-          <p>Once the catalog service publishes items, you’ll see price and owned quantity here.</p>
+          <p>Once the catalog service publishes items, you’ll see them here.</p>
         </div>
       );
     }
 
     return (
-      <div className="data-table-wrapper">
-        <table className="data-table" aria-label="Store catalog">
-          <thead>
-            <tr>
-              <th scope="col">Item</th>
-              <th scope="col">Description</th>
-              <th scope="col">Price</th>
-              <th scope="col">Owned</th>
-              <th scope="col" className="data-table__actions">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((item) => (
-              <tr key={item.id}>
-                <td data-title="Item">{item.name}</td>
-                <td data-title="Description">{item.description}</td>
-                <td data-title="Price">{item.price}</td>
-                <td data-title="Owned">{item.ownedQuantity}</td>
-                <td data-title="Actions" className="data-table__actions">
-                  <PurchaseModal item={item} updateItemIntoState={refreshItems} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="store-grid">
+        {items.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            className={`store-card${item.id === selectedItemId ? ' store-card--active' : ''}`}
+            onClick={() => setSelectedItemId(item.id)}
+          >
+            <span className="store-card__image" aria-hidden="true">
+              {item.id === selectedItemId && (
+                <span className="store-card__selected-badge" aria-hidden="true">
+                  <i className="bi bi-check-lg"></i>
+                </span>
+              )}
+              <span className="store-card__hint" aria-hidden="true">
+                <i className="bi bi-arrow-right"></i>
+              </span>
+            </span>
+            <span className="store-card__name">{item.name}</span>
+            <span className="store-card__description">{item.description}</span>
+            <span className="store-card__footer">
+              <span className="store-card__price">
+                <i className="bi bi-coin" aria-hidden="true"></i>
+                {item.price}
+              </span>
+              {item.ownedQuantity > 0 && (
+                <span className="store-card__owned">
+                  <i className="bi bi-check-circle-fill" aria-hidden="true"></i>
+                  {item.ownedQuantity}
+                </span>
+              )}
+            </span>
+          </button>
+        ))}
       </div>
     );
   };
@@ -92,48 +97,70 @@ export const Store = () => {
   return (
     <div className="data-page">
       <section className="data-page__header">
-        <p className="data-page__eyebrow">Store</p>
-        <h1 className="data-page__title">Browse the latest drops</h1>
-        <p className="data-page__subtitle">
-          Pick an item to trigger the Trading saga. Prices are cached from the catalog and owned counts update after each grant.
-        </p>
-        <div className="data-page__stats">
-          <div className="data-page__stat">
-            <span className="data-page__stat-label">Your gil</span>
-            <span className="data-page__stat-value">{userGil}</span>
-          </div>
-          <div className="data-page__stat">
-            <span className="data-page__stat-label">Items listed</span>
-            <span className="data-page__stat-value">{totals.totalListed}</span>
-          </div>
-          <div className="data-page__stat">
-            <span className="data-page__stat-label">Owned total</span>
-            <span className="data-page__stat-value">{totals.ownedTotal}</span>
-          </div>
+        <div className="data-page__header-text">
+          <p className="data-page__eyebrow">Store</p>
+          <h1 className="data-page__title">Browse the latest drops</h1>
         </div>
-        <div className="data-page__cta-row">
-          <Link className="data-page__cta" to={ApplicationPaths.InventoryPath}>
-            <i className="bi bi-box-seam" aria-hidden="true"></i>
-            View inventory
-          </Link>
+
+        <div className="data-page__wallet" aria-label="Gil balance">
+          {loading && <span className="data-page__wallet-spinner" role="status" aria-live="polite"></span>}
+
+          {!loading && loadedSuccess && (
+            <>
+              <i className="bi bi-wallet2 data-page__wallet-icon" aria-hidden="true"></i>
+              <span className="data-page__wallet-value">${userGil}</span>
+            </>
+          )}
+
+          {!loading && !loadedSuccess && <span className="data-page__wallet-error">—</span>}
         </div>
       </section>
 
-      <section className="data-page__content">
-        {loading && (
-          <div className="data-page__loading" role="status" aria-live="polite">
-            <span className="data-page__spinner" aria-hidden="true"></span>
-            Loading catalog…
-          </div>
-        )}
+      <section className={`data-page__content store-layout${selectedItem ? ' store-layout--split' : ''}`}>
+        <div className="store-layout__grid">
+          {loading && (
+            <div className="data-page__loading" role="status" aria-live="polite">
+              <span className="data-page__spinner" aria-hidden="true"></span>
+              Loading catalog…
+            </div>
+          )}
 
-        {!loading && loadedSuccess && renderTable()}
+          {!loading && loadedSuccess && renderGrid()}
 
-        {!loading && !loadedSuccess && (
-          <div className="data-empty">
-            <h3>Could not load store catalog</h3>
-            <p>The store service didn’t respond. Try refreshing in a bit.</p>
-          </div>
+          {!loading && !loadedSuccess && (
+            <div className="data-empty">
+              <h3>Could not load store catalog</h3>
+              <p>The store service didn’t respond. Try refreshing in a bit.</p>
+            </div>
+          )}
+        </div>
+
+        {selectedItem && (
+          <aside className="store-detail">
+            <div className="store-detail__header">
+              <p className="store-detail__eyebrow">Item</p>
+              <button
+                type="button"
+                className="store-detail__close"
+                onClick={closeDetail}
+                aria-label="Close item details"
+              >
+                <i className="bi bi-x-lg" aria-hidden="true"></i>
+              </button>
+            </div>
+
+            <h2 className="store-detail__title">{selectedItem.name}</h2>
+            <span className="store-detail__image" aria-hidden="true"></span>
+            <p className="store-detail__description">{selectedItem.description}</p>
+
+            {selectedItem.ownedQuantity > 0 && (
+              <p className="store-detail__owned">You already own {selectedItem.ownedQuantity}.</p>
+            )}
+
+            <div className="store-detail__form">
+              <PurchaseForm item={selectedItem} toggle={closeDetail} updateItemIntoState={refreshItems} />
+            </div>
+          </aside>
         )}
       </section>
     </div>

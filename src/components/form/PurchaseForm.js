@@ -44,6 +44,16 @@ export default class PurchaseForm extends React.Component
         this.setState({ [e.target.name]: e.target.value })
     }
 
+    increment = () =>
+    {
+        this.setState(state => ({ quantity: Math.max(1, (parseInt(state.quantity, 10) || 0) + 1) }));
+    }
+
+    decrement = () =>
+    {
+        this.setState(state => ({ quantity: Math.max(1, (parseInt(state.quantity, 10) || 1) - 1) }));
+    }
+
     submitPurchase = (e) =>
     {
         e.preventDefault();
@@ -168,18 +178,49 @@ export default class PurchaseForm extends React.Component
 
     render()
     {
-        return <Form noValidate validated={this.state.validated} onSubmit={this.submitPurchase}>
-            <Form.Group>
-                <Form.Label htmlFor="price">Price:</Form.Label>
-                <Form.Control type="number" name="price" value={this.state.price} readOnly />
-            </Form.Group>
-            <Form.Group>
-                <Form.Label htmlFor="quantity">Quantity:</Form.Label>
-                <Form.Control type="number" name="quantity" onChange={this.onChange} value={this.state.quantity} required />
+        const total = (Number(this.state.price) || 0) * (Number(this.state.quantity) || 0);
+
+        return <Form noValidate validated={this.state.validated} onSubmit={this.submitPurchase} className="purchase-form">
+            <Form.Group className="purchase-form__quantity">
+                <Form.Label htmlFor="quantity">Quantity</Form.Label>
+                <div className="purchase-form__stepper">
+                    <button
+                        type="button"
+                        className="purchase-form__step-btn"
+                        onClick={this.decrement}
+                        aria-label="Decrease quantity"
+                    >
+                        <i className="bi bi-dash-lg" aria-hidden="true"></i>
+                    </button>
+                    <Form.Control
+                        type="number"
+                        name="quantity"
+                        min="1"
+                        onChange={this.onChange}
+                        value={this.state.quantity}
+                        required
+                    />
+                    <button
+                        type="button"
+                        className="purchase-form__step-btn"
+                        onClick={this.increment}
+                        aria-label="Increase quantity"
+                    >
+                        <i className="bi bi-plus-lg" aria-hidden="true"></i>
+                    </button>
+                </div>
                 <Form.Control.Feedback type="invalid">The Quantity field is required</Form.Control.Feedback>
             </Form.Group>
 
-            <Button variant="primary" type="submit" disabled={this.state.buttonDisabled} >
+            <div className="purchase-form__total-row">
+                <span className="purchase-form__row-label">Total</span>
+                <span className="purchase-form__total-value">
+                    <i className="bi bi-coin" aria-hidden="true"></i>
+                    {total}
+                </span>
+            </div>
+
+            <Button variant="primary" type="submit" className="purchase-form__submit" disabled={this.state.buttonDisabled}>
                 {this.state.isLoading ? <Spinner
                     as="span"
                     animation="border"
@@ -189,7 +230,7 @@ export default class PurchaseForm extends React.Component
                 {this.state.isLoading ? ' Purchasing…' : 'Purchase'}
             </Button>
 
-            <Alert style={{ marginTop: "10px" }} variant={this.state.alertColor} show={this.state.alertVisible}>
+            <Alert variant={this.state.alertColor} show={this.state.alertVisible}>
                 {this.state.alertMessage}
             </Alert>
         </Form>;

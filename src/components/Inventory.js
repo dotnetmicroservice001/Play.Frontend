@@ -96,28 +96,31 @@ export const Inventory = () => {
   return (
     <div className="data-page">
       <section className="data-page__header">
-        <p className="data-page__eyebrow">Inventory</p>
-        <h1 className="data-page__title">
-          {cameFromUsersPage ? `${userContext.username}'s inventory` : 'Your inventory'}
-        </h1>
-        <p className="data-page__subtitle">
-          Track everything Trading has granted. Quantities update in real time.
-        </p>
-        <div className="data-page__stats">
-          <div className="data-page__stat">
-            <span className="data-page__stat-label">Items</span>
-            <span className="data-page__stat-value">{totals.distinctItems}</span>
-          </div>
-          <div className="data-page__stat">
-            <span className="data-page__stat-label">Total quantity</span>
-            <span className="data-page__stat-value">{totals.totalQuantity}</span>
-          </div>
+        <div className="data-page__header-text">
+          <p className="data-page__eyebrow">Inventory</p>
+          <h1 className="data-page__title">
+            {cameFromUsersPage ? `${userContext.username}'s inventory` : 'Your inventory'}
+          </h1>
+          <p className="data-page__subtitle">
+            Track everything Trading has granted. Quantities update in real time.
+          </p>
         </div>
         <div className="data-page__cta-row">
           <Link className="data-page__cta" to={ApplicationPaths.StorePath}>
             <i className="bi bi-bag" aria-hidden="true"></i>
             Go to store
           </Link>
+        </div>
+      </section>
+
+      <section className="data-page__stats">
+        <div className="data-page__stat">
+          <span className="data-page__stat-label">Items</span>
+          <span className="data-page__stat-value">{totals.distinctItems}</span>
+        </div>
+        <div className="data-page__stat">
+          <span className="data-page__stat-label">Total quantity</span>
+          <span className="data-page__stat-value">{totals.totalQuantity}</span>
         </div>
       </section>
 

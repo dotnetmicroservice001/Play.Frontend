@@ -139,7 +139,7 @@ export const Catalog = () => {
   return (
     <div className="data-page">
       <section className="data-page__header">
-        <div>
+        <div className="data-page__header-text">
           <p className="data-page__eyebrow">Catalog</p>
           <h1 className="data-page__title">Manage store catalog</h1>
           <p className="data-page__subtitle">

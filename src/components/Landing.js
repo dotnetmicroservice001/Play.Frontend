@@ -72,7 +72,7 @@ export const Landing = () => {
         <section id="demo" className="hero-bleed landing-hero">
           <Container>
             <div className="landing-hero__content landing-hero__content--stack">
-              <img src="/favicon.png" alt="GamePlayEconomy" className="landing-hero__logo" />
+              <img src="/purpleman.png" alt="GamePlayEconomy" className="landing-hero__logo" />
               <h1 className="landing-hero__warp">
                 <WarpText
                   text="GAMEPLAYECONOMY"

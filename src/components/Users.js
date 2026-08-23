@@ -134,7 +134,7 @@ export const Users = () => {
   return (
     <div className="data-page">
       <section className="data-page__header">
-        <div>
+        <div className="data-page__header-text">
           <p className="data-page__eyebrow">Players</p>
           <h1 className="data-page__title">Manage accounts</h1>
           <p className="data-page__subtitle">
