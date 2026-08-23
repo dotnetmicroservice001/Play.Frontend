@@ -35,8 +35,10 @@ export default class ItemModal extends Component {
         }
         return <Fragment>
             {button}
-            <Modal show={this.state.modal} className={this.props.className} onHide={this.toggle}>
-                <Modal.Header closeButton>{title}</Modal.Header>
+            <Modal show={this.state.modal} className={`app-modal ${this.props.className ?? ''}`.trim()} onHide={this.toggle}>
+                <Modal.Header closeButton>
+                    <Modal.Title>{title}</Modal.Title>
+                </Modal.Header>
                 <Modal.Body>
                     <ItemForm
                         addItemToState={this.props.addItemToState}

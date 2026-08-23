@@ -83,7 +83,7 @@ export const Inventory = () => {
         <div className="data-empty">
           <h3>No matches</h3>
           <p>No items match “{search}”. Try a different search.</p>
-          <button type="button" className="inventory-clear-search" onClick={() => setSearch('')}>
+          <button type="button" className="data-clear-search" onClick={() => setSearch('')}>
             Clear search
           </button>
         </div>
@@ -125,7 +125,7 @@ export const Inventory = () => {
         <div className="data-page__header-text">
           <p className="data-page__eyebrow">Inventory</p>
           <h1 className="data-page__title">
-            {cameFromUsersPage ? `${userContext.username}'s inventory` : 'Your inventory'}
+            {cameFromUsersPage ? `${userContext.email}'s inventory` : 'Your inventory'}
           </h1>
           <p className="data-page__subtitle">Everything you've collected, all in one place.</p>
         </div>
@@ -161,8 +161,8 @@ export const Inventory = () => {
 
           {!loading && loadedSuccess && items.length > 0 && (
             <>
-              <div className="inventory-toolbar">
-                <div className="inventory-toolbar__search">
+              <div className="data-toolbar">
+                <div className="data-toolbar__search">
                   <i className="bi bi-search" aria-hidden="true"></i>
                   <input
                     type="text"
@@ -172,7 +172,7 @@ export const Inventory = () => {
                     aria-label="Search inventory"
                   />
                 </div>
-                <label className="inventory-toolbar__sort">
+                <label className="data-toolbar__sort">
                   <span>Sort</span>
                   <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
                     <option value="name">Name (A–Z)</option>

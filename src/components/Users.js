@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Image } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import UserModal from './form/UserModal';
+import ConfirmDialog from './common/ConfirmDialog';
 import inventoryLogo from '../images/inventory-bag.png';
 import authService from './api-authorization/AuthorizeService';
 
@@ -14,6 +15,8 @@ const initialState = {
 export const Users = () => {
   const [{ users, loading, loadedSuccess }, setState] = useState(initialState);
   const [search, setSearch] = useState('');
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [deleteError, setDeleteError] = useState(null);
 
   const refreshUsers = async () => {
     setState((current) => ({ ...current, loading: true }));
@@ -52,11 +55,9 @@ export const Users = () => {
     return query ? users.filter((user) => user.email?.toLowerCase().includes(query)) : users;
   }, [users, search]);
 
-  const handleDelete = async (id) => {
-    const confirmed = window.confirm('Do you really wish to delete it?');
-    if (!confirmed) {
-      return;
-    }
+  const confirmDelete = async () => {
+    const { id } = deleteTarget;
+    setDeleteTarget(null);
 
     try {
       const token = await authService.getAccessToken();
@@ -78,7 +79,7 @@ export const Users = () => {
       }));
     } catch (error) {
       console.error(error);
-      window.alert('Could not delete the user.');
+      setDeleteError('Could not delete the user.');
     }
   };
 
@@ -94,8 +95,8 @@ export const Users = () => {
 
     return (
       <>
-        <div className="users-toolbar">
-          <div className="users-toolbar__search">
+        <div className="data-toolbar">
+          <div className="data-toolbar__search">
             <i className="bi bi-search" aria-hidden="true"></i>
             <input
               type="text"
@@ -111,7 +112,7 @@ export const Users = () => {
           <div className="data-empty">
             <h3>No matches</h3>
             <p>No users match “{search}”. Try a different search.</p>
-            <button type="button" className="users-clear-search" onClick={() => setSearch('')}>
+            <button type="button" className="data-clear-search" onClick={() => setSearch('')}>
               Clear search
             </button>
           </div>
@@ -144,12 +145,12 @@ export const Users = () => {
                       </Link>
                     </td>
                     <td data-title="Actions" className="data-table__actions">
-                      <div className="data-table__action-group users-table__actions">
+                      <div className="data-table__action-group">
                         <UserModal user={user} compact updateUserIntoState={refreshUsers} />
                         <Button
                           variant="danger"
                           size="sm"
-                          onClick={() => handleDelete(user.id)}
+                          onClick={() => setDeleteTarget(user)}
                           aria-label={`Delete ${user.email}`}
                           title="Delete"
                         >
@@ -211,6 +212,25 @@ export const Users = () => {
           </div>
         )}
       </section>
+
+      <ConfirmDialog
+        show={Boolean(deleteTarget)}
+        title="Delete user"
+        message={deleteTarget ? `Are you sure you want to delete "${deleteTarget.email}"? This can't be undone.` : ''}
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        confirmVariant="danger"
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
+
+      <ConfirmDialog
+        show={Boolean(deleteError)}
+        title="Something went wrong"
+        message={deleteError}
+        confirmLabel="OK"
+        onConfirm={() => setDeleteError(null)}
+      />
     </div>
   );
 };

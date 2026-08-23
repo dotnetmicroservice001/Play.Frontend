@@ -38,71 +38,6 @@
   gap: clamp(20px, 3vw, 28px);
 }
 
-.inventory-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 18px;
-}
-
-.inventory-toolbar__search {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex: 1 1 260px;
-  max-width: 360px;
-  padding: 10px 14px;
-  border: 2px solid var(--ink);
-  border-radius: 8px;
-  background: #ffffff;
-  box-shadow: 3px 3px 0 rgba(var(--purple-600-rgb), 0.9);
-}
-
-.inventory-toolbar__search i {
-  color: rgba(var(--ink-rgb), 0.4);
-}
-
-.inventory-toolbar__search input {
-  flex: 1 1 auto;
-  min-width: 0;
-  border: none;
-  outline: none;
-  background: transparent;
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
-  font-size: 0.92rem;
-  color: var(--ink);
-}
-
-.inventory-toolbar__search input::placeholder {
-  color: rgba(var(--ink-rgb), 0.4);
-}
-
-.inventory-toolbar__sort {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: rgba(var(--ink-rgb), 0.55);
-}
-
-.inventory-toolbar__sort select {
-  padding: 8px 12px;
-  border: 2px solid var(--ink);
-  border-radius: 8px;
-  background: #ffffff;
-  color: var(--ink);
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 700;
-  font-size: 0.82rem;
-  cursor: pointer;
-}
-
 /* Layout: item grid + inspect panel, same split as the Store page but with
    its own class names since inventory cards show different information
    (owned quantity, not price) and shouldn't be visually interchangeable
@@ -353,27 +288,6 @@
   margin: 0;
   font-size: 0.92rem;
   color: rgba(var(--ink-rgb), 0.7);
-}
-
-.inventory-clear-search {
-  margin-top: 4px;
-  border: 2px solid var(--ink);
-  border-radius: 8px;
-  padding: 6px 16px;
-  background: #ffffff;
-  color: var(--ink);
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 600;
-  font-size: 0.8rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: background 0.15s ease, transform 0.15s ease;
-}
-
-.inventory-clear-search:hover {
-  background: rgb(var(--purple-50-rgb));
-  transform: translate(-1px, -1px);
 }
 
 .inventory-empty {

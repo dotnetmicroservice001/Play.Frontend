@@ -3,6 +3,7 @@ import { Button, Form, Alert, Spinner } from 'react-bootstrap';
 import { v4 as uuidv4 } from 'uuid';
 import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
 import authService from '../api-authorization/AuthorizeService';
+import ConfirmDialog from '../common/ConfirmDialog';
 
 export default class PurchaseForm extends React.Component
 {
@@ -16,7 +17,8 @@ export default class PurchaseForm extends React.Component
         alertMessage: '',
         isLoading: false,
         buttonDisabled: false,
-        validated: false
+        validated: false,
+        confirmVisible: false
     }
 
     connection = new HubConnectionBuilder()
@@ -65,21 +67,22 @@ export default class PurchaseForm extends React.Component
         }
         else
         {
-            this.purchaseItem();
+            this.setState({ confirmVisible: true });
         }
 
         this.setState({ validated: true });
     }
 
-    async purchaseItem()
+    confirmPurchase = () =>
     {
-        let confirmPurchase = window.confirm(`Purchase ${this.state.quantity} ${this.state.name} for ${this.state.price * this.state.quantity} gil?`);
-        if (confirmPurchase)
-        {
-            this.setState({ buttonDisabled: true, isLoading: true, alertVisible: false })
-            var idempotencyId = uuidv4();
-            this.fetchRetry(idempotencyId, 3);
-        }
+        this.setState({ confirmVisible: false, buttonDisabled: true, isLoading: true, alertVisible: false });
+        const idempotencyId = uuidv4();
+        this.fetchRetry(idempotencyId, 3);
+    }
+
+    cancelPurchase = () =>
+    {
+        this.setState({ confirmVisible: false });
     }
 
     async fetchRetry(idempotencyId, tries)
@@ -233,6 +236,16 @@ export default class PurchaseForm extends React.Component
             <Alert variant={this.state.alertColor} show={this.state.alertVisible}>
                 {this.state.alertMessage}
             </Alert>
+
+            <ConfirmDialog
+                show={this.state.confirmVisible}
+                title="Confirm purchase"
+                message={`Purchase ${this.state.quantity} ${this.state.name} for ${this.state.price * this.state.quantity} gil?`}
+                confirmLabel="Purchase"
+                cancelLabel="Cancel"
+                onConfirm={this.confirmPurchase}
+                onCancel={this.cancelPurchase}
+            />
         </Form>;
     }
 }

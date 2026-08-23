@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import ItemModal from './form/ItemModal';
 import GrantItemModal from './form/GrantItemModal';
+import ConfirmDialog from './common/ConfirmDialog';
 import authService from './api-authorization/AuthorizeService';
 
 const initialState = {
@@ -15,6 +16,8 @@ export const Catalog = () => {
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState('name');
   const [justAddedId, setJustAddedId] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [deleteError, setDeleteError] = useState(null);
 
   const refreshItems = async () => {
     setState((current) => ({ ...current, loading: true }));
@@ -81,11 +84,9 @@ export const Catalog = () => {
     });
   }, [items, search, sortBy]);
 
-  const handleDelete = async (id) => {
-    const confirmed = window.confirm('Do you really wish to delete it?');
-    if (!confirmed) {
-      return;
-    }
+  const confirmDelete = async () => {
+    const { id } = deleteTarget;
+    setDeleteTarget(null);
 
     try {
       const token = await authService.getAccessToken();
@@ -107,7 +108,7 @@ export const Catalog = () => {
       }));
     } catch (error) {
       console.error(error);
-      window.alert('Could not delete the item.');
+      setDeleteError('Could not delete the item.');
     }
   };
 
@@ -124,8 +125,8 @@ export const Catalog = () => {
 
     return (
       <>
-        <div className="catalog-toolbar">
-          <div className="catalog-toolbar__search">
+        <div className="data-toolbar">
+          <div className="data-toolbar__search">
             <i className="bi bi-search" aria-hidden="true"></i>
             <input
               type="text"
@@ -135,7 +136,7 @@ export const Catalog = () => {
               aria-label="Search catalog"
             />
           </div>
-          <label className="catalog-toolbar__sort">
+          <label className="data-toolbar__sort">
             <span>Sort</span>
             <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
               <option value="name">Name (A–Z)</option>
@@ -148,7 +149,7 @@ export const Catalog = () => {
           <div className="data-empty">
             <h3>No matches</h3>
             <p>No items match “{search}”. Try a different search.</p>
-            <button type="button" className="catalog-clear-search" onClick={() => setSearch('')}>
+            <button type="button" className="data-clear-search" onClick={() => setSearch('')}>
               Clear search
             </button>
           </div>
@@ -174,7 +175,7 @@ export const Catalog = () => {
                       <span className="catalog-table__price">{item.price}</span>
                     </td>
                     <td data-title="Actions" className="data-table__actions">
-                      <div className="data-table__action-group catalog-table__actions">
+                      <div className="data-table__action-group">
                         <ItemModal
                           isNew={false}
                           compact
@@ -186,7 +187,7 @@ export const Catalog = () => {
                         <Button
                           variant="danger"
                           size="sm"
-                          onClick={() => handleDelete(item.id)}
+                          onClick={() => setDeleteTarget(item)}
                           aria-label={`Delete ${item.name}`}
                           title="Delete"
                         >
@@ -249,6 +250,25 @@ export const Catalog = () => {
           </div>
         )}
       </section>
+
+      <ConfirmDialog
+        show={Boolean(deleteTarget)}
+        title="Delete item"
+        message={deleteTarget ? `Are you sure you want to delete "${deleteTarget.name}"? This can't be undone.` : ''}
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        confirmVariant="danger"
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
+
+      <ConfirmDialog
+        show={Boolean(deleteError)}
+        title="Something went wrong"
+        message={deleteError}
+        confirmLabel="OK"
+        onConfirm={() => setDeleteError(null)}
+      />
     </div>
   );
 };

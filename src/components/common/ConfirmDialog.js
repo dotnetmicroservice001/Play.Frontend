@@ -1,0 +1,39 @@
+import React from 'react';
+import { Modal, Button } from 'react-bootstrap';
+
+/**
+ * Pixel-tile themed replacement for window.confirm/window.alert. Omit
+ * cancelLabel to render as an alert (a single dismiss button) instead of
+ * a confirm/cancel pair.
+ */
+const ConfirmDialog = ({
+  show,
+  title,
+  message,
+  confirmLabel = 'Confirm',
+  cancelLabel,
+  confirmVariant = 'primary',
+  onConfirm,
+  onCancel,
+}) => (
+  <Modal show={show} onHide={onCancel ?? onConfirm} centered className="app-modal confirm-dialog">
+    <Modal.Header closeButton={Boolean(onCancel)}>
+      <Modal.Title>{title}</Modal.Title>
+    </Modal.Header>
+    <Modal.Body>
+      <p className="confirm-dialog__message">{message}</p>
+      <div className="confirm-dialog__actions">
+        {cancelLabel && (
+          <button type="button" className="confirm-dialog__cancel" onClick={onCancel}>
+            {cancelLabel}
+          </button>
+        )}
+        <Button variant={confirmVariant} onClick={onConfirm}>
+          {confirmLabel}
+        </Button>
+      </div>
+    </Modal.Body>
+  </Modal>
+);
+
+export default ConfirmDialog;

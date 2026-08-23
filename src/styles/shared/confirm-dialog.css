@@ -1,0 +1,39 @@
+/*
+ * Confirm/alert dialog body layout (see components/common/ConfirmDialog.js).
+ * The modal chrome itself (border/shadow/header/title) comes from the
+ * shared .app-modal class in shared/modal.css.
+ */
+.confirm-dialog__message {
+  margin: 0 0 20px;
+  color: rgba(var(--ink-rgb), 0.75);
+}
+
+.confirm-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.confirm-dialog__cancel {
+  padding: 0.375rem 1rem;
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--ink);
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.confirm-dialog__cancel:hover {
+  background: rgb(var(--purple-50-rgb));
+  transform: translate(-2px, -2px);
+}
+
+.confirm-dialog__cancel:active {
+  transform: translate(1px, 1px);
+}

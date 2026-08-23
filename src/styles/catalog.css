@@ -1,67 +1,5 @@
 /* Catalog-specific overrides on top of the shared .data-page pattern (see shared/data-page.css). */
 
-.catalog-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  margin-bottom: 16px;
-}
-
-.catalog-toolbar__search {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex: 1 1 240px;
-  max-width: 320px;
-  padding: 9px 14px;
-  border: 2px solid var(--ink);
-  border-radius: 8px;
-  background: #ffffff;
-}
-
-.catalog-toolbar__search i {
-  color: rgba(var(--ink-rgb), 0.5);
-}
-
-.catalog-toolbar__search input {
-  flex: 1 1 auto;
-  min-width: 0;
-  border: none;
-  outline: none;
-  background: transparent;
-  font-size: 0.92rem;
-  color: var(--ink);
-}
-
-.catalog-toolbar__search input::placeholder {
-  color: rgba(var(--ink-rgb), 0.4);
-}
-
-.catalog-toolbar__sort {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: rgba(var(--ink-rgb), 0.55);
-}
-
-.catalog-toolbar__sort select {
-  padding: 7px 10px;
-  border: 2px solid var(--ink);
-  border-radius: 8px;
-  background: #ffffff;
-  font-family: inherit;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--ink);
-}
-
 .catalog-table__name {
   font-family: 'Space Grotesk', sans-serif;
   font-weight: 600;
@@ -95,60 +33,12 @@
   color: var(--accent);
 }
 
-/* Tighter icon-only action buttons so Edit/Grant/Delete fit comfortably
-   in a table row without the row growing taller than the rest. */
-.catalog-table__actions .btn {
-  padding: 6px 10px;
-  min-width: 0;
-}
-
-.catalog-table__actions .btn i {
-  font-size: 0.95rem;
-}
-
 .catalog-empty__icon {
   font-size: 2.2rem;
   color: rgb(var(--purple-300-rgb));
 }
 
-.catalog-clear-search {
-  justify-self: center;
-  padding: 8px 18px;
-  border: 2px solid var(--ink);
-  border-radius: 8px;
-  background: #ffffff;
-  color: var(--ink);
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 600;
-  font-size: 0.82rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
-}
-
-.catalog-clear-search:hover {
-  background: rgb(var(--purple-50-rgb));
-  transform: translate(-2px, -2px);
-  box-shadow: 3px 3px 0 rgba(var(--purple-600-rgb), 0.9);
-}
-
-.catalog-clear-search:active {
-  transform: translate(1px, 1px);
-  box-shadow: none;
-}
-
 @media (max-width: 720px) {
-  .catalog-toolbar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .catalog-toolbar__search {
-    flex-basis: auto;
-    max-width: none;
-  }
-
   .catalog-table__description {
     max-width: none;
     overflow: visible;

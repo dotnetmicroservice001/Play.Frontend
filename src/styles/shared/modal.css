@@ -1,0 +1,23 @@
+/*
+ * Generic pixel-tile chrome for react-bootstrap Modals. Apply the
+ * .app-modal class (alongside any modal-specific class) so every dialog
+ * in the app — confirm/alert, Add/Edit Item, Grant Item, Edit User —
+ * shares the same ink-bordered, hard-shadow look instead of Bootstrap's
+ * unstyled default.
+ */
+.app-modal .modal-content {
+  border: 3px solid var(--ink);
+  border-radius: 10px;
+  box-shadow: 6px 6px 0 rgba(var(--purple-600-rgb), 0.9);
+}
+
+.app-modal .modal-header {
+  border-bottom: 2px solid rgba(var(--ink-rgb), 0.12);
+}
+
+.app-modal .modal-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.05rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
