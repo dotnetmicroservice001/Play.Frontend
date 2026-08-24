@@ -72,7 +72,10 @@ export const Landing = () => {
         <section id="demo" className="hero-bleed landing-hero">
           <Container>
             <div className="landing-hero__content landing-hero__content--stack">
-              <img src="/purpleman.png" alt="GamePlayEconomy" className="landing-hero__logo" />
+              <div className="landing-hero__mascots">
+                <img src="/12.png" alt="" aria-hidden="true" className="landing-hero__logo landing-hero__logo--companion" />
+                <img src="/11.png" alt="GamePlayEconomy" className="landing-hero__logo" />
+              </div>
               <h1 className="landing-hero__warp">
                 <WarpText
                   text="GAMEPLAYECONOMY"
@@ -112,7 +115,7 @@ export const Landing = () => {
                     See How It's Built
                     </button>
                     <Link
-                      to={AuthorizationPaths.Login}
+                      to={{ pathname: AuthorizationPaths.Login, search: '?demo=1' }}
                       className="hero-cta hero-cta--primary"
                     >
                     <i className="bi bi-person-plus" aria-hidden="true"></i>

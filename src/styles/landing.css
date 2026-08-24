@@ -144,12 +144,24 @@
   margin: 0;
 }
 
-.landing-hero__logo {
-  height: clamp(72px, 11vw, 110px);
-  width: clamp(72px, 11vw, 110px);
+.landing-hero__mascots {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
   margin-bottom: -12px;
+}
+
+.landing-hero__logo {
+  height: clamp(110px, 16vw, 170px);
+  width: clamp(110px, 16vw, 170px);
   image-rendering: pixelated;
   filter: drop-shadow(0 12px 20px rgba(var(--purple-600-rgb), 0.25));
+}
+
+.landing-hero__logo--companion {
+  height: clamp(74px, 10.8vw, 114px);
+  width: clamp(74px, 10.8vw, 114px);
+  margin-right: -14px;
 }
 
 .hero-typer {
