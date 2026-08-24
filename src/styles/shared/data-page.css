@@ -366,6 +366,51 @@
   box-shadow: none;
 }
 
+/* Item rarity chip — used next to the item name in both the Catalog admin
+   table and the Store card/detail panel, so the color scheme is defined
+   once here instead of duplicated per page. Unknown/future rarity strings
+   fall back to the ink/gray "common" look via the default rule below. */
+.rarity-badge {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  vertical-align: middle;
+  background: rgb(var(--purple-50-rgb));
+  color: rgba(var(--ink-rgb), 0.7);
+}
+
+.rarity-badge--uncommon {
+  background: #e3f5ea;
+  color: #0f5132;
+  border-color: #0f5132;
+}
+
+.rarity-badge--rare {
+  background: #e5edfb;
+  color: #1e40af;
+  border-color: #1e40af;
+}
+
+.rarity-badge--epic {
+  background: rgb(var(--purple-100-rgb));
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.rarity-badge--legendary {
+  background: #fdf0dc;
+  color: #9a5b00;
+  border-color: #9a5b00;
+}
+
 .data-empty {
   text-align: center;
   display: grid;

@@ -65,6 +65,17 @@ export const Store = () => {
             onClick={() => setSelectedItemId(item.id)}
           >
             <span className="store-card__image" aria-hidden="true">
+              {item.imageUrl ? (
+                <img
+                  src={item.imageUrl}
+                  alt=""
+                  className="store-card__image-img"
+                  onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
+                />
+              ) : null}
+              <span className="store-card__image-fallback" style={item.imageUrl ? { display: 'none' } : undefined}>
+                <i className="bi bi-image" aria-hidden="true"></i>
+              </span>
               {item.id === selectedItemId && (
                 <span className="store-card__selected-badge" aria-hidden="true">
                   <i className="bi bi-check-lg"></i>
@@ -74,7 +85,15 @@ export const Store = () => {
                 <i className="bi bi-arrow-right"></i>
               </span>
             </span>
-            <span className="store-card__name">{item.name}</span>
+            <span className="store-card__name">
+              {item.name}
+              {item.rarity && (
+                <span className={`rarity-badge rarity-badge--${item.rarity.toLowerCase()}`}>
+                  {item.rarity}
+                </span>
+              )}
+            </span>
+            <span className="store-card__category">{item.category || 'Uncategorized'}</span>
             <span className="store-card__description">{item.description}</span>
             <span className="store-card__footer">
               <span className="store-card__price">
@@ -149,8 +168,28 @@ export const Store = () => {
               </button>
             </div>
 
-            <h2 className="store-detail__title">{selectedItem.name}</h2>
-            <span className="store-detail__image" aria-hidden="true"></span>
+            <h2 className="store-detail__title">
+              {selectedItem.name}
+              {selectedItem.rarity && (
+                <span className={`rarity-badge rarity-badge--${selectedItem.rarity.toLowerCase()}`}>
+                  {selectedItem.rarity}
+                </span>
+              )}
+            </h2>
+            <p className="store-detail__category">{selectedItem.category || 'Uncategorized'}</p>
+            <span className="store-detail__image" aria-hidden="true">
+              {selectedItem.imageUrl ? (
+                <img
+                  src={selectedItem.imageUrl}
+                  alt=""
+                  className="store-detail__image-img"
+                  onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
+                />
+              ) : null}
+              <span className="store-detail__image-fallback" style={selectedItem.imageUrl ? { display: 'none' } : undefined}>
+                <i className="bi bi-image" aria-hidden="true"></i>
+              </span>
+            </span>
             <p className="store-detail__description">{selectedItem.description}</p>
 
             {selectedItem.ownedQuantity > 0 && (

@@ -159,6 +159,7 @@ export const Catalog = () => {
               <thead>
                 <tr>
                   <th scope="col">Item</th>
+                  <th scope="col">Category</th>
                   <th scope="col">Description</th>
                   <th scope="col">Price</th>
                   <th scope="col" className="data-table__actions">Actions</th>
@@ -167,7 +168,15 @@ export const Catalog = () => {
               <tbody>
                 {filteredItems.map((item) => (
                   <tr key={item.id} className={item.id === justAddedId ? 'catalog-row--new' : undefined}>
-                    <td data-title="Item" className="catalog-table__name">{item.name}</td>
+                    <td data-title="Item" className="catalog-table__name">
+                      {item.name}
+                      {item.rarity && (
+                        <span className={`rarity-badge rarity-badge--${item.rarity.toLowerCase()}`}>
+                          {item.rarity}
+                        </span>
+                      )}
+                    </td>
+                    <td data-title="Category">{item.category || '—'}</td>
                     <td data-title="Description" className="catalog-table__description" title={item.description}>
                       {item.description}
                     </td>
