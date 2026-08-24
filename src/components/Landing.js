@@ -92,6 +92,12 @@ export const Landing = () => {
                   style={{ height: 'clamp(120px, 18vw, 220px)' }}
                 />
               </h1>
+              <img
+                src="/herostrip.png"
+                alt=""
+                aria-hidden="true"
+                className="landing-hero__strip"
+              />
               <TextType
                 as="p"
                 className="hero-typer"
