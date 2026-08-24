@@ -245,13 +245,14 @@ export class NavMenu extends Component
   profileAndLogoutItems()
   {
     const logoutPath = { pathname: `${AuthorizationPaths.LogOut}`, state: { local: true } };
+    const shortName = this.state.userName ? this.state.userName.split('@')[0] : '';
     return (
       <Fragment>
         <NavDropdown
           title={
-            <span className="navmenu__greeting navmenu__greeting--dropdown">
-              <i className="bi bi-person-circle mr-1" aria-hidden="true"></i>
-              Hello {this.state.userName}
+            <span className="navmenu__greeting navmenu__greeting--dropdown" title={this.state.userName}>
+              <i className="bi bi-person-circle" aria-hidden="true"></i>
+              {shortName}
             </span>
           }
           id="profile-dropdown"

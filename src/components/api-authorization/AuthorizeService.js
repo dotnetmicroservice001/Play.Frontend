@@ -78,6 +78,21 @@ export class AuthorizeService {
         }
     }
 
+    // Skips the silent/popup attempts and redirects straight to the IdP,
+    // tagging the authorize request with ?demo=1 so the login page there
+    // knows to bypass its credential form and sign the demo user in
+    // immediately instead of waiting for a second click.
+    async signInDemo(state) {
+        await this.ensureUserManagerInitialized();
+        try {
+            await this.userManager.signinRedirect(this.createArguments(state, { demo: '1' }));
+            return this.redirect();
+        } catch (redirectError) {
+            console.log("Redirect authentication error: ", redirectError);
+            return this.error(redirectError);
+        }
+    }
+
     async completeSignIn(url) {
         try {
             await this.ensureUserManagerInitialized();
@@ -158,8 +173,12 @@ export class AuthorizeService {
         }
     }
 
-    createArguments(state) {
-        return { useReplaceToNavigate: true, data: state };
+    createArguments(state, extraQueryParams) {
+        const args = { useReplaceToNavigate: true, data: state };
+        if (extraQueryParams) {
+            args.extraQueryParams = extraQueryParams;
+        }
+        return args;
     }
 
     error(message) {

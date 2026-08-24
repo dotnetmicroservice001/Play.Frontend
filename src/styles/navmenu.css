@@ -1,15 +1,40 @@
+.navbar.navmenu {
+  border-bottom: 3px solid var(--ink);
+  box-shadow: 0 4px 0 rgba(var(--purple-600-rgb), 0.9);
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Match the data-page/home-page content column exactly (max-width:1040px
+   inside padding: clamp(24px, 6vw, 72px)) so the logo lines up with page
+   content below it instead of following Bootstrap's own container
+   breakpoints. Collapsing that two-level pattern (outer padding + inner
+   max-width) into one rule: outer max-width = 1040px + 2 * the same
+   padding, centered, with that padding applied directly — the math works
+   out to the identical left edge at every viewport width. */
+.navbar.navmenu .container {
+  max-width: calc(1040px + 2 * clamp(24px, 6vw, 72px));
+  width: 100%;
+  padding-left: clamp(24px, 6vw, 72px);
+  padding-right: clamp(24px, 6vw, 72px);
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .navbar-light .navbar-brand {
   font-family: 'Space Grotesk', sans-serif;
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: rgba(var(--purple-50-rgb), 0.85) !important;
   display: inline-flex;
   align-items: center;
   gap: 8px;
 }
 
 .navmenu__logo {
-  height: 28px;
-  width: 28px;
+  height: 24px;
+  width: 24px;
   image-rendering: pixelated;
 }
 
@@ -65,7 +90,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0.75rem;
   font-weight: 500;
   letter-spacing: 0.03em;
   color: inherit;
@@ -83,9 +108,6 @@
   gap: 8px;
 }
 
-.navmenu__greeting i {
-  font-size: 1rem;
-}
 .navmenu__collapse,
 .navmenu__primary,
 .navmenu__secondary,
@@ -100,18 +122,85 @@
   gap: 6px;
   background: none;
   border: none;
+  border-radius: 8px;
   font-weight: 500;
   letter-spacing: 0.03em;
   cursor: pointer;
   padding: 0.5rem 1rem;
   color: inherit;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link:focus,
+.navbar .dropdown-toggle:hover,
+.navbar .dropdown-toggle:focus {
+  background: rgba(var(--purple-300-rgb), 0.18);
+  transform: translateY(-1px);
+}
+
+.navbar .nav-link:active,
+.navbar .dropdown-toggle:active {
+  transform: translateY(0);
+}
+
+/* Dropdown panels (Manage, Dev Tools, profile) — same ink-border +
+   hard-shadow language as the app-modal dialogs, instead of Bootstrap's
+   plain default menu. */
+.navbar .dropdown-menu {
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 5px 5px 0 rgba(var(--purple-600-rgb), 0.9);
+  padding: 6px;
+  margin-top: 10px;
+}
+
+.navbar .dropdown-item {
+  border-radius: 6px;
+  color: var(--ink);
+  font-weight: 500;
+  padding: 8px 12px;
+}
+
+.navbar .dropdown-item:hover,
+.navbar .dropdown-item:focus {
+  background: rgb(var(--purple-50-rgb));
+  color: var(--ink);
+}
+
+.navbar .dropdown-item:active {
+  background: rgb(var(--purple-100-rgb));
+  color: var(--ink);
+}
+
+.navmenu__logout-item:hover,
+.navmenu__logout-item:focus {
+  background: var(--danger-bg) !important;
+  color: var(--danger) !important;
+}
+
+.navbar .navbar-toggler {
+  border-radius: 8px;
+  transition: background 0.15s ease;
+}
+
+.navbar .navbar-toggler:hover {
+  background: rgba(var(--purple-300-rgb), 0.18);
 }
 
 .navbar .nav-link i,
 .navbar .dropdown-toggle i,
 .navmenu__collapse i {
-  font-size: 1rem;
+  font-size: 0.85rem;
+  opacity: 0.7;
   margin-bottom: 0;
+}
+
+/* Account icon reads even smaller than the primary nav icons — it's a
+   secondary/utility control, not a link of equal weight. */
+.navbar .navmenu__greeting i {
+  font-size: 0.8rem;
 }
 
 .navmenu__secondary {

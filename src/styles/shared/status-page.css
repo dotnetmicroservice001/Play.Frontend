@@ -1,0 +1,113 @@
+/*
+ * Full-page status panel (see components/common/StatusPage.js) — 404s and
+ * the auth flow's login/logout success, failure, and processing states.
+ * Reuses the same grid background + pixel-tile card language as .data-page
+ * and .data-empty, but as a standalone page rather than page content.
+ */
+.status-page {
+  position: relative;
+  min-height: calc(100vh - 120px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(32px, 5vw, 56px) clamp(24px, 6vw, 72px);
+  background: linear-gradient(180deg, rgba(var(--purple-100-rgb), 0.22) 0%, rgba(var(--purple-50-rgb), 0.55) 100%);
+  overflow: hidden;
+}
+
+.status-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(90deg, var(--landing-grid-light) 1px, transparent 1px),
+    linear-gradient(var(--landing-grid-light) 1px, transparent 1px);
+  background-size: 32px 32px;
+  opacity: 0.32;
+  pointer-events: none;
+}
+
+.status-page__panel {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 480px;
+  text-align: center;
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: clamp(36px, 6vw, 52px) clamp(28px, 5vw, 40px);
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 8px 8px 0 rgba(var(--purple-600-rgb), 0.9);
+}
+
+.status-page__icon {
+  font-size: 2.6rem;
+  color: rgb(var(--purple-400-rgb));
+}
+
+.status-page__icon--spin {
+  animation: data-page-spin 1.2s linear infinite;
+}
+
+.status-page__panel--danger .status-page__icon {
+  color: var(--danger);
+}
+
+.status-page__panel--success .status-page__icon {
+  color: var(--success);
+}
+
+.status-page__eyebrow {
+  margin: 0;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: rgba(var(--ink-rgb), 0.55);
+}
+
+.status-page__title {
+  margin: 0;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1.5rem, 4vw, 1.9rem);
+}
+
+.status-page__message {
+  margin: 0;
+  color: rgba(var(--ink-rgb), 0.7);
+}
+
+.status-page__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 2px solid var(--ink);
+  background: rgb(var(--purple-300-rgb));
+  color: var(--ink);
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: 4px 4px 0 rgba(var(--purple-600-rgb), 0.9);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.status-page__cta:hover,
+.status-page__cta:focus {
+  transform: translate(-2px, -2px);
+  background: rgb(var(--purple-200-rgb));
+  color: var(--ink);
+  box-shadow: 6px 6px 0 rgba(var(--purple-600-rgb), 0.9);
+  outline: none;
+}
+
+.status-page__cta:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 rgba(var(--purple-600-rgb), 0.9);
+}

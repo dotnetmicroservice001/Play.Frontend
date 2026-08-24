@@ -3,6 +3,7 @@ import { Component } from 'react';
 import authService from './AuthorizeService';
 import { AuthenticationResultStatus } from './AuthorizeService';
 import { LoginActions, QueryParameterNames, AuthorizationPaths } from './ApiAuthorizationConstants';
+import StatusPage from '../common/StatusPage';
 
 // The main responsibility of this component is to handle the user's login process.
 // This is the starting point for the login process. Any component that needs to authenticate
@@ -47,13 +48,48 @@ export class Login extends Component {
         const { message } = this.state;
 
         if (!!message) {
-            return <div>{message}</div>
+            return (
+                <StatusPage
+                    icon="bi-exclamation-octagon"
+                    eyebrow="Sign-in error"
+                    title="We couldn't sign you in"
+                    message={message}
+                    ctaLabel="Try again"
+                    ctaTo={AuthorizationPaths.Login}
+                    tone="danger"
+                />
+            );
         } else {
             switch (action) {
                 case LoginActions.Login:
-                    return (<div>Processing login</div>);
+                    return (
+                        <StatusPage
+                            icon="bi-arrow-repeat"
+                            title="Signing you in…"
+                            message="Hang tight, this should only take a moment."
+                            spin
+                        />
+                    );
                 case LoginActions.LoginCallback:
-                    return (<div>Processing login callback</div>);
+                    return (
+                        <StatusPage
+                            icon="bi-arrow-repeat"
+                            title="Finishing sign-in…"
+                            message="Hang tight, this should only take a moment."
+                            spin
+                        />
+                    );
+                case LoginActions.LoginFailed:
+                    // componentDidMount hasn't parsed the ?message= query param into
+                    // state yet on this first render — briefly show a neutral state
+                    // instead of falling through to the "invalid action" default.
+                    return (
+                        <StatusPage
+                            icon="bi-arrow-repeat"
+                            title="Checking sign-in status…"
+                            spin
+                        />
+                    );
                 case LoginActions.Profile:
                 case LoginActions.Register:
                     return (<div></div>);
@@ -65,7 +101,9 @@ export class Login extends Component {
 
     async login(returnUrl) {
         const state = { returnUrl };
-        const result = await authService.signIn(state);
+        const params = new URLSearchParams(window.location.search);
+        const isDemo = params.get('demo') === '1';
+        const result = isDemo ? await authService.signInDemo(state) : await authService.signIn(state);
         switch (result.status) {
             case AuthenticationResultStatus.Redirect:
                 break;
