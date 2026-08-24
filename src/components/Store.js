@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import PurchaseForm from './form/PurchaseForm';
 import authService from './api-authorization/AuthorizeService';
 
@@ -12,6 +12,7 @@ const initialState = {
 export const Store = () => {
   const [{ items, userGil, loading, loadedSuccess }, setState] = useState(initialState);
   const [selectedItemId, setSelectedItemId] = useState(null);
+  const [activeCategory, setActiveCategory] = useState('All');
 
   const refreshItems = async () => {
     setState((current) => ({ ...current, loading: true }));
@@ -45,6 +46,16 @@ export const Store = () => {
   const selectedItem = items.find((item) => item.id === selectedItemId) ?? null;
   const closeDetail = () => setSelectedItemId(null);
 
+  const categories = useMemo(() => {
+    const unique = new Set(items.map((item) => item.category || 'Uncategorized'));
+    return ['All', ...Array.from(unique).sort()];
+  }, [items]);
+
+  const filteredItems = useMemo(() => {
+    if (activeCategory === 'All') return items;
+    return items.filter((item) => (item.category || 'Uncategorized') === activeCategory);
+  }, [items, activeCategory]);
+
   const renderGrid = () => {
     if (items.length === 0) {
       return (
@@ -55,9 +66,18 @@ export const Store = () => {
       );
     }
 
+    if (filteredItems.length === 0) {
+      return (
+        <div className="data-empty">
+          <h3>No items in this category</h3>
+          <p>Try a different category, or browse all items.</p>
+        </div>
+      );
+    }
+
     return (
       <div className="store-grid">
-        {items.map((item) => (
+        {filteredItems.map((item) => (
           <button
             key={item.id}
             type="button"
@@ -144,6 +164,23 @@ export const Store = () => {
             </div>
           )}
 
+          {!loading && loadedSuccess && items.length > 0 && (
+            <div className="store-category-filters" role="tablist" aria-label="Browse by category">
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  type="button"
+                  role="tab"
+                  aria-selected={activeCategory === category}
+                  className={`store-category-filter${activeCategory === category ? ' store-category-filter--active' : ''}`}
+                  onClick={() => setActiveCategory(category)}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+          )}
+
           {!loading && loadedSuccess && renderGrid()}
 
           {!loading && !loadedSuccess && (
@@ -153,6 +190,10 @@ export const Store = () => {
             </div>
           )}
         </div>
+
+        {selectedItem && (
+          <div className="store-detail-backdrop" onClick={closeDetail} aria-hidden="true"></div>
+        )}
 
         {selectedItem && (
           <aside className="store-detail">
