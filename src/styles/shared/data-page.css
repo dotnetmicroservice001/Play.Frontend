@@ -14,7 +14,6 @@
   font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
   background: linear-gradient(180deg, rgba(var(--purple-100-rgb), 0.22) 0%, rgba(var(--purple-50-rgb), 0.55) 100%);
   min-height: calc(100vh - 120px);
-  overflow: hidden;
 }
 
 /* Same grid tiling used on the landing hero/outcomes sections and the

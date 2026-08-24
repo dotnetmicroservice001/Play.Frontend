@@ -85,20 +85,20 @@ export const Store = () => {
                 <i className="bi bi-arrow-right"></i>
               </span>
             </span>
-            <span className="store-card__name">
-              {item.name}
-              {item.rarity && (
-                <span className={`rarity-badge rarity-badge--${item.rarity.toLowerCase()}`}>
-                  {item.rarity}
-                </span>
-              )}
-            </span>
+            <span className="store-card__name">{item.name}</span>
             <span className="store-card__category">{item.category || 'Uncategorized'}</span>
             <span className="store-card__description">{item.description}</span>
             <span className="store-card__footer">
-              <span className="store-card__price">
-                <i className="bi bi-coin" aria-hidden="true"></i>
-                {item.price}
+              <span className="store-card__price-group">
+                <span className="store-card__price">
+                  <i className="bi bi-coin" aria-hidden="true"></i>
+                  {item.price}
+                </span>
+                {item.rarity && (
+                  <span className={`rarity-badge rarity-badge--${item.rarity.toLowerCase()}`}>
+                    {item.rarity}
+                  </span>
+                )}
               </span>
               {item.ownedQuantity > 0 && (
                 <span className="store-card__owned">
