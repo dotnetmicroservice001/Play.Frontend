@@ -11,6 +11,26 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  cursor: url('../assets/icons/mouse.png') 1 1, auto;
+}
+
+/* Bootstrap (and our own component CSS) sets cursor: pointer directly on
+   these, which beats the body-level rule above on specificity regardless
+   of stylesheet order — so the custom cursor needs to be reasserted here
+   too, or it reverts to the system pointer on every clickable element. */
+a,
+button,
+.btn,
+[role="button"],
+select,
+label,
+input[type="button"],
+input[type="submit"],
+.dropdown-toggle,
+.dropdown-item,
+.nav-link,
+summary {
+  cursor: url('../assets/icons/mouse.png') 1 1, auto !important;
 }
 
 code {
