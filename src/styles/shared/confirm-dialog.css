@@ -3,9 +3,18 @@
  * The modal chrome itself (border/shadow/header/title) comes from the
  * shared .app-modal class in shared/modal.css.
  */
+.confirm-dialog__icon {
+  display: block;
+  width: 4rem;
+  height: 4rem;
+  margin: 0 auto 12px;
+  image-rendering: pixelated;
+}
+
 .confirm-dialog__message {
   margin: 0 0 20px;
   color: rgba(var(--ink-rgb), 0.75);
+  text-align: center;
 }
 
 .confirm-dialog__actions {

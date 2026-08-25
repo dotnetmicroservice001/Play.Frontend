@@ -9,7 +9,10 @@
 }
 
 /* Same grid tiling used on the landing hero/outcomes sections, carried
-   over here so the post-login dashboard reads as part of the same site. */
+   over here so the post-login dashboard reads as part of the same site.
+   Masked so it fades in under the hero rather than sitting at flat
+   opacity everywhere — the hero reads as a lit clearing, and the grid
+   settles back to its normal density by the time the stat plate starts. */
 .home::before {
   content: '';
   position: absolute;
@@ -18,6 +21,8 @@
     linear-gradient(var(--landing-grid-light) 1px, transparent 1px);
   background-size: 32px 32px;
   opacity: 0.32;
+  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0px, rgba(0, 0, 0, 1) 260px);
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0px, rgba(0, 0, 0, 1) 260px);
   pointer-events: none;
 }
 
@@ -31,6 +36,16 @@
 }
 
 .home-hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.home-hero__text {
+  position: relative;
+  z-index: 1;
   display: grid;
   gap: 4px;
 }
@@ -53,84 +68,146 @@
   color: inherit;
 }
 
-/* Stat tiles row — wallet balance + inventory-derived counts, each a
-   compact chamfered card in the same ink-border/hard-shadow language as
-   the rest of the app. */
-.home-stats {
-  display: grid;
-  gap: 18px;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+/* The standalone wizard portrait (no cat, no tree canopy, no vine
+   frame) — a persistent small emblem rather than a repeat of the full
+   landing crest illustration, since this one greets the player every
+   session instead of once. */
+.home-hero__emblem {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  width: 68px;
+  height: 68px;
 }
 
-.home-stat-card {
+/* Ambient light behind the emblem — a quieter, single-source version of
+   the layered glows on the landing hero (landing.css). Landing gets to
+   spend a big atmospheric moment because you see it once; this is seen
+   every login, so it stays low-opacity rather than a full spotlight.
+   Centered on the emblem itself (not offset from the hero container)
+   so it stays concentric with it at any width. */
+.home-hero__glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 240px;
+  height: 240px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(var(--purple-400-rgb), 0.32), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.home-hero__emblem img {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 6px 10px rgba(var(--purple-600-rgb), 0.3));
+}
+
+/* Stat row — wallet balance + inventory-derived counts sitting free on
+   the page background, no outer card. It's status, not something
+   clickable, so it doesn't need a boxed container to read as a unit —
+   the icon medallions alone are enough to tie the three together. */
+.home-stats {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr;
+  gap: 24px;
+}
+
+.home-stat-segment {
   display: grid;
   grid-template-columns: auto 1fr;
   align-items: center;
-  gap: 4px 16px;
-  padding: 18px 20px;
-  border-radius: 10px;
-  border: 3px solid var(--ink);
-  background: #ffffff;
-  box-shadow: 6px 6px 0 rgba(var(--purple-600-rgb), 0.9);
+  gap: 4px 14px;
 }
 
-.home-stat-card__icon {
+.home-stat-segment__body {
+  display: grid;
+  gap: 2px;
+}
+
+.home-stat-segment__icon {
   grid-row: 1 / span 3;
-  width: 52px;
-  height: 52px;
+  width: 44px;
+  height: 44px;
   border-radius: 8px;
-  background: rgb(var(--purple-100-rgb));
+  background: #ffffff;
   border: 3px solid var(--ink);
   color: var(--ink);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   box-shadow: 3px 3px 0 rgba(var(--purple-600-rgb), 0.9);
 }
 
-.home-stat-card__icon .wallet-icon {
-  font-size: 1.7rem;
+/* Wallet leads the plate — bigger icon, bigger accent-colored value —
+   the "main resource" the way a HUD gives its primary stat more weight
+   than secondary ones, rather than treating all three as equals. */
+.home-stat-segment--primary .home-stat-segment__icon {
+  width: 56px;
+  height: 56px;
+  font-size: 1.6rem;
 }
 
-.home-stat-card__icon-img {
-  width: 24px;
-  height: 24px;
+.home-stat-segment--primary .home-stat-segment__icon-img {
+  width: 28px;
+  height: 28px;
+}
+
+.home-stat-segment--primary .home-stat-segment__value {
+  font-size: 2rem;
+  color: var(--accent);
+}
+
+.home-stat-segment__icon-img {
+  width: 22px;
+  height: 22px;
   image-rendering: pixelated;
 }
 
-.home-stat-card__label {
+.home-stat-segment__label {
   margin: 0;
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.14em;
   color: rgba(var(--ink-rgb), 0.55);
 }
 
-.home-stat-card__value {
+.home-stat-segment__value {
   margin: 0;
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.7rem;
+  font-size: 1.5rem;
   font-weight: 700;
   line-height: 1.15;
   color: var(--ink);
 }
 
-.home-stat-card__caption {
+.home-stat-segment__caption {
   margin: 0;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   color: rgba(var(--ink-rgb), 0.6);
 }
 
-.home-stat-card__spinner {
+.home-stat-segment__spinner {
   width: 18px;
   height: 18px;
   border-radius: 50%;
   border: 3px solid rgba(var(--purple-500-rgb), 0.18);
   border-top-color: rgba(var(--purple-600-rgb), 0.85);
   animation: data-page-spin 0.8s linear infinite;
+}
+
+@media (max-width: 640px) {
+  .home-stats {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Shared section header used above "Latest drops" and "Your bag". */
@@ -170,12 +247,33 @@
   text-decoration: underline;
 }
 
+/* Main lane (Latest drops — wants width for its card grid) + a narrower
+   rail (Your bag, admin links, Dev Tools note — all short, list-like
+   "about you" content) instead of stacking every section full-width. */
+.home-columns {
+  display: grid;
+  grid-template-columns: 2fr minmax(280px, 1fr);
+  gap: clamp(28px, 3.5vw, 40px);
+  align-items: start;
+}
+
+.home-columns__rail {
+  display: grid;
+  gap: clamp(28px, 3.5vw, 40px);
+}
+
+@media (max-width: 1000px) {
+  .home-columns {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Latest drops — recommendation cards pointing into the store, styled
    like a compact take on the store-card grid. */
 .home-drops {
   display: grid;
   gap: 18px;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
 
 .home-drop-card {
@@ -206,7 +304,7 @@
   height: 120px;
   border-radius: 8px;
   border: 2px solid var(--ink);
-  background: rgb(var(--purple-50-rgb));
+  background: #ffffff;
   overflow: hidden;
 }
 
@@ -264,93 +362,101 @@
   color: var(--accent);
 }
 
-/* Your bag — a compact, purpose-built list (not the shared .data-table)
-   so a 3-field preview row stays a single line at every viewport width
-   instead of stacking into the admin tables' mobile card pattern. */
-.home-bag-list {
-  border-radius: 10px;
-  border: 3px solid var(--ink);
-  background: #ffffff;
-  box-shadow: 6px 6px 0 rgba(var(--purple-600-rgb), 0.9);
-  overflow: hidden;
+/* Your bag — a small pouch panel echoing Inventory's own chamfered
+   frame (inventory.css .inventory-panel), so the preview visually
+   mirrors the page it's teasing instead of looking like a plain widget.
+   Deliberately lighter than the real pouch: a single chamfer + one
+   shadow layer, no inlaid rivets or dashed-divider header — those stay
+   exclusive to the full Inventory page so they still feel earned there. */
+.home-bag-pouch {
+  position: relative;
 }
 
-.home-bag-row {
+.home-bag-pouch__shadow {
+  position: absolute;
+  inset: 0;
+  transform: translate(5px, 5px);
+  background: rgba(var(--purple-600-rgb), 0.9);
+  clip-path: polygon(
+    16px 0, calc(100% - 16px) 0, 100% 16px,
+    100% calc(100% - 16px), calc(100% - 16px) 100%, 16px 100%,
+    0 calc(100% - 16px), 0 16px
+  );
+}
+
+.home-bag-pouch__frame {
+  position: relative;
+  padding: 3px;
+  background: var(--ink);
+  clip-path: polygon(
+    16px 0, calc(100% - 16px) 0, 100% 16px,
+    100% calc(100% - 16px), calc(100% - 16px) 100%, 16px 100%,
+    0 calc(100% - 16px), 0 16px
+  );
+}
+
+.home-bag-pouch__inner {
+  padding: 16px;
+  background: #ffffff;
+  clip-path: polygon(
+    13px 0, calc(100% - 13px) 0, 100% 13px,
+    100% calc(100% - 13px), calc(100% - 13px) 100%, 13px 100%,
+    0 calc(100% - 13px), 0 13px
+  );
+}
+
+/* A strip of slot-thumbnails (image + quantity badge), mirroring
+   Inventory's own card-slot grid (inventory.css .inventory-card)
+   instead of a label/value row list — a peek into the pouch rather
+   than a mini data table. */
+.home-bag-slots {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(56px, 1fr));
+  gap: 10px;
+}
+
+.home-bag-slot {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 16px;
-  border-bottom: 1px solid rgba(var(--ink-rgb), 0.12);
-}
-
-.home-bag-row:last-child {
-  border-bottom: none;
-}
-
-.home-bag-row:hover {
-  background: rgba(var(--purple-600-rgb), 0.06);
-}
-
-.home-bag-row__image {
-  display: inline-flex;
-  align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 6px;
+  aspect-ratio: 1;
+  border-radius: 8px;
   border: 2px solid var(--ink);
-  background: rgb(var(--purple-50-rgb));
+  background: #ffffff;
   overflow: hidden;
-  flex-shrink: 0;
 }
 
-.home-bag-row__image-img {
+.home-bag-slot__image-img {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  padding: 4px;
+  padding: 6px;
   image-rendering: pixelated;
 }
 
-.home-bag-row__glyph {
-  font-size: 1.05rem;
+.home-bag-slot__glyph {
+  font-size: 1.1rem;
   color: rgba(var(--ink-rgb), 0.4);
 }
 
-.home-bag-row__info {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  min-width: 0;
-  flex: 1 1 auto;
-}
-
-.home-bag-row__name {
-  font-weight: 700;
-  font-size: 0.94rem;
-  color: var(--ink);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.home-bag-row__category {
-  font-size: 0.78rem;
-  color: rgba(var(--ink-rgb), 0.55);
-}
-
-.home-bag-row__qty {
-  flex-shrink: 0;
+.home-bag-slot__qty {
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+  padding: 1px 5px;
+  border-radius: 6px;
+  border: 1.5px solid var(--ink);
+  background: #ffffff;
   font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.66rem;
   font-weight: 700;
-  font-size: 0.9rem;
   color: var(--accent);
 }
 
 .home-admin {
   display: grid;
   gap: 12px;
-  max-width: 640px;
 }
 
 .home-admin__title {
@@ -395,57 +501,8 @@
   box-shadow: 1px 1px 0 rgba(var(--purple-600-rgb), 0.9);
 }
 
-/* Bottom status bar — same visual language as the rest of the dashboard,
-   holding the Dev Tools note that used to sit as a lone paragraph. */
-.home-footer-bar {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-  padding: 14px 20px;
-  border-radius: 10px;
-  border: 3px solid var(--ink);
-  background: #ffffff;
-  box-shadow: 6px 6px 0 rgba(var(--purple-600-rgb), 0.9);
-}
-
-.home-footer-bar__status {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--ink);
-  white-space: nowrap;
-}
-
-.home-footer-bar__dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: rgb(var(--purple-600-rgb));
-}
-
-.home-footer-bar__note {
-  margin: 0;
-  font-size: 0.88rem;
-  color: rgba(var(--ink-rgb), 0.65);
-}
-
 @media (max-width: 768px) {
   .home {
     padding: 28px 20px 48px;
-  }
-
-  .home-stat-card {
-    padding: 16px;
-  }
-
-  .home-footer-bar {
-    flex-direction: column;
-    align-items: flex-start;
   }
 }
