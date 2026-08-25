@@ -9,6 +9,48 @@ const initialState = {
   loadedSuccess: false,
 };
 
+/* Custom pixel-art glyphs for the categories that have one (public/categories/).
+   Categories are free-text from the Catalog service, not a fixed enum, so
+   anything without a matching image (or an unrecognized category) falls
+   back to a generic Bootstrap icon instead of guessing. */
+const CATEGORY_ICON_IMAGES = {
+  Weapons: '/categories/sword.png',
+  'Armor & Accessories': '/categories/armor.png',
+  'Potions, Scrolls & Materials': '/categories/potion.png',
+  Companions: '/categories/paw.png',
+};
+
+const CATEGORY_ICONS = {
+  Weapons: 'bi-lightning-fill',
+  'Armor & Accessories': 'bi-shield-fill',
+  'Potions, Scrolls & Materials': 'bi-flask-fill',
+  Companions: 'bi-feather',
+};
+
+const getCategoryIcon = (category) => CATEGORY_ICONS[category] || 'bi-tags-fill';
+
+/* Display-only shortening — the raw Catalog category name is still what
+   drives filtering and the icon lookups above, this just keeps the rail
+   tooltip and panel header from stretching out with a long label. */
+const CATEGORY_SHORT_LABELS = {
+  'Potions, Scrolls & Materials': 'Consumables',
+};
+
+const getCategoryLabel = (category) => CATEGORY_SHORT_LABELS[category] || category;
+
+/* Pads the grid out with empty sockets so a light inventory still reads
+   as a bag with room in it, not a stray handful of cards — matching the
+   fixed-slot look of a real game inventory. Not a real capacity limit:
+   just how many slots are shown before the grid grows to fit more. */
+const MIN_GRID_SLOTS = 12;
+
+/* CSS url() in inventory.css can't reach files under public/ — CRA's
+   css-loader resolves them as module imports and fails to build. An
+   inline style bypasses that, the same way the existing /wallet.png and
+   /gil.png <img> tags elsewhere already resolve public/ assets at
+   runtime rather than through webpack. */
+const RIVET_STYLE = { backgroundImage: "url('/purplediamond.png')" };
+
 export const Inventory = () => {
   const location = useLocation();
   const history = useHistory();
@@ -16,9 +58,8 @@ export const Inventory = () => {
   const userContext = location?.user;
 
   const [{ items, loading, loadedSuccess }, setState] = useState(initialState);
-  const [search, setSearch] = useState('');
-  const [sortBy, setSortBy] = useState('name');
   const [selectedItemId, setSelectedItemId] = useState(null);
+  const [activeCategory, setActiveCategory] = useState('All');
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -54,25 +95,18 @@ export const Inventory = () => {
     fetchItems();
   }, [cameFromUsersPage, userContext]);
 
-  const totals = useMemo(() => {
-    const totalQuantity = items.reduce((sum, item) => sum + (item.quantity ?? 0), 0);
-    return {
-      totalQuantity,
-      distinctItems: items.length,
-    };
+  const categories = useMemo(() => {
+    const unique = new Set(items.map((item) => item.category || 'Uncategorized'));
+    return ['All', ...Array.from(unique).sort()];
   }, [items]);
 
   const filteredItems = useMemo(() => {
-    const query = search.trim().toLowerCase();
-    const filtered = query ? items.filter((item) => item.name?.toLowerCase().includes(query)) : items;
+    const filtered = activeCategory === 'All'
+      ? items
+      : items.filter((item) => (item.category || 'Uncategorized') === activeCategory);
 
-    return [...filtered].sort((a, b) => {
-      if (sortBy === 'quantity') {
-        return (b.quantity ?? 0) - (a.quantity ?? 0);
-      }
-      return (a.name ?? '').localeCompare(b.name ?? '');
-    });
-  }, [items, search, sortBy]);
+    return [...filtered].sort((a, b) => (a.name ?? '').localeCompare(b.name ?? ''));
+  }, [items, activeCategory]);
 
   const selectedItem = items.find((item) => item.catalogItemId === selectedItemId) ?? null;
   const closeDetail = () => setSelectedItemId(null);
@@ -81,14 +115,13 @@ export const Inventory = () => {
     if (filteredItems.length === 0) {
       return (
         <div className="data-empty">
-          <h3>No matches</h3>
-          <p>No items match “{search}”. Try a different search.</p>
-          <button type="button" className="data-clear-search" onClick={() => setSearch('')}>
-            Clear search
-          </button>
+          <h3>No items in this pouch</h3>
+          <p>Try a different category, or browse all items.</p>
         </div>
       );
     }
+
+    const emptySlotCount = Math.max(0, MIN_GRID_SLOTS - filteredItems.length);
 
     return (
       <div className="inventory-grid">
@@ -96,7 +129,7 @@ export const Inventory = () => {
           <button
             key={item.catalogItemId}
             type="button"
-            className={`inventory-card${item.catalogItemId === selectedItemId ? ' inventory-card--active' : ''}`}
+            className={`inventory-card${item.rarity ? ` inventory-card--rarity-${item.rarity.toLowerCase()}` : ''}${item.catalogItemId === selectedItemId ? ' inventory-card--active' : ''}`}
             onClick={() => setSelectedItemId(item.catalogItemId)}
           >
             <span className="inventory-card__image" aria-hidden="true">
@@ -124,8 +157,23 @@ export const Inventory = () => {
               )}
               <span className="inventory-card__stack">×{item.quantity}</span>
             </span>
-            <span className="inventory-card__name">{item.name}</span>
+            <span className="inventory-card__name">
+              <i className="inventory-card__name-ornament" aria-hidden="true"></i>
+              <span className="inventory-card__name-text">{item.name}</span>
+              <i className="inventory-card__name-ornament" aria-hidden="true"></i>
+            </span>
           </button>
+        ))}
+
+        {Array.from({ length: emptySlotCount }).map((_, index) => (
+          <div key={`empty-${index}`} className="inventory-card inventory-card--empty" aria-hidden="true">
+            <span className="inventory-card__image inventory-card__image--empty"></span>
+            <span className="inventory-card__name inventory-card__name--empty">
+              <i className="inventory-card__name-ornament" aria-hidden="true"></i>
+              <span className="inventory-card__name-text">&nbsp;</span>
+              <i className="inventory-card__name-ornament" aria-hidden="true"></i>
+            </span>
+          </div>
         ))}
       </div>
     );
@@ -137,84 +185,105 @@ export const Inventory = () => {
         <div className="data-page__header-text">
           <p className="data-page__eyebrow">Inventory</p>
           <h1 className="data-page__title">
-            {cameFromUsersPage ? `${userContext.email}'s inventory` : 'Your inventory'}
+            {cameFromUsersPage ? `${userContext.email}'s inventory` : "What's in your collection"}
           </h1>
-          <p className="data-page__subtitle">Everything you've collected, all in one place.</p>
         </div>
         <div className="data-page__cta-row">
           <Link className="data-page__cta" to={ApplicationPaths.StorePath}>
             <i className="bi bi-bag" aria-hidden="true"></i>
-            Go to store
+            Store
           </Link>
         </div>
       </section>
 
-      {!loading && loadedSuccess && (
-        <section className="data-page__stats">
-          <div className="data-page__stat">
-            <span className="data-page__stat-label">Items</span>
-            <span className="data-page__stat-value">{totals.distinctItems}</span>
-          </div>
-          <div className="data-page__stat">
-            <span className="data-page__stat-label">Total units</span>
-            <span className="data-page__stat-value">{totals.totalQuantity}</span>
-          </div>
-        </section>
-      )}
-
       <section className="data-page__content inventory-layout">
-        <div className="inventory-layout__grid">
-          {loading && (
-            <div className="data-page__loading" role="status" aria-live="polite">
-              <span className="data-page__spinner" aria-hidden="true"></span>
-              Loading inventory…
-            </div>
-          )}
+        {loading && (
+          <div className="data-page__loading" role="status" aria-live="polite">
+            <span className="data-page__spinner" aria-hidden="true"></span>
+            Loading inventory…
+          </div>
+        )}
 
-          {!loading && loadedSuccess && items.length > 0 && (
-            <>
-              <div className="data-toolbar">
-                <div className="data-toolbar__search">
-                  <i className="bi bi-search" aria-hidden="true"></i>
-                  <input
-                    type="text"
-                    placeholder="Search inventory…"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    aria-label="Search inventory"
-                  />
-                </div>
-                <label className="data-toolbar__sort">
-                  <span>Sort</span>
-                  <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-                    <option value="name">Name (A–Z)</option>
-                    <option value="quantity">Quantity (high–low)</option>
-                  </select>
-                </label>
+        {!loading && loadedSuccess && items.length > 0 && (
+          <div className="inventory-layout__body">
+            <nav className="inventory-rail-wrap" aria-label="Browse by category">
+              <div className="inventory-rail__buttons">
+                {categories.map((category) => (
+                  <button
+                    key={category}
+                    type="button"
+                    aria-current={activeCategory === category}
+                    aria-label={getCategoryLabel(category)}
+                    title={getCategoryLabel(category)}
+                    className={`inventory-rail__tab${activeCategory === category ? ' inventory-rail__tab--active' : ''}`}
+                    onClick={() => setActiveCategory(category)}
+                  >
+                    {category !== 'All' && CATEGORY_ICON_IMAGES[category] ? (
+                      <img
+                        src={CATEGORY_ICON_IMAGES[category]}
+                        alt=""
+                        className="inventory-rail__tab-icon"
+                        aria-hidden="true"
+                      />
+                    ) : (
+                      <i className={`bi ${category === 'All' ? 'bi-collection' : getCategoryIcon(category)}`} aria-hidden="true"></i>
+                    )}
+                  </button>
+                ))}
               </div>
+            </nav>
 
-              {renderGrid()}
-            </>
-          )}
+            <div className="inventory-layout__grid inventory-panel-wrap">
+              <span className="inventory-panel__rivet inventory-panel__rivet--tl" style={RIVET_STYLE} aria-hidden="true"></span>
+              <span className="inventory-panel__rivet inventory-panel__rivet--tr" style={RIVET_STYLE} aria-hidden="true"></span>
+              <span className="inventory-panel__rivet inventory-panel__rivet--bl" style={RIVET_STYLE} aria-hidden="true"></span>
+              <span className="inventory-panel__rivet inventory-panel__rivet--br" style={RIVET_STYLE} aria-hidden="true"></span>
 
-          {!loading && loadedSuccess && items.length === 0 && (
-            <div className="inventory-empty">
-              <i className="bi bi-archive inventory-empty__icon" aria-hidden="true"></i>
-              <h3 className="inventory-empty__title">Your inventory is empty</h3>
-              <p className="inventory-empty__copy">Items you collect will appear here.</p>
-              <Link className="inventory-empty__cta" to={ApplicationPaths.StorePath}>
-                Browse store <i className="bi bi-arrow-right" aria-hidden="true"></i>
-              </Link>
+              <div className="inventory-panel-shadow" aria-hidden="true"></div>
+              <div className="inventory-panel">
+               <div className="inventory-panel__gap">
+                <div className="inventory-panel__border2">
+                <div className="inventory-panel__inner">
+                  <div className="inventory-panel__header">
+                    <p className="inventory-panel__label">
+                      <span className="inventory-panel__label-text">
+                        {activeCategory === 'All' ? 'All items' : getCategoryLabel(activeCategory)}
+                      </span>
+                    </p>
+                    <span className="inventory-panel__count">
+                      <span className="inventory-panel__count-inner">
+                        <i className="bi bi-bag-fill" aria-hidden="true"></i>
+                        {filteredItems.length}/{Math.max(MIN_GRID_SLOTS, filteredItems.length)}
+                      </span>
+                    </span>
+                  </div>
+
+                  <div className="inventory-panel__body">{renderGrid()}</div>
+                </div>
+                </div>
+               </div>
+              </div>
             </div>
-          )}
+          </div>
+        )}
 
-          {!loading && !loadedSuccess && (
-            <div className="data-empty">
-              <h3>Could not load items</h3>
-              <p>Something went wrong while reaching the inventory service. Try refreshing in a moment.</p>
-            </div>
-          )}
-        </div>
+        {!loading && loadedSuccess && items.length === 0 && (
+          <div className="inventory-empty">
+            <i className="bi bi-archive inventory-empty__icon" aria-hidden="true"></i>
+            <h3 className="inventory-empty__title">Your inventory is empty</h3>
+            <p className="inventory-empty__copy">Items you collect will appear here.</p>
+            <Link className="inventory-empty__cta" to={ApplicationPaths.StorePath}>
+              Browse store <i className="bi bi-arrow-right" aria-hidden="true"></i>
+            </Link>
+          </div>
+        )}
+
+        {!loading && !loadedSuccess && (
+          <div className="data-empty">
+            <h3>Could not load items</h3>
+            <p>Something went wrong while reaching the inventory service. Try refreshing in a moment.</p>
+          </div>
+        )}
 
         {selectedItem && (
           <div className="inventory-detail-backdrop" onClick={closeDetail} aria-hidden="true"></div>
