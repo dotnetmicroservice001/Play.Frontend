@@ -24,26 +24,13 @@
 .home__content {
   position: relative;
   z-index: 1;
-  max-width: 1040px;
+  max-width: 1080px;
   margin: 0 auto;
   display: grid;
-  gap: clamp(32px, 4vw, 48px);
+  gap: clamp(28px, 3.5vw, 40px);
 }
 
 .home-hero {
-  display: grid;
-  gap: 12px;
-}
-
-.home-hero__row {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 16px;
-}
-
-.home-hero__text {
   display: grid;
   gap: 4px;
 }
@@ -66,121 +53,298 @@
   color: inherit;
 }
 
-.home-hero__blurb {
-  max-width: 680px;
-  margin: 0;
-  font-size: 1rem;
-  color: rgba(var(--ink-rgb), 0.72);
-}
-
-/* Gil balance, shown like a wallet chip next to the hero title instead of
-   a full stat tile — real number from the Store service, not placeholder
-   copy. */
-.home-wallet {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 18px;
-  border-radius: 8px;
-  border: 3px solid var(--ink);
-  background: rgb(var(--purple-50-rgb));
-  box-shadow: 4px 4px 0 rgba(var(--purple-600-rgb), 0.9);
-  font-family: 'Space Grotesk', sans-serif;
-}
-
-.home-wallet__icon {
-  font-size: 1.25rem;
-}
-
-.home-wallet__value {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--accent);
-}
-
-.home-wallet__spinner {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  border: 3px solid rgba(var(--purple-500-rgb), 0.18);
-  border-top-color: rgba(var(--purple-600-rgb), 0.85);
-  /* Reuses the spin animation already defined in shared/data-page.css —
-     no need for a second, identical @keyframes block. */
-  animation: data-page-spin 0.8s linear infinite;
-}
-
-.home-wallet__error {
-  font-size: 1.1rem;
-  color: rgba(var(--ink-rgb), 0.4);
-}
-
-.home-actions {
+/* Stat tiles row — wallet balance + inventory-derived counts, each a
+   compact chamfered card in the same ink-border/hard-shadow language as
+   the rest of the app. */
+.home-stats {
   display: grid;
   gap: 18px;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
 
-.home-actions__card {
-  display: flex;
-  flex-direction: column;
+.home-stat-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
   align-items: center;
-  justify-content: center;
-  gap: 14px;
-  padding: 20px 22px;
-  width: 100%;
-  height: 100%;
-  text-align: center;
+  gap: 4px 16px;
+  padding: 18px 20px;
   border-radius: 10px;
   border: 3px solid var(--ink);
   background: #ffffff;
-  color: var(--ink);
   box-shadow: 6px 6px 0 rgba(var(--purple-600-rgb), 0.9);
-  text-decoration: none;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
 }
 
-.home-actions__card:hover {
-  transform: translate(-3px, -3px);
-  background: rgb(var(--purple-50-rgb));
-  box-shadow: 9px 9px 0 rgba(var(--purple-600-rgb), 0.9);
-}
-
-.home-actions__card:active {
-  transform: translate(3px, 3px);
-  box-shadow: 2px 2px 0 rgba(var(--purple-600-rgb), 0.9);
-}
-
-.home-actions__icon {
-  width: 56px;
-  height: 56px;
-  border-radius: 6px;
+.home-stat-card__icon {
+  grid-row: 1 / span 3;
+  width: 52px;
+  height: 52px;
+  border-radius: 8px;
   background: rgb(var(--purple-100-rgb));
   border: 3px solid var(--ink);
   color: var(--ink);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  image-rendering: pixelated;
-  box-shadow: 4px 4px 0 rgba(var(--purple-600-rgb), 0.9);
-  font-size: 1.8rem;
+  font-size: 1.5rem;
+  box-shadow: 3px 3px 0 rgba(var(--purple-600-rgb), 0.9);
 }
 
-.home-actions__heading {
+.home-stat-card__icon .wallet-icon {
+  font-size: 1.7rem;
+}
+
+.home-stat-card__icon-img {
+  width: 24px;
+  height: 24px;
+  image-rendering: pixelated;
+}
+
+.home-stat-card__label {
   margin: 0;
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.3rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-size: 0.72rem;
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(var(--ink-rgb), 0.55);
+}
+
+.home-stat-card__value {
+  margin: 0;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1.15;
   color: var(--ink);
 }
 
-.home-actions__copy {
+.home-stat-card__caption {
   margin: 0;
-  font-size: 1.08rem;
+  font-size: 0.82rem;
+  color: rgba(var(--ink-rgb), 0.6);
+}
+
+.home-stat-card__spinner {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 3px solid rgba(var(--purple-500-rgb), 0.18);
+  border-top-color: rgba(var(--purple-600-rgb), 0.85);
+  animation: data-page-spin 0.8s linear infinite;
+}
+
+/* Shared section header used above "Latest drops" and "Your bag". */
+.home-section {
+  display: grid;
+  gap: 16px;
+}
+
+.home-section__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.home-section__title {
+  margin: 0;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink);
+}
+
+.home-section__link {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.85rem;
   font-weight: 600;
-  color: rgba(var(--ink-rgb), 0.72);
-  line-height: 1.55;
+  color: var(--accent);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.home-section__link:hover {
+  text-decoration: underline;
+}
+
+/* Latest drops — recommendation cards pointing into the store, styled
+   like a compact take on the store-card grid. */
+.home-drops {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.home-drop-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 10px;
+  border: 3px solid var(--ink);
+  background: #ffffff;
+  color: var(--ink);
+  text-decoration: none;
+  box-shadow: 6px 6px 0 rgba(var(--purple-600-rgb), 0.9);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.home-drop-card:hover {
+  transform: translate(-3px, -3px);
+  background: rgb(var(--purple-50-rgb));
+  box-shadow: 9px 9px 0 rgba(var(--purple-600-rgb), 0.9);
+  color: var(--ink);
+}
+
+.home-drop-card__image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 120px;
+  border-radius: 8px;
+  border: 2px solid var(--ink);
+  background: rgb(var(--purple-50-rgb));
+  overflow: hidden;
+}
+
+.home-drop-card__image-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 10px;
+  image-rendering: pixelated;
+}
+
+.home-drop-card__image-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  color: rgba(var(--ink-rgb), 0.35);
+}
+
+.home-drop-card__body {
+  display: grid;
+  gap: 6px;
+}
+
+.home-drop-card__name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.home-drop-card__description {
+  font-size: 0.85rem;
+  color: rgba(var(--ink-rgb), 0.65);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.home-drop-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.home-drop-card__price {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* Your bag — a compact, purpose-built list (not the shared .data-table)
+   so a 3-field preview row stays a single line at every viewport width
+   instead of stacking into the admin tables' mobile card pattern. */
+.home-bag-list {
+  border-radius: 10px;
+  border: 3px solid var(--ink);
+  background: #ffffff;
+  box-shadow: 6px 6px 0 rgba(var(--purple-600-rgb), 0.9);
+  overflow: hidden;
+}
+
+.home-bag-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(var(--ink-rgb), 0.12);
+}
+
+.home-bag-row:last-child {
+  border-bottom: none;
+}
+
+.home-bag-row:hover {
+  background: rgba(var(--purple-600-rgb), 0.06);
+}
+
+.home-bag-row__image {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 6px;
+  border: 2px solid var(--ink);
+  background: rgb(var(--purple-50-rgb));
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.home-bag-row__image-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 4px;
+  image-rendering: pixelated;
+}
+
+.home-bag-row__glyph {
+  font-size: 1.05rem;
+  color: rgba(var(--ink-rgb), 0.4);
+}
+
+.home-bag-row__info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.home-bag-row__name {
+  font-weight: 700;
+  font-size: 0.94rem;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.home-bag-row__category {
+  font-size: 0.78rem;
+  color: rgba(var(--ink-rgb), 0.55);
+}
+
+.home-bag-row__qty {
+  flex-shrink: 0;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--accent);
 }
 
 .home-admin {
@@ -231,10 +395,44 @@
   box-shadow: 1px 1px 0 rgba(var(--purple-600-rgb), 0.9);
 }
 
-.home-devnote {
+/* Bottom status bar — same visual language as the rest of the dashboard,
+   holding the Dev Tools note that used to sit as a lone paragraph. */
+.home-footer-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 14px 20px;
+  border-radius: 10px;
+  border: 3px solid var(--ink);
+  background: #ffffff;
+  box-shadow: 6px 6px 0 rgba(var(--purple-600-rgb), 0.9);
+}
+
+.home-footer-bar__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.home-footer-bar__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgb(var(--purple-600-rgb));
+}
+
+.home-footer-bar__note {
   margin: 0;
   font-size: 0.88rem;
-  color: rgba(var(--ink-rgb), 0.6);
+  color: rgba(var(--ink-rgb), 0.65);
 }
 
 @media (max-width: 768px) {
@@ -242,12 +440,12 @@
     padding: 28px 20px 48px;
   }
 
-  .home-actions__card {
-    align-items: flex-start;
-    text-align: left;
+  .home-stat-card {
+    padding: 16px;
   }
 
-  .home-actions__icon {
-    margin-bottom: 4px;
+  .home-footer-bar {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
