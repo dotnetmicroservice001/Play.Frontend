@@ -254,6 +254,7 @@ export const Catalog = () => {
 
         {!loading && !loadedSuccess && (
           <div className="data-empty">
+            <img src="/dinoerror.png" alt="" className="data-empty__icon-img" aria-hidden="true" />
             <h3>Could not load items</h3>
             <p>Please try again in a few moments.</p>
           </div>

@@ -51,6 +51,12 @@
   animation: data-page-spin 1.2s linear infinite;
 }
 
+.status-page__icon-img {
+  width: 3.2rem;
+  height: 3.2rem;
+  image-rendering: pixelated;
+}
+
 .status-page__panel--danger .status-page__icon {
   color: var(--danger);
 }

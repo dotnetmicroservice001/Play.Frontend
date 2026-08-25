@@ -60,6 +60,7 @@ export const Store = () => {
     if (items.length === 0) {
       return (
         <div className="data-empty">
+          <i className="bi bi-shop data-empty__icon" aria-hidden="true"></i>
           <h3>No catalog items yet</h3>
           <p>Once the catalog service publishes items, you’ll see them here.</p>
         </div>
@@ -69,6 +70,7 @@ export const Store = () => {
     if (filteredItems.length === 0) {
       return (
         <div className="data-empty">
+          <i className="bi bi-funnel data-empty__icon" aria-hidden="true"></i>
           <h3>No items in this category</h3>
           <p>Try a different category, or browse all items.</p>
         </div>
@@ -185,6 +187,7 @@ export const Store = () => {
 
           {!loading && !loadedSuccess && (
             <div className="data-empty">
+              <img src="/dinoerror.png" alt="" className="data-empty__icon-img" aria-hidden="true" />
               <h3>Could not load store catalog</h3>
               <p>The store service didn’t respond. Try refreshing in a bit.</p>
             </div>

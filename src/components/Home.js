@@ -253,6 +253,7 @@ export const Home = () => {
 
           {!store.loading && store.loadedSuccess && latestDrops.length === 0 && (
             <div className="data-empty">
+              <i className="bi bi-shop data-empty__icon" aria-hidden="true"></i>
               <h3>No catalog items yet</h3>
               <p>Once the catalog service publishes items, you'll see them here.</p>
             </div>
@@ -260,6 +261,7 @@ export const Home = () => {
 
           {!store.loading && !store.loadedSuccess && (
             <div className="data-empty">
+              <img src="/dinoerror.png" alt="" className="data-empty__icon-img" aria-hidden="true" />
               <h3>Could not load the store</h3>
               <p>The store service didn't respond. Try refreshing in a bit.</p>
             </div>
@@ -312,13 +314,18 @@ export const Home = () => {
 
           {!inventory.loading && inventory.loadedSuccess && bagPreview.length === 0 && (
             <div className="data-empty">
+              <i className="bi bi-archive data-empty__icon" aria-hidden="true"></i>
               <h3>Your bag is empty</h3>
               <p>Items you collect will show up here.</p>
+              <Link className="data-page__cta" to={ApplicationPaths.StorePath}>
+                <i className="bi bi-bag" aria-hidden="true"></i> Browse store
+              </Link>
             </div>
           )}
 
           {!inventory.loading && !inventory.loadedSuccess && (
             <div className="data-empty">
+              <img src="/dinoerror.png" alt="" className="data-empty__icon-img" aria-hidden="true" />
               <h3>Could not load your bag</h3>
               <p>Something went wrong while reaching the inventory service. Try refreshing in a moment.</p>
             </div>

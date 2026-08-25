@@ -115,6 +115,7 @@ export const Inventory = () => {
     if (filteredItems.length === 0) {
       return (
         <div className="data-empty">
+          <i className="bi bi-funnel data-empty__icon" aria-hidden="true"></i>
           <h3>No items in this pouch</h3>
           <p>Try a different category, or browse all items.</p>
         </div>
@@ -280,6 +281,7 @@ export const Inventory = () => {
 
         {!loading && !loadedSuccess && (
           <div className="data-empty">
+            <img src="/dinoerror.png" alt="" className="data-empty__icon-img" aria-hidden="true" />
             <h3>Could not load items</h3>
             <p>Something went wrong while reaching the inventory service. Try refreshing in a moment.</p>
           </div>

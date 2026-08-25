@@ -412,12 +412,28 @@
 .data-empty {
   text-align: center;
   display: grid;
+  justify-items: center;
   gap: 8px;
-  padding: clamp(24px, 5vw, 36px);
+  padding: clamp(32px, 6vw, 48px) clamp(24px, 5vw, 36px);
   border: 3px solid var(--ink);
   border-radius: 10px;
   background: rgb(var(--purple-50-rgb));
   box-shadow: 6px 6px 0 rgba(var(--purple-600-rgb), 0.9);
+}
+
+.data-empty__icon {
+  margin-bottom: 6px;
+  font-size: 2.2rem;
+  color: rgb(var(--purple-300-rgb));
+}
+
+/* Pixel-art dino mascot used in "could not load" error empty states —
+   same image-rendering treatment as .wallet-icon so it stays crisp. */
+.data-empty__icon-img {
+  width: 2.4rem;
+  height: 2.4rem;
+  margin-bottom: 6px;
+  image-rendering: pixelated;
 }
 
 .data-empty h3 {
@@ -428,7 +444,13 @@
 
 .data-empty p {
   margin: 0;
+  max-width: 40ch;
   color: rgba(var(--ink-rgb), 0.65);
+}
+
+.data-empty .data-page__cta,
+.data-empty .data-clear-search {
+  margin-top: 8px;
 }
 
 @media (max-width: 720px) {

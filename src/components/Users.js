@@ -87,6 +87,7 @@ export const Users = () => {
     if (users.length === 0) {
       return (
         <div className="data-empty">
+          <i className="bi bi-people data-empty__icon" aria-hidden="true"></i>
           <h3>No users yet</h3>
           <p>Provision a player to see their gil balance and inventory here.</p>
         </div>
@@ -207,6 +208,7 @@ export const Users = () => {
 
         {!loading && !loadedSuccess && (
           <div className="data-empty">
+            <img src="/dinoerror.png" alt="" className="data-empty__icon-img" aria-hidden="true" />
             <h3>Could not load users</h3>
             <p>Please try again in a few moments.</p>
           </div>
