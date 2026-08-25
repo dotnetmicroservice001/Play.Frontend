@@ -111,7 +111,7 @@ export const Store = () => {
             <span className="store-card__footer">
               <span className="store-card__price-group">
                 <span className="store-card__price">
-                  <i className="bi bi-coin" aria-hidden="true"></i>
+                  <img src="/gil.png" alt="" className="gil-icon" aria-hidden="true" />
                   {item.price}
                 </span>
                 {item.rarity && (
@@ -146,7 +146,7 @@ export const Store = () => {
 
           {!loading && loadedSuccess && (
             <>
-              <i className="bi bi-wallet2 data-page__wallet-icon" aria-hidden="true"></i>
+              <img src="/wallet.png" alt="" className="wallet-icon data-page__wallet-icon" aria-hidden="true" />
               <span className="data-page__wallet-value">${userGil}</span>
             </>
           )}

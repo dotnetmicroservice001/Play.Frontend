@@ -218,7 +218,7 @@ export default class PurchaseForm extends React.Component
             <div className="purchase-form__total-row">
                 <span className="purchase-form__row-label">Total</span>
                 <span className="purchase-form__total-value">
-                    <i className="bi bi-coin" aria-hidden="true"></i>
+                    <img src="/gil.png" alt="" className="gil-icon" aria-hidden="true" />
                     {total}
                 </span>
             </div>

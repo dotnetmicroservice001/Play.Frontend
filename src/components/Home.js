@@ -119,7 +119,7 @@ export const Home = () => {
 
               {!stats.loading && stats.loadedSuccess && (
                 <>
-                  <i className="bi bi-wallet2 home-wallet__icon" aria-hidden="true"></i>
+                  <img src="/wallet.png" alt="" className="wallet-icon home-wallet__icon" aria-hidden="true" />
                   <span className="home-wallet__value">${stats.userGil}</span>
                 </>
               )}

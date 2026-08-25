@@ -218,8 +218,12 @@
   color: var(--accent);
 }
 
-.store-card__price i {
-  color: rgb(var(--purple-400-rgb));
+.gil-icon {
+  width: 1.15em;
+  height: 1.15em;
+  vertical-align: -0.2em;
+  image-rendering: pixelated;
+  flex-shrink: 0;
 }
 
 .store-card__owned {
@@ -359,10 +363,6 @@
   font-weight: 700;
   font-size: 1.05rem;
   color: var(--accent);
-}
-
-.purchase-form__total-value i {
-  color: rgb(var(--purple-400-rgb));
 }
 
 .purchase-form__quantity {

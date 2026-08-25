@@ -344,3 +344,14 @@ button:focus-visible,
   border-radius: 10px;
   overflow: hidden;
 }
+
+/* Wallet/gil balance icon — used in the Store header and Home dashboard
+   wallet stat, both of which set font-size on this element so it scales
+   with each context via em. */
+.wallet-icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  image-rendering: pixelated;
+  flex-shrink: 0;
+}
