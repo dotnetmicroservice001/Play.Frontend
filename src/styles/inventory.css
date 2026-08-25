@@ -100,9 +100,8 @@
   position: relative;
   border-radius: 6px;
   border: 2px solid var(--ink);
-  background: linear-gradient(90deg, var(--landing-grid-light) 1px, transparent 1px),
-    linear-gradient(var(--landing-grid-light) 1px, transparent 1px), rgb(var(--purple-100-rgb));
-  background-size: 16px 16px, 16px 16px, auto;
+  background: var(--color-surface-muted);
+  overflow: hidden;
 }
 
 .inventory-card__image {
@@ -111,6 +110,14 @@
 
 .inventory-detail__image {
   height: 220px;
+}
+
+.inventory-card__image-img,
+.inventory-detail__image-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
 }
 
 .inventory-card__selected-badge {
@@ -216,16 +223,33 @@
   font-weight: 700;
 }
 
+/* Modal, not a side panel like Store's — Inventory items are being
+   inspected, not bought, so a focused overlay reads better than a
+   persistent panel competing with the grid for width. */
+.inventory-detail-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(var(--ink-rgb), 0.5);
+  z-index: 40;
+}
+
 .inventory-detail {
-  flex: 0 0 320px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 50;
   display: grid;
   align-content: start;
   gap: 14px;
-  padding: 20px;
+  width: min(420px, calc(100vw - 40px));
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+  padding: 24px;
   border: 3px solid var(--ink);
-  border-radius: 10px;
+  border-radius: 14px;
   background: #ffffff;
-  box-shadow: 6px 6px 0 rgba(var(--purple-600-rgb), 0.9);
+  box-shadow: 8px 8px 0 rgba(var(--purple-600-rgb), 0.9);
 }
 
 .inventory-detail__header {
@@ -356,10 +380,5 @@
 @media (max-width: 860px) {
   .inventory-layout {
     flex-direction: column;
-  }
-
-  .inventory-detail {
-    flex: 1 1 auto;
-    width: 100%;
   }
 }

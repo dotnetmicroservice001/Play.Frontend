@@ -100,7 +100,19 @@ export const Inventory = () => {
             onClick={() => setSelectedItemId(item.catalogItemId)}
           >
             <span className="inventory-card__image" aria-hidden="true">
-              <i className="bi bi-box-seam inventory-card__glyph" aria-hidden="true"></i>
+              {item.imageUrl ? (
+                <img
+                  src={item.imageUrl}
+                  alt=""
+                  className="inventory-card__image-img"
+                  onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
+                />
+              ) : null}
+              <i
+                className="bi bi-box-seam inventory-card__glyph"
+                aria-hidden="true"
+                style={item.imageUrl ? { display: 'none' } : undefined}
+              ></i>
               {item.catalogItemId === selectedItemId ? (
                 <span className="inventory-card__selected-badge" aria-hidden="true">
                   <i className="bi bi-check-lg"></i>
@@ -205,7 +217,11 @@ export const Inventory = () => {
         </div>
 
         {selectedItem && (
-          <aside className="inventory-detail">
+          <div className="inventory-detail-backdrop" onClick={closeDetail} aria-hidden="true"></div>
+        )}
+
+        {selectedItem && (
+          <aside className="inventory-detail" role="dialog" aria-modal="true" aria-label={selectedItem.name}>
             <div className="inventory-detail__header">
               <p className="inventory-detail__eyebrow">Item</p>
               <button
@@ -219,7 +235,19 @@ export const Inventory = () => {
             </div>
 
             <span className="inventory-detail__image" aria-hidden="true">
-              <i className="bi bi-box-seam inventory-detail__glyph" aria-hidden="true"></i>
+              {selectedItem.imageUrl ? (
+                <img
+                  src={selectedItem.imageUrl}
+                  alt=""
+                  className="inventory-detail__image-img"
+                  onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
+                />
+              ) : null}
+              <i
+                className="bi bi-box-seam inventory-detail__glyph"
+                aria-hidden="true"
+                style={selectedItem.imageUrl ? { display: 'none' } : undefined}
+              ></i>
               <span className="inventory-detail__stack">×{selectedItem.quantity}</span>
             </span>
 
