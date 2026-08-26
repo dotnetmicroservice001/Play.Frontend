@@ -2,6 +2,7 @@ import React, { useEffect, useCallback, useState, useRef } from 'react';
 import { Container } from 'react-bootstrap';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { AuthorizationPaths } from './api-authorization/ApiAuthorizationConstants';
+import authService from './api-authorization/AuthorizeService';
 import { QuestTimeline } from './QuestTimeline';
 import { TechStackOverview } from './TechStackOverview';
 import TextType from './TextType';
@@ -11,10 +12,27 @@ import architectureImage from '../images/architecture.png';
 export const Landing = () => {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isArchitectureOpen, setIsArchitectureOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const location = useLocation();
   const history = useHistory();
   const { hash, pathname, search } = location;
   const architectureDetailsRef = useRef(null);
+
+  // "Sign in as Demo Player" always redirects straight to the IdP with no
+  // check of the current session — while already authenticated, that
+  // either just re-confirms the same session or silently keeps a
+  // different logged-in account, neither of which is what the click
+  // suggests will happen. Hiding it once signed in sidesteps both cases.
+  useEffect(() => {
+    const populateAuthState = () => {
+      authService.isAuthenticated().then(setIsAuthenticated);
+    };
+
+    const subscription = authService.subscribe(populateAuthState);
+    populateAuthState();
+
+    return () => authService.unsubscribe(subscription);
+  }, []);
 
   const handleScroll = useCallback(() => {
     setShowScrollTop(window.scrollY > 600);
@@ -89,13 +107,15 @@ export const Landing = () => {
                     <i className="bi bi-diagram-3" aria-hidden="true"></i>
                     See How It's Built
                     </button>
-                    <Link
-                      to={{ pathname: AuthorizationPaths.Login, search: '?demo=1' }}
-                      className="hero-cta hero-cta--primary"
-                    >
-                    <i className="bi bi-person-plus" aria-hidden="true"></i>
-                      Sign in as Demo Player
-                    </Link>
+                    {!isAuthenticated && (
+                      <Link
+                        to={{ pathname: AuthorizationPaths.Login, search: '?demo=1' }}
+                        className="hero-cta hero-cta--primary"
+                      >
+                      <i className="bi bi-person-plus" aria-hidden="true"></i>
+                        Sign in as Demo Player
+                      </Link>
+                    )}
 
 
                     </div>
