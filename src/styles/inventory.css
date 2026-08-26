@@ -1,208 +1,909 @@
-.inventory {
-  padding: clamp(32px, 5vw, 56px) clamp(24px, 6vw, 64px);
-  display: grid;
-  gap: clamp(28px, 4vw, 40px);
-  color: var(--landing-ink, #0d0f14);
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
-  background: linear-gradient(180deg, rgba(244, 246, 255, 0.6) 0%, rgba(255, 255, 255, 0.94) 100%);
-}
-
-.inventory__header {
-  display: grid;
-  gap: 12px;
-  max-width: 720px;
-}
-
-.inventory__eyebrow {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.22em;
-  color: rgba(13, 15, 20, 0.55);
-}
-
-.inventory__title {
-  margin: 0;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: clamp(2rem, 5vw, 2.4rem);
-  line-height: 1.2;
-}
-
-.inventory__subtitle {
-  margin: 0;
-  font-size: 1rem;
-  color: rgba(13, 15, 20, 0.72);
-}
-
-.inventory__stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px 20px;
-  font-size: 0.9rem;
-  color: rgba(13, 15, 20, 0.62);
-}
-
-.inventory__stats strong {
-  font-size: 1.05rem;
-  margin-right: 6px;
-}
-
-.inventory__cta-row {
-  margin-top: 18px;
-}
-
-.inventory__cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 18px;
-  border-radius: 999px;
-  background: #0d0f14;
-  color: #fff;
-  font-family: 'Space Grotesk', sans-serif;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  text-decoration: none;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-}
-
-.inventory__cta i {
-  font-size: 1.1rem;
-}
-
-.inventory__cta:hover {
-  transform: translateY(-2px);
-  background: rgba(15, 23, 42, 0.88);
-  box-shadow: 0 16px 28px rgba(15, 23, 42, 0.25);
-}
-
-.inventory__content {
-  padding: clamp(12px, 3vw, 20px) 0;
-}
-
-.inventory__loading {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 0.95rem;
-  color: rgba(13, 15, 20, 0.72);
-}
-
-.inventory__spinner {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  border: 3px solid rgba(30, 64, 175, 0.15);
-  border-top-color: rgba(30, 64, 175, 0.85);
-  animation: inventory-spin 0.8s linear infinite;
-}
-
-@keyframes inventory-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.inventory-table-wrapper {
-  overflow-x: auto;
-}
-
-.inventory-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.95rem;
-}
-
-.inventory-table thead {
-  background: #0d0f14;
-  color: #fff;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.78rem;
-}
-
-.inventory-table th,
-.inventory-table td {
-  padding: 14px 16px;
-  text-align: left;
-  border-bottom: 1px solid rgba(13, 15, 20, 0.12);
-}
-
-.inventory-table tbody tr:hover {
-  background: rgba(13, 15, 20, 0.06);
-}
-
-.inventory-table tbody tr:last-child td {
-  border-bottom: none;
-}
-
-.inventory-empty {
-  text-align: center;
-  display: grid;
-  gap: 8px;
-  padding: clamp(24px, 5vw, 36px);
-}
-
-.inventory-empty h3 {
-  margin: 0;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.1rem;
-}
-
-.inventory-empty p {
-  margin: 0;
-  color: rgba(13, 15, 20, 0.65);
-}
+/* Inventory-specific overrides on top of the shared .data-page pattern (see shared/data-page.css). */
 
 .inventory__back {
-  justify-self: start;
-  border: none;
-  background: rgba(13, 15, 20, 0.08);
-  color: rgba(13, 15, 20, 0.8);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 2px solid var(--ink);
+  background: #ffffff;
+  color: var(--ink);
   padding: 8px 16px;
-  border-radius: 999px;
+  border-radius: 8px;
   font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
+  box-shadow: 3px 3px 0 rgba(var(--purple-600-rgb), 0.9);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
 }
 
-.inventory__back:hover {
-  background: rgba(13, 15, 20, 0.14);
-  transform: translateY(-1px);
+.inventory__back:hover,
+.inventory__back:focus {
+  background: rgb(var(--purple-50-rgb));
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 rgba(var(--purple-600-rgb), 0.9);
+  outline: none;
 }
 
-@media (max-width: 640px) {
-  .inventory__stats {
+.inventory__back:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 rgba(var(--purple-600-rgb), 0.9);
+}
+
+/* Tighter section rhythm than the shared .data-page default — this page has
+   more going on (stats + toolbar + grid) so the generous default gap reads
+   as gaps between unrelated pieces instead of one connected page. */
+.data-page--inventory {
+  gap: clamp(20px, 3vw, 28px);
+}
+
+.inventory-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Center the rail against the panel's height, not top-align it — the
+   rail is only as tall as its handful of category tabs, so flex-start
+   left it stranded near the top of a much taller grid instead of
+   sitting level with the table it's paired with. */
+.inventory-layout__body {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.inventory-layout__grid {
+  flex: 1 1 0%;
+  min-width: 0;
+  width: 100%;
+}
+
+/* The grid framed as a physical pouch — a chamfered (corner-cut) plate,
+   not a plain rounded card, since that faceted-metal-plate silhouette is
+   what actually reads as "RPG inventory panel" rather than "web card".
+   Double-bordered: outer ink frame → thin white gap → second ink line →
+   white content, four nested clipped layers all sharing the same corner
+   cut so the two border lines stay parallel all the way round, including
+   the diagonal corners (a plain CSS border can't follow a clip-path
+   corner — only the box's original rectangular edges get a stroke — so
+   each ring is its own solid-filled, separately clipped layer instead).
+
+   The rivets live one level up, on .inventory-panel-wrap, which has no
+   clip-path of its own — a rivet placed inside .inventory-panel would
+   get clipped by that same corner cut. They're inset well past the
+   outer edge so they read as sitting inside the frame, not straddling
+   the boundary line. */
+.inventory-panel-wrap {
+  position: relative;
+}
+
+/* The hard offset shadow can't be a filter/box-shadow on .inventory-panel
+   itself — clip-path clips ALL of an element's own paint output,
+   including its own box-shadow and (in this browser at least) even
+   filter: drop-shadow, so both render nothing. .inventory-panel-shadow
+   is a real duplicate element instead: same clip-path shape, solid
+   purple fill, offset 6px, sitting behind the panel in paint order
+   (position:relative on both puts them in the same stacking step, so
+   DOM order — shadow first — decides who's on top). */
+.inventory-panel-shadow {
+  position: absolute;
+  inset: 0;
+  transform: translate(6px, 6px);
+  background: rgba(var(--purple-600-rgb), 0.9);
+  clip-path: polygon(
+    36px 0, calc(100% - 36px) 0, 100% 36px,
+    100% calc(100% - 36px), calc(100% - 36px) 100%, 36px 100%,
+    0 calc(100% - 36px), 0 36px
+  );
+}
+
+.inventory-panel {
+  position: relative;
+  padding: 3px;
+  background: var(--ink);
+  clip-path: polygon(
+    36px 0, calc(100% - 36px) 0, 100% 36px,
+    100% calc(100% - 36px), calc(100% - 36px) 100%, 36px 100%,
+    0 calc(100% - 36px), 0 36px
+  );
+}
+
+.inventory-panel__gap {
+  padding: 2px;
+  background: #ffffff;
+  clip-path: polygon(
+    32px 0, calc(100% - 32px) 0, 100% 32px,
+    100% calc(100% - 32px), calc(100% - 32px) 100%, 32px 100%,
+    0 calc(100% - 32px), 0 32px
+  );
+}
+
+.inventory-panel__border2 {
+  padding: 2px;
+  background: var(--ink);
+  clip-path: polygon(
+    29px 0, calc(100% - 29px) 0, 100% 29px,
+    100% calc(100% - 29px), calc(100% - 29px) 100%, 29px 100%,
+    0 calc(100% - 29px), 0 29px
+  );
+}
+
+.inventory-panel__inner {
+  padding: 40px;
+  background: #ffffff;
+  clip-path: polygon(
+    25px 0, calc(100% - 25px) 0, 100% 25px,
+    100% calc(100% - 25px), calc(100% - 25px) 100%, 25px 100%,
+    0 calc(100% - 25px), 0 25px
+  );
+}
+
+/* Inlaid corner gems — sized to actually read as a jewel set into the
+   frame, not a speck of hardware, and inset past both border lines into
+   the white content area so they sit inside the frame rather than on
+   top of its edge, with enough room around them to clear the header
+   text and the grid's first row. */
+.inventory-panel__rivet {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  z-index: 1;
+}
+
+.inventory-panel__rivet--tl {
+  top: 26px;
+  left: 26px;
+}
+
+.inventory-panel__rivet--tr {
+  top: 26px;
+  right: 26px;
+}
+
+.inventory-panel__rivet--bl {
+  bottom: 26px;
+  left: 26px;
+}
+
+.inventory-panel__rivet--br {
+  bottom: 26px;
+  right: 26px;
+}
+
+.inventory-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 6px 12px;
+  padding-bottom: 10px;
+  border-bottom: 2px dashed rgba(var(--ink-rgb), 0.15);
+}
+
+.inventory-panel__label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.inventory-panel__label::before,
+.inventory-panel__label::after {
+  content: '\25C6';
+  flex: none;
+  font-size: 0.6rem;
+  color: rgba(var(--purple-600-rgb), 0.5);
+}
+
+/* Long free-text category names ("Potions, Scrolls & Materials") wrap
+   to a second line at narrow widths otherwise, orphaning the trailing
+   diamond on its own line instead of flanking the text. Truncating to
+   one line keeps both ornaments attached, same pattern as the item
+   nameplate below. */
+.inventory-panel__label-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Chamfered chip, not a pill — a rounded pill reads as a generic web
+   badge and breaks the faceted-plate language the rest of the panel is
+   built from. Same ink-frame/fill two-layer clip-path trick as the
+   panel itself, just at a smaller cut size. */
+.inventory-panel__count {
+  flex: 0 0 auto;
+  padding: 2px;
+  background: var(--ink);
+  clip-path: polygon(
+    6px 0, calc(100% - 6px) 0, 100% 6px,
+    100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%,
+    0 calc(100% - 6px), 0 6px
+  );
+}
+
+.inventory-panel__count-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: rgb(var(--purple-50-rgb));
+  clip-path: polygon(
+    4px 0, calc(100% - 4px) 0, 100% 4px,
+    100% calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%,
+    0 calc(100% - 4px), 0 4px
+  );
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.inventory-panel__count-inner i {
+  color: var(--accent);
+}
+
+/* Vertical pouch-tab rail — categories as belt pouches you flip through,
+   not Store's horizontal pill row, so the two browse patterns don't read
+   as the same control reused twice. Icon-only: category names here are
+   long free-text strings ("Potions, Scrolls & Materials"), not the short
+   single words a labeled tab could fit, so the name lives in the native
+   tooltip instead of wrapping across three lines.
+
+   No frame around this one — a chamfered double-border shell (matching
+   the panel) needed the tab buttons nested inside its clipped layers to
+   sit flush, but clip-path clips its whole subtree, so the hover flyout
+   popping out to the right got cut off at the frame's own edge. Pulling
+   the buttons out into their own unclipped absolutely-positioned overlay
+   fixed the clipping but left the frame with no in-flow content to size
+   itself against, collapsing it. Simplest fix: drop the frame — each tab
+   already carries its own background/hover/active treatment, so a plain
+   structured column of them reads fine without an outer shell. */
+.inventory-rail-wrap {
+  flex: 0 0 auto;
+}
+
+.inventory-rail__buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Each tab carries its own border/shadow now that there's no outer rail
+   frame — reads as a small floating tile rather than a bare colored
+   square. Sized up from the original 32px so each tab is comfortably
+   clickable/tappable on its own, without a frame's visual weight to
+   lean on for presence. */
+.inventory-rail__tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  background: rgb(var(--purple-50-rgb));
+  color: rgba(var(--ink-rgb), 0.75);
+  cursor: pointer;
+  box-shadow: 2px 2px 0 rgba(var(--purple-600-rgb), 0.9);
+  transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.inventory-rail__tab:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 rgba(var(--purple-600-rgb), 0.9);
+}
+
+.inventory-rail__tab i {
+  font-size: 1.1rem;
+}
+
+.inventory-rail__tab-icon {
+  width: 26px;
+  height: 26px;
+  image-rendering: pixelated;
+}
+
+.inventory-rail__tab:hover {
+  background: rgb(var(--purple-100-rgb));
+  color: var(--ink);
+}
+
+.inventory-rail__tab--active {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.inventory-rail__tab--active:hover {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+/* Fixed-size sockets, capped so they don't stretch to fill the row —
+   real inventory grids read as a bag of equal slots, not a masonry of
+   product cards, which is the biggest single thing that separates this
+   from Store's card grid. */
+.inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 120px));
+  justify-content: center;
+  gap: 12px;
+}
+
+/* Slots read as recessed pockets in a pouch (inset socket, quiet border)
+   rather than Store's raised, poppable shopping cards — same clickable
+   affordance, different physical metaphor. Rarity is carried on the
+   border color via the modifier classes below, once item.rarity is
+   available (mirrors Store's own rarity-badge palette). */
+.inventory-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 6px;
+  text-align: left;
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--ink);
+  cursor: pointer;
+  font: inherit;
+  transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.inventory-card:hover,
+.inventory-card:focus-visible {
+  background: rgb(var(--purple-50-rgb));
+  box-shadow: 0 0 0 3px rgba(var(--purple-300-rgb), 0.45);
+}
+
+/* Padding slots — empty sockets, not cards, so they drop the border
+   weight, fill, and pointer affordance entirely rather than just being
+   an inactive button. Mirrors the filled card's image+nameplate structure
+   (rather than a single aspect-ratio square) so its total height matches
+   a filled card exactly — a bare square here falls short of a filled
+   card's height (image + nameplate), leaving empty sockets floating
+   above the bottom of the grid row instead of sitting flush with their
+   neighbors. */
+.inventory-card--empty {
+  border: 2px dashed rgba(var(--ink-rgb), 0.18);
+  background: transparent;
+  cursor: default;
+}
+
+.inventory-card__image--empty {
+  border-style: dashed;
+  border-color: rgba(var(--ink-rgb), 0.15);
+  background: transparent;
+  box-shadow: none;
+}
+
+.inventory-card__name--empty {
+  border-top-color: transparent;
+}
+
+.inventory-card__name--empty .inventory-card__name-text,
+.inventory-card__name--empty .inventory-card__name-ornament {
+  visibility: hidden;
+}
+
+/* A solid, opaque ring — not just a darker version of the translucent
+   hover ring — so "selected" reads as a distinct state you can spot at
+   a glance, not something you have to compare against neighboring cards
+   to notice. */
+.inventory-card--active {
+  background: rgb(var(--purple-100-rgb));
+  box-shadow: 0 0 0 3px var(--accent);
+}
+
+.inventory-card--rarity-uncommon {
+  border-color: #0f5132;
+}
+
+.inventory-card--rarity-rare {
+  border-color: #1e40af;
+}
+
+.inventory-card--rarity-epic {
+  border-color: var(--accent);
+}
+
+.inventory-card--rarity-legendary {
+  border-color: #9a5b00;
+}
+
+.inventory-card__image,
+.inventory-detail__image {
+  display: block;
+  position: relative;
+  border-radius: 5px;
+  border: 2px solid rgba(var(--ink-rgb), 0.5);
+  background: var(--color-surface-muted);
+  overflow: hidden;
+  box-shadow: inset 2px 2px 0 rgba(var(--ink-rgb), 0.06);
+}
+
+.inventory-card__image {
+  aspect-ratio: 1;
+}
+
+.inventory-detail__image {
+  height: 220px;
+}
+
+.inventory-card__image-img,
+.inventory-detail__image-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.inventory-card__selected-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  background: var(--accent);
+  color: #ffffff;
+  font-size: 0.7rem;
+  box-shadow: 1px 1px 0 rgba(var(--purple-600-rgb), 0.9);
+}
+
+/* Same "click to view" affordance as the store cards, so both pages speak
+   the same interaction language even though they mean different things
+   (inspect vs. buy). */
+.inventory-card__hint {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  background: #ffffff;
+  color: var(--ink);
+  font-size: 0.7rem;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.inventory-card:hover .inventory-card__hint,
+.inventory-card:focus-visible .inventory-card__hint {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Generic item-art glyph so the placeholder reads as "item art slot"
+   instead of an empty grid square. One consistent icon for every item —
+   deliberately not varied per item, since there's no real category data
+   to justify differentiating them. */
+.inventory-card__glyph,
+.inventory-detail__glyph {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(var(--purple-600-rgb), 0.3);
+  pointer-events: none;
+}
+
+.inventory-card__glyph {
+  font-size: 1.6rem;
+}
+
+.inventory-detail__glyph {
+  font-size: 3.4rem;
+}
+
+/* Stack-count badge overlaid on the art corner, like a game inventory
+   slot, instead of quantity sitting in a plain text row below the name. */
+.inventory-card__stack,
+.inventory-detail__stack {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  display: inline-flex;
+  align-items: center;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: var(--accent);
+  color: #ffffff;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  box-shadow: 1px 1px 0 rgba(var(--purple-600-rgb), 0.9);
+}
+
+.inventory-card__stack {
+  padding: 2px 7px;
+  font-size: 0.68rem;
+}
+
+.inventory-detail__stack {
+  padding: 4px 12px;
+  font-size: 0.92rem;
+}
+
+/* Secondary caption, not a card headline like Store's — the slot's icon
+   and rarity border carry the item's identity; the name is a label
+   underneath it, not the main event. Full name, wrapped up to two lines,
+   rather than truncated — ornaments stay flanking the text on either
+   side (row layout), vertically centered against the now-taller
+   (possibly two-line) text block instead of a single line of text. */
+.inventory-card__name {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  margin-top: 2px;
+  padding-top: 4px;
+  border-top: 1px dashed rgba(var(--ink-rgb), 0.15);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-align: center;
+  color: rgba(var(--ink-rgb), 0.68);
+}
+
+/* Reserves a fixed two-line height regardless of the actual name length,
+   so a one-line name and a two-line name don't leave cards in the same
+   row at different heights — same reasoning as the empty/filled slot
+   height match below. Caps at two lines (clamped, not just wrapped) so
+   an extreme outlier name can't blow out the card entirely. */
+.inventory-card__name-text {
+  min-width: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  white-space: normal;
+  line-height: 1.2;
+  min-height: calc(1.2em * 2);
+}
+
+.inventory-card__name-ornament {
+  flex: 0 0 auto;
+  font-size: 0.5rem;
+  color: rgba(var(--purple-600-rgb), 0.8);
+}
+
+.inventory-card__name-ornament::before {
+  content: '\25C6';
+}
+
+/* Modal, not a side panel like Store's — Inventory items are being
+   inspected, not bought, so a focused overlay reads better than a
+   persistent panel competing with the grid for width. */
+.inventory-detail-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(var(--ink-rgb), 0.5);
+  z-index: 40;
+}
+
+.inventory-detail {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 50;
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  width: min(420px, calc(100vw - 40px));
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+  padding: 24px;
+  border: 3px solid var(--ink);
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 8px 8px 0 rgba(var(--purple-600-rgb), 0.9);
+}
+
+.inventory-detail__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.inventory-detail__eyebrow {
+  margin: 0;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: rgba(var(--ink-rgb), 0.5);
+}
+
+.inventory-detail__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  background: #ffffff;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.inventory-detail__close:hover {
+  background: rgb(var(--purple-50-rgb));
+  transform: translate(-1px, -1px);
+}
+
+.inventory-detail__title {
+  margin: 0;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.3rem;
+}
+
+.inventory-detail__owned {
+  margin: -6px 0 0;
+  font-size: 0.88rem;
+  color: rgba(var(--ink-rgb), 0.6);
+}
+
+.inventory-detail__owned strong {
+  color: var(--accent);
+}
+
+.inventory-detail__divider {
+  margin: 0;
+  border: none;
+  border-top: 2px solid rgba(var(--ink-rgb), 0.12);
+}
+
+.inventory-detail__description {
+  margin: 0;
+  font-size: 0.92rem;
+  color: rgba(var(--ink-rgb), 0.7);
+}
+
+.inventory-empty {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  text-align: center;
+  padding: clamp(40px, 8vw, 64px) clamp(24px, 6vw, 40px);
+  border: 3px solid var(--ink);
+  border-radius: 10px;
+  background: rgb(var(--purple-50-rgb));
+  box-shadow: 6px 6px 0 rgba(var(--purple-600-rgb), 0.9);
+}
+
+.inventory-empty__icon {
+  font-size: 2.4rem;
+  color: rgba(var(--purple-600-rgb), 0.35);
+}
+
+.inventory-empty__title {
+  margin: 0;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.inventory-empty__copy {
+  margin: 0;
+  color: rgba(var(--ink-rgb), 0.65);
+}
+
+.inventory-empty__cta {
+  margin-top: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 2px solid var(--ink);
+  background: #ffffff;
+  color: var(--ink);
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: 4px 4px 0 rgba(var(--purple-600-rgb), 0.9);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.inventory-empty__cta:hover,
+.inventory-empty__cta:focus {
+  transform: translate(-2px, -2px);
+  background: rgb(var(--purple-50-rgb));
+  color: var(--ink);
+  box-shadow: 6px 6px 0 rgba(var(--purple-600-rgb), 0.9);
+  outline: none;
+}
+
+.inventory-empty__cta:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 rgba(var(--purple-600-rgb), 0.9);
+}
+
+@media (max-width: 860px) {
+  .inventory-layout__body {
     flex-direction: column;
-    align-items: flex-start;
   }
 
-  .inventory-table thead {
+  /* Rail flattens into a slim strip, not a full-size box carried over
+     from the desktop column — less padding, no hard offset shadow, a
+     smaller chamfer, and smaller tabs so the bar reads as a compact
+     control, not a card. */
+  .inventory-rail-wrap {
+    flex: none;
+    width: 100%;
+  }
+
+  .inventory-rail__buttons {
+    flex-direction: row;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 4px 2px;
+  }
+
+  .inventory-rail__tab {
+    flex: 0 0 auto;
+    width: 44px;
+    height: 44px;
+  }
+
+  .inventory-rail__tab i {
+    font-size: 1.2rem;
+  }
+
+  .inventory-rail__tab-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .inventory-panel-shadow,
+  .inventory-panel {
+    clip-path: polygon(
+      22px 0, calc(100% - 22px) 0, 100% 22px,
+      100% calc(100% - 22px), calc(100% - 22px) 100%, 22px 100%,
+      0 calc(100% - 22px), 0 22px
+    );
+  }
+
+  .inventory-panel {
+    padding: 2px;
+  }
+
+  .inventory-panel__gap {
+    padding: 1px;
+    clip-path: polygon(
+      20px 0, calc(100% - 20px) 0, 100% 20px,
+      100% calc(100% - 20px), calc(100% - 20px) 100%, 20px 100%,
+      0 calc(100% - 20px), 0 20px
+    );
+  }
+
+  .inventory-panel__border2 {
+    padding: 1px;
+    clip-path: polygon(
+      18px 0, calc(100% - 18px) 0, 100% 18px,
+      100% calc(100% - 18px), calc(100% - 18px) 100%, 18px 100%,
+      0 calc(100% - 18px), 0 18px
+    );
+  }
+
+  .inventory-panel__inner {
+    padding: 22px;
+    clip-path: polygon(
+      15px 0, calc(100% - 15px) 0, 100% 15px,
+      100% calc(100% - 15px), calc(100% - 15px) 100%, 15px 100%,
+      0 calc(100% - 15px), 0 15px
+    );
+  }
+
+  .inventory-panel__rivet {
+    width: 20px;
+    height: 20px;
+  }
+
+  .inventory-panel__rivet--tl,
+  .inventory-panel__rivet--tr {
+    top: 14px;
+  }
+
+  .inventory-panel__rivet--bl,
+  .inventory-panel__rivet--br {
+    bottom: 14px;
+  }
+
+  .inventory-panel__rivet--tl,
+  .inventory-panel__rivet--bl {
+    left: 14px;
+  }
+
+  .inventory-panel__rivet--tr,
+  .inventory-panel__rivet--br {
+    right: 14px;
+  }
+
+  .inventory-panel__header {
+    margin: 0 2px 10px;
+  }
+
+  .inventory-panel__label {
+    font-size: 0.72rem;
+    gap: 6px;
+  }
+
+  .inventory-panel__count-inner {
+    padding: 3px 9px;
+    font-size: 0.68rem;
+  }
+
+  /* The store CTA is sized for a header with room to spare on desktop;
+     on a narrow screen right under the page title it reads as oversized
+     next to everything else, so it drops to a smaller, quieter button. */
+  .data-page--inventory .data-page__cta {
+    padding: 7px 14px;
+    font-size: 0.78rem;
+  }
+
+  .data-page--inventory .data-page__cta i {
+    font-size: 0.9rem;
+  }
+
+  /* Padding the grid out to a fixed minimum makes sense on a wide desktop
+     row; at 2 columns that same minimum turns into several rows of empty
+     sockets outweighing the real items, so cap how many are shown. */
+  .inventory-card--empty:nth-child(n + 9) {
     display: none;
   }
 
-  .inventory-table tr {
-    display: grid;
-    gap: 6px;
-    padding: 12px 0;
+  /* Tighter modal chrome — the header/eyebrow/close button were sized
+     for a 420px desktop dialog; on a phone-width sheet that padding and
+     type scale reads oversized before you even reach the item itself. */
+  .inventory-detail {
+    padding: 18px;
+    gap: 12px;
   }
 
-  .inventory-table td {
-    border: none;
-    padding: 4px 0;
+  .inventory-detail__eyebrow {
+    font-size: 0.66rem;
+    letter-spacing: 0.16em;
   }
 
-  .inventory-table td::before {
-    content: attr(data-title);
-    font-family: 'Space Grotesk', sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    display: block;
-    font-size: 0.72rem;
-    color: rgba(13, 15, 20, 0.55);
-    margin-bottom: 2px;
+  .inventory-detail__close {
+    width: 24px;
+    height: 24px;
+  }
+
+  .inventory-detail__title {
+    font-size: 1.15rem;
   }
 }

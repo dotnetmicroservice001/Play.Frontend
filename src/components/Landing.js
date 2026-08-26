@@ -2,43 +2,37 @@ import React, { useEffect, useCallback, useState, useRef } from 'react';
 import { Container } from 'react-bootstrap';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { AuthorizationPaths } from './api-authorization/ApiAuthorizationConstants';
+import authService from './api-authorization/AuthorizeService';
 import { QuestTimeline } from './QuestTimeline';
 import { TechStackOverview } from './TechStackOverview';
 import TextType from './TextType';
-import '../styles/landing.css';
+import WarpText from './WarpText';
 import architectureImage from '../images/architecture.png';
-
-// Cards describing the main user outcomes
-const userOutcomeCards = [
-  {
-    id: 'secure-sign-in',
-    title: 'Sign in securely',
-    description: 'Save progress and protect your inventory with verified profiles and role-aware access.',
-    icon: 'bi-shield-lock'
-  },
-  {
-    id: 'browse-buy',
-    title: 'Browse & buy items',
-    description: 'See accurate prices and instant availability pulled straight from the catalog service.',
-    icon: 'bi-joystick'
-  },
-  {
-    id: 'track-status',
-    title: 'Track order status live',
-    description: 'Watch purchase updates stream to the UI in real time—no manual refresh required.',
-    icon: 'bi-lightning-charge'
-  }
-];
-
-
 
 export const Landing = () => {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isArchitectureOpen, setIsArchitectureOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const location = useLocation();
   const history = useHistory();
   const { hash, pathname, search } = location;
   const architectureDetailsRef = useRef(null);
+
+  // "Sign in as Demo Player" always redirects straight to the IdP with no
+  // check of the current session — while already authenticated, that
+  // either just re-confirms the same session or silently keeps a
+  // different logged-in account, neither of which is what the click
+  // suggests will happen. Hiding it once signed in sidesteps both cases.
+  useEffect(() => {
+    const populateAuthState = () => {
+      authService.isAuthenticated().then(setIsAuthenticated);
+    };
+
+    const subscription = authService.subscribe(populateAuthState);
+    populateAuthState();
+
+    return () => authService.unsubscribe(subscription);
+  }, []);
 
   const handleScroll = useCallback(() => {
     setShowScrollTop(window.scrollY > 600);
@@ -72,11 +66,29 @@ export const Landing = () => {
         <section id="demo" className="hero-bleed landing-hero">
           <Container>
             <div className="landing-hero__content landing-hero__content--stack">
-              <div className="landing-hero__eyebrow">Virtual Marketplace</div>
+              <div className="landing-hero__mascots">
+                <img src="/wizardcrest.png" alt="GamePlayEconomy" className="landing-hero__crest" />
+              </div>
+              <h1 className="landing-hero__warp">
+                <WarpText
+                  text="GAMEPLAYECONOMY"
+                  color="var(--ink)"
+                  fontWeight={700}
+                  fontSize="clamp(2.4rem, 7vw, 5.5rem)"
+                  warpStrength={0.025}
+                  warpScale={0.6}
+                  speed={0.55}
+                  pointerInfluence={0.42}
+                  pointerStrength={0.38}
+                  refraction={0.005}
+                  ripple
+                  style={{ height: 'clamp(52px, 9.1vw, 116px)' }}
+                />
+              </h1>
               <TextType
-                as="h1"
+                as="p"
                 className="hero-typer"
-                text={'GAMEPLAYECONOMY\nTrade and manage game items securely\nwith real-time feedback.'}
+                text="The store interface for your game."
                 loop={false}
                 typingSpeed={54}
                 pauseDuration={900}
@@ -85,9 +97,6 @@ export const Landing = () => {
                 cursorBlinkDuration={0.8}
                 cursorCharacter="▍"
               />
-              <p className="landing-hero__subtitle">
-                Sign in, browse the catalog, and follow every purchase update without refreshing the page.
-              </p>
               <div className="landing-hero__cta-row">
                 <button
                   type="button"
@@ -98,13 +107,15 @@ export const Landing = () => {
                     <i className="bi bi-diagram-3" aria-hidden="true"></i>
                     See How It's Built
                     </button>
-                    <Link
-                      to={AuthorizationPaths.Login}
-                      className="hero-cta hero-cta--primary"
-                    >
-                    <i className="bi bi-person-plus" aria-hidden="true"></i>
-                      Sign in as Demo Player
-                    </Link>
+                    {!isAuthenticated && (
+                      <Link
+                        to={{ pathname: AuthorizationPaths.Login, search: '?demo=1' }}
+                        className="hero-cta hero-cta--primary"
+                      >
+                      <i className="bi bi-person-plus" aria-hidden="true"></i>
+                        Sign in as Demo Player
+                      </Link>
+                    )}
 
 
                     </div>
@@ -112,31 +123,7 @@ export const Landing = () => {
                   </Container>
                   </section>
 
-                  {/* User outcomes section */}
-              <section id="outcomes" className="landing-section landing-section--compact">
-                <Container>
-                <div className="outcomes">
-                  <h2 className="outcomes__title">What you can do</h2>
-                  <p className="outcomes__subtitle">Everything players expect from a modern marketplace—delivered with one login.</p>
-                  <div className="outcomes__grid" role="list">
-                  {userOutcomeCards.map((card) => (
-                    <div key={card.id} className="outcomes__card" role="listitem">
-                    <div className="outcomes__card-icon" aria-hidden="true">
-                      <span className="outcomes__card-icon-sheen"></span>
-                      <i className={`bi ${card.icon}`}></i>
-                    </div>
-                    <div className="outcomes__card-content">
-                      <h3 className="outcomes__card-title">{card.title}</h3>
-                      <p className="outcomes__card-body">{card.description}</p>
-                    </div>
-                    </div>
-                  ))}
-                  </div>
-                </div>
-                </Container>
-              </section>
-
-              {/* Placeholder anchor for case study navigation */}
+                  {/* Placeholder anchor for case study navigation */}
         <div id="case-study" className="case-study-anchor" aria-hidden="true"></div>
 
         {/* Quests timeline section */}
@@ -157,7 +144,7 @@ export const Landing = () => {
               >
                 <summary className="architecture-details__summary">How it's built</summary>
                 <div className="architecture-details__content">
-            <h1 className="techstack-header__title techstack-header__title--large" style={{ fontSize: '1.7rem' }}>ARCHITECTURE</h1>
+            <h1 className="architecture-details__title">Architecture</h1>
             <div className="architecture-details__image">
               <img
                 src={architectureImage}

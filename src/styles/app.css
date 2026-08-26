@@ -1,0 +1,357 @@
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  cursor: url('../assets/icons/mouse.png') 1 1, auto;
+}
+
+/* Bootstrap (and our own component CSS) sets cursor: pointer directly on
+   these, which beats the body-level rule above on specificity regardless
+   of stylesheet order — so the custom cursor needs to be reasserted here
+   too, or it reverts to the system pointer on every clickable element. */
+a,
+button,
+.btn,
+[role="button"],
+select,
+label,
+input[type="button"],
+input[type="submit"],
+.dropdown-toggle,
+.dropdown-item,
+.nav-link,
+summary {
+  cursor: url('../assets/icons/mouse.png') 1 1, auto !important;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.app-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1 0 auto;
+}
+
+.page-full {
+  width: 100%;
+}
+
+/* Subtle card container for main content */
+.content .page-shell {
+  background-color: #ffffff;
+  border: 1px solid #eaeaea;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+  border-radius: 12px;
+  padding: 24px;
+  margin-top: 48px;
+  margin-bottom: 24px;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.content .page-shell:hover {
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
+  transform: translateY(-1px);
+}
+
+/* Center titles inside the main content card */
+.content .page-shell > h1,
+.content .page-shell > h2,
+.content .page-shell > h3 {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.footer {
+  width: 100%;
+  padding: 20px 0;
+  background-color: rgb(var(--purple-50-rgb));
+  border-top: 1px solid rgba(var(--purple-600-rgb), 0.15);
+}
+
+.footer__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.footer__text {
+  margin: 0;
+  font-size: 0.8rem;
+  color: rgba(var(--ink-rgb), 0.6);
+  line-height: 1.4;
+}
+
+.footer__contact {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: inline-flex;
+  gap: 18px;
+}
+
+.footer__link {
+  display: inline-flex;
+  color: rgba(var(--ink-rgb), 0.55);
+  font-size: 1.05rem;
+  transition: color 0.2s ease;
+}
+
+.footer__link:hover,
+.footer__link:focus {
+  color: var(--accent);
+}
+
+@media (max-width: 600px) {
+  .footer__inner {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
+}
+
+/* Links */
+a {
+  color: var(--color-fg);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.15s ease;
+}
+
+a:hover {
+  text-decoration: none;
+  border-bottom-color: var(--color-fg);
+}
+
+/* Navbar: solid black with inverted accents */
+.navbar {
+  background-color: var(--color-black) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.navbar .navbar-brand,
+.navbar .nav-link {
+  color: #f5f5f5 !important;
+}
+
+.navbar .nav-link.active,
+.navbar .nav-link:focus,
+.navbar .nav-link:hover {
+  color: #ffffff !important;
+  border-bottom: 2px solid #ffffff;
+}
+
+/* Navbar toggler visibility on dark glass */
+.navbar .navbar-toggler {
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.navbar .navbar-toggler:focus {
+  box-shadow: none;
+}
+.navbar .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255,255,255,0.85)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* Spacing between navbar elements */
+.navbar .navbar-brand {
+  margin-right: 1rem;
+}
+
+.navbar .nav-link {
+  margin: 0 0.5rem;
+  padding: 0.5rem 0.25rem;
+}
+
+/* Space between left and right nav groups */
+.navbar .navbar-nav + .navbar-nav {
+  margin-left: 1rem;
+}
+
+.navbar .btn {
+  margin-left: 0.75rem;
+}
+
+/* Tighter vertical spacing when collapsed */
+@media (max-width: 991.98px) {
+  .navbar .nav-link {
+    margin: 0.25rem 0;
+  }
+  .navbar .btn {
+    margin: 0.5rem 0;
+  }
+}
+
+/* Any buttons placed in navbar use inverted (light) pixel-tile style */
+.navbar .btn-primary,
+.navbar .btn-primary:focus,
+.navbar .btn-primary:active {
+  background-color: #ffffff !important;
+  border-color: var(--ink) !important;
+  color: var(--ink) !important;
+  box-shadow: 3px 3px 0 rgba(var(--purple-300-rgb), 0.9) !important;
+}
+.navbar .btn-primary:hover {
+  background-color: rgb(var(--purple-50-rgb)) !important;
+  border-color: var(--ink) !important;
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 rgba(var(--purple-300-rgb), 0.9) !important;
+}
+.navbar .btn-primary:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 rgba(var(--purple-300-rgb), 0.9) !important;
+}
+
+/* Buttons: pixel-tile treatment — ink border, hard offset shadow, sharp
+   corners — matching the CTAs used across landing/home/data pages. */
+.btn {
+  border-radius: 8px !important;
+  border-width: 2px !important;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.btn-primary,
+.btn-primary:focus,
+.btn-primary:active {
+  background-color: rgb(var(--purple-300-rgb)) !important;
+  border-color: var(--ink) !important;
+  color: var(--ink) !important;
+  box-shadow: 3px 3px 0 rgba(var(--purple-600-rgb), 0.9) !important;
+}
+
+.btn-primary:hover {
+  background-color: rgb(var(--purple-200-rgb)) !important;
+  border-color: var(--ink) !important;
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 rgba(var(--purple-600-rgb), 0.9) !important;
+}
+
+.btn-primary:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 rgba(var(--purple-600-rgb), 0.9) !important;
+}
+
+/* Danger buttons keep the app's wine accent instead of Bootstrap red,
+   with the same pixel-tile border/shadow language. */
+.btn-danger,
+.btn-danger:focus,
+.btn-danger:active {
+  background-color: var(--danger) !important;
+  border-color: var(--ink) !important;
+  color: #ffffff !important;
+  box-shadow: 3px 3px 0 rgba(122, 18, 68, 0.55) !important;
+}
+
+.btn-danger:hover {
+  background-color: #611036 !important;
+  border-color: var(--ink) !important;
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 rgba(122, 18, 68, 0.55) !important;
+}
+
+.btn-danger:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 rgba(122, 18, 68, 0.55) !important;
+}
+
+/* Alert success/danger: react-bootstrap's Alert was the one place still
+   leaking Bootstrap's stock red/green (#f8d7da/#721c24, #d4edda/#155724).
+   Buttons stay monochrome on purpose (see .btn-danger above), but alerts
+   need a real red/green cue for usability, so instead they get a deeper,
+   richer version of that same red/green — consistent with the rest of
+   the app's palette instead of default Bootstrap colors. */
+.alert-danger {
+  background-color: var(--danger-bg) !important;
+  border-color: var(--danger-border) !important;
+  color: var(--danger) !important;
+}
+
+.alert-success {
+  background-color: var(--success-bg) !important;
+  border-color: var(--success-border) !important;
+  color: var(--success) !important;
+}
+
+/* Forms */
+.form-control {
+  color: var(--color-fg);
+  background-color: var(--color-white);
+  border-color: var(--color-border-strong);
+  border-radius: 10px;
+}
+
+/* Focus-visible styles for accessibility */
+a:focus-visible,
+button:focus-visible,
+.btn:focus-visible,
+.nav-link:focus-visible,
+.form-control:focus-visible {
+  outline: 2px solid var(--color-fg) !important;
+  outline-offset: 2px;
+  box-shadow: none !important;
+}
+
+.form-control:focus {
+  color: var(--color-fg);
+  background-color: var(--color-white);
+  border-color: var(--color-fg);
+  box-shadow: none;
+}
+
+/* Tables */
+.table {
+  color: var(--color-fg);
+}
+
+.table thead th {
+  border-bottom: 2px solid var(--color-fg);
+}
+
+.table td, .table th {
+  border-color: var(--color-border);
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: #fafafa;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #f2f2f2;
+}
+
+/* Rounded tables within main content card */
+.content .page-shell .table {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Wallet/coin balance icon — used in the Store header and Home dashboard
+   wallet stat, both of which set font-size on this element so it scales
+   with each context via em. */
+.wallet-icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  image-rendering: pixelated;
+  flex-shrink: 0;
+}

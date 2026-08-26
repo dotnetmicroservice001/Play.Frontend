@@ -9,6 +9,9 @@ export default class ItemForm extends React.Component
         name: '',
         description: '',
         price: '',
+        category: '',
+        imageUrl: '',
+        rarity: '',
         alertVisible: false,
         validated: false
     }
@@ -17,8 +20,16 @@ export default class ItemForm extends React.Component
     {
         if (this.props.item)
         {
-            const { id, name, description, price } = this.props.item
-            this.setState({ id, name, description, price });
+            const { id, name, description, price, category, imageUrl, rarity } = this.props.item
+            this.setState({
+                id,
+                name,
+                description,
+                price,
+                category: category ?? '',
+                imageUrl: imageUrl ?? '',
+                rarity: rarity ?? ''
+            });
         }
     }
     onChange = e =>
@@ -55,7 +66,10 @@ export default class ItemForm extends React.Component
             body: JSON.stringify({
                 name: this.state.name,
                 description: this.state.description,
-                price: parseFloat(this.state.price)
+                price: parseFloat(this.state.price),
+                category: this.state.category,
+                imageUrl: this.state.imageUrl,
+                rarity: this.state.rarity
             })
         })
             .then(async response =>
@@ -110,7 +124,10 @@ export default class ItemForm extends React.Component
                 id: this.state.id,
                 name: this.state.name,
                 description: this.state.description,
-                price: parseFloat(this.state.price)
+                price: parseFloat(this.state.price),
+                category: this.state.category,
+                imageUrl: this.state.imageUrl,
+                rarity: this.state.rarity
             })
         })
             .then(async response =>
@@ -156,6 +173,25 @@ export default class ItemForm extends React.Component
                 <Form.Label htmlFor="price">Price:</Form.Label>
                 <Form.Control type="number" name="price" onChange={this.onChange} value={this.state.price} required />
                 <Form.Control.Feedback type="invalid">The Price field is required</Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group>
+                <Form.Label htmlFor="category">Category:</Form.Label>
+                <Form.Control type="text" name="category" onChange={this.onChange} value={this.state.category} placeholder="e.g. Weapons" />
+            </Form.Group>
+            <Form.Group>
+                <Form.Label htmlFor="imageUrl">Image URL:</Form.Label>
+                <Form.Control type="text" name="imageUrl" onChange={this.onChange} value={this.state.imageUrl} placeholder="/item-images/…" />
+            </Form.Group>
+            <Form.Group>
+                <Form.Label htmlFor="rarity">Rarity:</Form.Label>
+                <Form.Control as="select" name="rarity" onChange={this.onChange} value={this.state.rarity}>
+                    <option value="">—</option>
+                    <option value="Common">Common</option>
+                    <option value="Uncommon">Uncommon</option>
+                    <option value="Rare">Rare</option>
+                    <option value="Epic">Epic</option>
+                    <option value="Legendary">Legendary</option>
+                </Form.Control>
             </Form.Group>
             <Button variant="primary" type="submit">Save</Button>
 

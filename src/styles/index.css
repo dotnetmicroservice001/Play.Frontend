@@ -1,0 +1,23 @@
+/*
+ * Central CSS import manifest. This is the only place that assembles the
+ * app's stylesheets — components no longer import their own CSS — so the
+ * cascade order is explicit here instead of depending on JS import order.
+ * Third-party CSS (Bootstrap, Bootstrap Icons) is imported directly in
+ * src/index.js and stays out of this manifest.
+ */
+@import './tokens.css';
+@import './app.css';
+@import './shared/data-page.css';
+@import './shared/modal.css';
+@import './shared/confirm-dialog.css';
+@import './shared/status-page.css';
+@import './shared/welcome-modal.css';
+@import './navmenu.css';
+@import './catalog.css';
+@import './store.css';
+@import './inventory.css';
+@import './users.css';
+@import './home.css';
+@import './landing.css';
+@import './quest-timeline.css';
+@import './TextType.css';

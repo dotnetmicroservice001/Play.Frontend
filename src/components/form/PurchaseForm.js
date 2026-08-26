@@ -1,8 +1,24 @@
 import React from 'react';
-import { Button, Form, Alert, Spinner } from 'react-bootstrap';
+import { Button, Form, Spinner } from 'react-bootstrap';
 import { v4 as uuidv4 } from 'uuid';
 import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
 import authService from '../api-authorization/AuthorizeService';
+import ConfirmDialog from '../common/ConfirmDialog';
+
+/* The Trading service's fault/error text is written for logs, not
+   players (e.g. raw exception messages or a ProblemDetails title). We
+   only ever show the player one of these friendly translations —
+   never the server's own wording — while still logging the raw
+   message to the console for debugging. */
+const FRIENDLY_FAULT_MESSAGES = [
+    { match: /insufficient|enough|balance|funds|afford/i, message: "You don't have enough Coins for this purchase." }
+];
+
+const getFriendlyFaultMessage = (rawMessage) =>
+{
+    const known = FRIENDLY_FAULT_MESSAGES.find(({ match }) => match.test(rawMessage || ''));
+    return known ? known.message : "We couldn't complete this purchase. Please try again.";
+};
 
 export default class PurchaseForm extends React.Component
 {
@@ -11,12 +27,13 @@ export default class PurchaseForm extends React.Component
         name: '',
         price: '',
         quantity: 1,
-        alertVisible: false,
-        alertColor: '',
-        alertMessage: '',
+        successModalVisible: false,
+        errorModalVisible: false,
+        errorMessage: '',
         isLoading: false,
         buttonDisabled: false,
-        validated: false
+        validated: false,
+        confirmVisible: false
     }
 
     connection = new HubConnectionBuilder()
@@ -39,9 +56,41 @@ export default class PurchaseForm extends React.Component
             });
     }
 
+    /* Store.js lets a shopper switch the selected item without closing
+       the detail panel first (setSelectedItemId directly on card click),
+       and PurchaseForm has no `key` tied to the item id, so React reuses
+       this same instance across that switch instead of remounting it.
+       Without this sync, `state.id/name/price` — what actually gets
+       submitted — would stay pinned to whichever item was open when the
+       form first mounted, even though the panel around it has already
+       moved on to a different item. */
+    componentDidUpdate(prevProps)
+    {
+        if (prevProps.item.id !== this.props.item.id)
+        {
+            const { id, name, price } = this.props.item;
+            this.setState({ id, name, price });
+        }
+    }
+
+    componentWillUnmount()
+    {
+        this.connection.stop();
+    }
+
     onChange = e =>
     {
         this.setState({ [e.target.name]: e.target.value })
+    }
+
+    increment = () =>
+    {
+        this.setState(state => ({ quantity: Math.max(1, (parseInt(state.quantity, 10) || 0) + 1) }));
+    }
+
+    decrement = () =>
+    {
+        this.setState(state => ({ quantity: Math.max(1, (parseInt(state.quantity, 10) || 1) - 1) }));
     }
 
     submitPurchase = (e) =>
@@ -55,21 +104,27 @@ export default class PurchaseForm extends React.Component
         }
         else
         {
-            this.purchaseItem();
+            this.setState({ confirmVisible: true });
         }
 
         this.setState({ validated: true });
     }
 
-    async purchaseItem()
+    confirmPurchase = () =>
     {
-        let confirmPurchase = window.confirm(`Purchase ${this.state.quantity} ${this.state.name} for ${this.state.price * this.state.quantity} gil?`);
-        if (confirmPurchase)
-        {
-            this.setState({ buttonDisabled: true, isLoading: true, alertVisible: false })
-            var idempotencyId = uuidv4();
-            this.fetchRetry(idempotencyId, 3);
-        }
+        this.setState({ confirmVisible: false, buttonDisabled: true, isLoading: true, successModalVisible: false });
+        const idempotencyId = uuidv4();
+        this.fetchRetry(idempotencyId, 3);
+    }
+
+    cancelPurchase = () =>
+    {
+        this.setState({ confirmVisible: false });
+    }
+
+    closeErrorModal = () =>
+    {
+        this.setState({ errorModalVisible: false });
     }
 
     async fetchRetry(idempotencyId, tries)
@@ -93,25 +148,25 @@ export default class PurchaseForm extends React.Component
                 if (!response.ok)
                 {
                     const errorData = await response.json();
-                    console.error(errorData);
-                    throw new Error(`Could not purchase the item: ${errorData.title}`);
+                    console.error('Purchase request failed:', errorData);
+                    throw new Error(errorData.title || 'Purchase request failed');
                 }
 
                 console.log('Purchase request completed with status ' + response.status);
                 return response.json();
             })
-            .catch(err => 
+            .catch(err =>
             {
                 var triesLeft = tries - 1;
                 if (!triesLeft)
                 {
+                    console.error('Purchase request failed after retries:', err);
                     this.setState({
-                        alertMessage: err.message,
-                        alertColor: "danger",
+                        errorMessage: "We couldn't start this purchase. Please check your connection and try again.",
+                        errorModalVisible: true,
                         buttonDisabled: false,
                         isLoading: false
                     });
-                    this.showAlert(false);
                     return;
                 }
 
@@ -126,12 +181,12 @@ export default class PurchaseForm extends React.Component
 
         if (status.currentState === "Faulted")
         {
+            console.error('Purchase faulted:', status.errorMessage);
             this.setState({
-                alertMessage: "Could not purchase the item(s). " + status.errorMessage,
-                alertColor: "danger",
+                errorMessage: getFriendlyFaultMessage(status.errorMessage),
+                errorModalVisible: true,
                 buttonDisabled: false
             });
-            this.showAlert(false);
         }
         else
         {
@@ -144,42 +199,64 @@ export default class PurchaseForm extends React.Component
                     total
                 });
             }
-            this.setState({
-                alertMessage: "Item(s) successfully purchased!",
-                alertColor: "success"
+            this.setState({ successModalVisible: true }, () =>
+            {
+                window.setTimeout(() => this.props.toggle(), 2000);
             });
-            this.showAlert(true);
         }
     }
 
-    showAlert = (autoDismiss) =>
+    closeSuccessModal = () =>
     {
-        this.setState({ alertVisible: true }, () =>
-        {
-            if (autoDismiss)
-            {
-                window.setTimeout(() =>
-                {
-                    this.props.toggle();
-                }, 2000)
-            }
-        });
+        this.setState({ successModalVisible: false });
+        this.props.toggle();
     }
 
     render()
     {
-        return <Form noValidate validated={this.state.validated} onSubmit={this.submitPurchase}>
-            <Form.Group>
-                <Form.Label htmlFor="price">Price:</Form.Label>
-                <Form.Control type="number" name="price" value={this.state.price} readOnly />
-            </Form.Group>
-            <Form.Group>
-                <Form.Label htmlFor="quantity">Quantity:</Form.Label>
-                <Form.Control type="number" name="quantity" onChange={this.onChange} value={this.state.quantity} required />
+        const total = (Number(this.state.price) || 0) * (Number(this.state.quantity) || 0);
+
+        return <Form noValidate validated={this.state.validated} onSubmit={this.submitPurchase} className="purchase-form">
+            <Form.Group className="purchase-form__quantity">
+                <Form.Label htmlFor="quantity">Quantity</Form.Label>
+                <div className="purchase-form__stepper">
+                    <button
+                        type="button"
+                        className="purchase-form__step-btn"
+                        onClick={this.decrement}
+                        aria-label="Decrease quantity"
+                    >
+                        <i className="bi bi-dash-lg" aria-hidden="true"></i>
+                    </button>
+                    <Form.Control
+                        type="number"
+                        name="quantity"
+                        min="1"
+                        onChange={this.onChange}
+                        value={this.state.quantity}
+                        required
+                    />
+                    <button
+                        type="button"
+                        className="purchase-form__step-btn"
+                        onClick={this.increment}
+                        aria-label="Increase quantity"
+                    >
+                        <i className="bi bi-plus-lg" aria-hidden="true"></i>
+                    </button>
+                </div>
                 <Form.Control.Feedback type="invalid">The Quantity field is required</Form.Control.Feedback>
             </Form.Group>
 
-            <Button variant="primary" type="submit" disabled={this.state.buttonDisabled} >
+            <div className="purchase-form__total-row">
+                <span className="purchase-form__row-label">Total</span>
+                <span className="purchase-form__total-value">
+                    <img src="/coin.png" alt="" className="coin-icon" aria-hidden="true" />
+                    {total}
+                </span>
+            </div>
+
+            <Button variant="primary" type="submit" className="purchase-form__submit" disabled={this.state.buttonDisabled}>
                 {this.state.isLoading ? <Spinner
                     as="span"
                     animation="border"
@@ -189,9 +266,35 @@ export default class PurchaseForm extends React.Component
                 {this.state.isLoading ? ' Purchasing…' : 'Purchase'}
             </Button>
 
-            <Alert style={{ marginTop: "10px" }} variant={this.state.alertColor} show={this.state.alertVisible}>
-                {this.state.alertMessage}
-            </Alert>
+            <ConfirmDialog
+                show={this.state.successModalVisible}
+                title="Purchase complete!"
+                message="Item(s) successfully purchased!"
+                icon={{ src: '/12.png', alt: '' }}
+                confirmLabel="OK"
+                onConfirm={this.closeSuccessModal}
+                onCancel={this.closeSuccessModal}
+            />
+
+            <ConfirmDialog
+                show={this.state.confirmVisible}
+                title="Confirm purchase"
+                message={`Purchase ${this.state.quantity} ${this.state.name} for ${this.state.price * this.state.quantity} coins?`}
+                confirmLabel="Purchase"
+                cancelLabel="Cancel"
+                onConfirm={this.confirmPurchase}
+                onCancel={this.cancelPurchase}
+            />
+
+            <ConfirmDialog
+                show={this.state.errorModalVisible}
+                title="Purchase failed"
+                message={this.state.errorMessage}
+                icon={{ src: '/dinoerror.png', alt: '' }}
+                confirmLabel="OK"
+                onConfirm={this.closeErrorModal}
+                onCancel={this.closeErrorModal}
+            />
         </Form>;
     }
 }

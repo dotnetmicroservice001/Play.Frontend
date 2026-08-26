@@ -1,7 +1,41 @@
+.navbar.navmenu {
+  border-bottom: 3px solid var(--ink);
+  box-shadow: 0 4px 0 rgba(var(--purple-600-rgb), 0.9);
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Match the data-page/home-page content column exactly (max-width:1040px
+   inside padding: clamp(24px, 6vw, 72px)) so the logo lines up with page
+   content below it instead of following Bootstrap's own container
+   breakpoints. Collapsing that two-level pattern (outer padding + inner
+   max-width) into one rule: outer max-width = 1040px + 2 * the same
+   padding, centered, with that padding applied directly — the math works
+   out to the identical left edge at every viewport width. */
+.navbar.navmenu .container {
+  max-width: calc(1040px + 2 * clamp(24px, 6vw, 72px));
+  width: 100%;
+  padding-left: clamp(24px, 6vw, 72px);
+  padding-right: clamp(24px, 6vw, 72px);
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .navbar-light .navbar-brand {
   font-family: 'Space Grotesk', sans-serif;
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: rgba(var(--purple-50-rgb), 0.85) !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navmenu__logo {
+  height: 24px;
+  width: 24px;
+  image-rendering: pixelated;
 }
 
 .navbar-light .nav-link,
@@ -9,7 +43,7 @@
 .navbar-light .navmenu__greeting {
   font-weight: 500;
   letter-spacing: 0.03em;
-  color: rgb(250, 251, 255);
+  color: rgb(var(--purple-50-rgb));
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -22,7 +56,7 @@
 .navbar-light .dropdown-toggle:focus,
 .navbar-light .navmenu__greeting:hover,
 .navbar-light .navmenu__greeting:focus {
-  color: rgb(238, 234, 253);
+  color: rgb(var(--purple-100-rgb));
 }
 
 .navmenu__collapse {
@@ -31,7 +65,16 @@
   justify-content: space-between;
   flex-wrap: nowrap;
   gap: 12px;
-  width: 100%;
+  /* Bootstrap's own .navbar-collapse sets flex-basis:100%/flex-grow:1
+     (meant for the collapsed-menu-drops-to-a-new-row pattern we don't
+     use, since `expand` is always on). Left alone, that plus width:100%
+     made this claim the container's full content width *in addition to*
+     the brand before it, overflowing the container's right edge by
+     however much the brand takes up. flex:1 1 auto + min-width:0 sizes
+     it to the space actually left over instead. */
+  flex: 1 1 auto;
+  min-width: 0;
+  width: auto;
 }
 
 .navmenu__primary,
@@ -56,7 +99,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0.75rem;
   font-weight: 500;
   letter-spacing: 0.03em;
   color: inherit;
@@ -68,32 +111,10 @@
   align-items: center;
 }
 
-
-
 .navmenu__logout-item {
   display: flex;
   align-items: center;
   gap: 8px;
-}
-
-.navmenu__greeting i {
-  font-size: 1rem;
-}
-
-body.theme-dark .navmenu__profile-dropdown .dropdown-menu {
-  background-color: rgba(15, 23, 42, 0.95);
-  border: 1px solid rgba(148, 163, 184, 0.18);
-  box-shadow: 0 18px 32px rgba(2, 6, 23, 0.55);
-}
-
-body.theme-dark .navmenu__profile-dropdown .dropdown-item {
-  color: rgba(226, 232, 240, 0.88);
-}
-
-body.theme-dark .navmenu__profile-dropdown .dropdown-item:hover,
-body.theme-dark .navmenu__profile-dropdown .dropdown-item:focus {
-  color: #ffffff;
-  background-color: rgba(79, 70, 229, 0.35);
 }
 
 .navmenu__collapse,
@@ -110,95 +131,85 @@ body.theme-dark .navmenu__profile-dropdown .dropdown-item:focus {
   gap: 6px;
   background: none;
   border: none;
+  border-radius: 8px;
   font-weight: 500;
   letter-spacing: 0.03em;
   cursor: pointer;
   padding: 0.5rem 1rem;
   color: inherit;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link:focus,
+.navbar .dropdown-toggle:hover,
+.navbar .dropdown-toggle:focus {
+  background: rgba(var(--purple-300-rgb), 0.18);
+  transform: translateY(-1px);
+}
+
+.navbar .nav-link:active,
+.navbar .dropdown-toggle:active {
+  transform: translateY(0);
+}
+
+/* Dropdown panels (Manage, Dev Tools, profile) — same ink-border +
+   hard-shadow language as the app-modal dialogs, instead of Bootstrap's
+   plain default menu. */
+.navbar .dropdown-menu {
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 5px 5px 0 rgba(var(--purple-600-rgb), 0.9);
+  padding: 6px;
+  margin-top: 10px;
+}
+
+.navbar .dropdown-item {
+  border-radius: 6px;
+  color: var(--ink);
+  font-weight: 500;
+  padding: 8px 12px;
+}
+
+.navbar .dropdown-item:hover,
+.navbar .dropdown-item:focus {
+  background: rgb(var(--purple-50-rgb));
+  color: var(--ink);
+}
+
+.navbar .dropdown-item:active {
+  background: rgb(var(--purple-100-rgb));
+  color: var(--ink);
+}
+
+.navmenu__logout-item:hover,
+.navmenu__logout-item:focus {
+  background: var(--danger-bg) !important;
+  color: var(--danger) !important;
+}
+
+.navbar .navbar-toggler {
+  border-radius: 8px;
+  transition: background 0.15s ease;
+}
+
+.navbar .navbar-toggler:hover {
+  background: rgba(var(--purple-300-rgb), 0.18);
 }
 
 .navbar .nav-link i,
 .navbar .dropdown-toggle i,
 .navmenu__collapse i {
-  font-size: 1rem;
+  font-size: 0.85rem;
+  opacity: 0.7;
   margin-bottom: 0;
 }
 
-.theme-toggle {
-  display: inline-flex !important;
-  align-items: center;
-  justify-content: center;
-  width: 42px;
-  height: 42px;
-  padding: 0;
-  border: none;
-  background: none;
-  border-radius: 50%;
-  transition: transform 0.18s ease;
-  cursor: pointer;
-}
-
-.theme-toggle:hover {
-  transform: translateY(-1px);
-}
-
-.theme-toggle:focus-visible .theme-toggle__track {
-  box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.45);
-}
-
-.theme-toggle:focus .theme-toggle__track {
-  box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.35);
-}
-
-.theme-toggle__track {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  border: 1px solid rgba(76, 29, 149, 0.25);
-  background: rgba(76, 29, 149, 0.1);
-  transition:
-    background 0.2s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.theme-toggle:hover .theme-toggle__track {
-  background: rgba(76, 29, 149, 0.18);
-  border-color: rgba(76, 29, 149, 0.4);
-}
-
-.theme-toggle__thumb {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  font-size: 0.95rem;
-  transition:
-    background 0.2s ease,
-    color 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.theme-toggle__thumb[data-theme='light'] {
-  background: linear-gradient(135deg, rgba(237, 233, 254, 0.95), rgba(196, 181, 253, 0.96));
-  color: rgba(40, 14, 75, 0.9);
-  box-shadow: 0 6px 14px rgba(76, 29, 149, 0.24);
-}
-
-.theme-toggle__thumb[data-theme='dark'] {
-  background: linear-gradient(135deg, rgba(76, 29, 149, 0.92), rgba(124, 58, 237, 0.96));
-  color: rgba(233, 231, 255, 0.94);
-  box-shadow: 0 6px 16px rgba(56, 33, 126, 0.32);
-}
-
-.theme-toggle__thumb[data-theme='dark'] i {
-  transform: translateY(1px);
+/* Account icon reads even smaller than the primary nav icons — it's a
+   secondary/utility control, not a link of equal weight. */
+.navbar .navmenu__greeting i {
+  font-size: 0.8rem;
 }
 
 .navmenu__secondary {
@@ -206,59 +217,6 @@ body.theme-dark .navmenu__profile-dropdown .dropdown-item:focus {
   justify-content: flex-end;
   min-width: 0;
   flex: 0 0 auto;
-}
-
-.navmenu.navmenu--dark .navbar-brand,
-.navmenu.navmenu--dark .nav-link,
-.navmenu.navmenu--dark .dropdown-toggle,
-.navmenu.navmenu--dark .theme-toggle,
-.navmenu.navmenu--dark .navmenu__greeting {
-  color: rgba(244, 243, 255, 0.85);
-}
-
-.navmenu.navmenu--dark .nav-link:hover,
-.navmenu.navmenu--dark .nav-link:focus,
-.navmenu.navmenu--dark .dropdown-toggle:hover,
-.navmenu.navmenu--dark .dropdown-toggle:focus,
-.navmenu.navmenu--dark .theme-toggle:hover,
-.navmenu.navmenu--dark .theme-toggle:focus,
-.navmenu.navmenu--dark .navmenu__greeting:hover,
-.navmenu.navmenu--dark .navmenu__greeting:focus {
-  color: #ffffff;
-}
-
-.navmenu.navmenu--dark .navbar-brand {
-  color: #ffffff;
-}
-
-.navmenu.navmenu--dark {
-  background-color: rgba(5, 7, 14, 0.95) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-.navmenu.navmenu--dark .theme-toggle__track {
-  background: rgba(30, 41, 59, 0.6);
-  border-color: rgba(148, 163, 184, 0.35);
-}
-
-.navmenu.navmenu--dark .theme-toggle:hover .theme-toggle__track {
-  background: rgba(76, 29, 149, 0.3);
-  border-color: rgba(165, 180, 252, 0.5);
-}
-
-.navmenu.navmenu--dark .theme-toggle:focus-visible .theme-toggle__track,
-.navmenu.navmenu--dark .theme-toggle:focus .theme-toggle__track {
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.45);
-}
-
-.navmenu.navmenu--light .theme-toggle__track {
-  background: rgba(76, 29, 149, 0.08);
-  border-color: rgba(76, 29, 149, 0.24);
-}
-
-.navmenu.navmenu--light .theme-toggle:hover .theme-toggle__track {
-  background: rgba(76, 29, 149, 0.16);
-  border-color: rgba(76, 29, 149, 0.36);
 }
 
 .navmenu__primary .nav-link,
@@ -283,23 +241,74 @@ body.theme-dark .navmenu__profile-dropdown .dropdown-item:focus {
   font-size: 0.95rem;
 }
 
-.navmenu__dropdown--dark .dropdown-menu {
-  background-color: rgba(15, 23, 42, 0.95);
-  border: 1px solid rgba(148, 163, 184, 0.18);
+.navmenu__display-name-editor {
+  padding: 6px 12px 10px;
 }
 
-.navmenu__dropdown--dark .dropdown-item {
-  color: rgba(226, 232, 240, 0.9);
+.navmenu__display-name-label-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 0 6px;
 }
 
-.navmenu__dropdown--dark .dropdown-item:hover,
-.navmenu__dropdown--dark .dropdown-item:focus {
-  color: #ffffff;
-  background-color: rgba(79, 70, 229, 0.35);
+.navmenu__display-name-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(var(--ink-rgb), 0.6);
 }
 
-.navmenu__dropdown--dark .dropdown-item i {
-  color: inherit;
+.navmenu__display-name-count {
+  font-size: 0.7rem;
+  color: rgba(var(--ink-rgb), 0.45);
+  white-space: nowrap;
+}
+
+.navmenu__display-name-row {
+  display: flex;
+  gap: 6px;
+}
+
+.navmenu__display-name-row input {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 0.85rem;
+  color: var(--ink);
+}
+
+.navmenu__display-name-row input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.navmenu__display-name-row button {
+  flex: 0 0 auto;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  background: rgb(var(--purple-300-rgb));
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.navmenu__display-name-row button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.navmenu__display-name-error {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.76rem;
+  color: #b3261e;
 }
 
 @media (max-width: 992px) {
@@ -323,19 +332,50 @@ body.theme-dark .navmenu__profile-dropdown .dropdown-item:focus {
 }
 
 @media (max-width: 768px) {
+  /* The wordmark was eating ~190px of a ~340px-wide row on phones — it
+     doesn't shrink below its own content width, so it starved the nav
+     links down to a sliver. Icon-only frees that space back up. */
+  .navmenu__brand-text {
+    display: none;
+  }
+
+  .navbar-light .navbar-brand {
+    gap: 0;
+  }
+
+  .navbar.navmenu .container {
+    position: relative;
+  }
+
   .navmenu__collapse {
     justify-content: flex-start;
+    gap: 8px;
+  }
+
+  /* Only the primary links (Home/Store/Inventory) scroll horizontally.
+     The account/dev-tools dropdowns stay in normal flow, fixed-width and
+     un-clipped — their menus are plain absolute-positioned elements (no
+     Popper inside a Navbar, so no popperConfig escape hatch), and an
+     overflow-x:auto ancestor would force overflow-y:auto too, clipping
+     any dropdown menu that opens below it. Keeping them out of the
+     scroller sidesteps that, and means Logout is never a scroll away. */
+  .navmenu__primary {
+    flex: 1 1 auto;
+    min-width: 0;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     gap: 8px;
+    /* Fades the trailing edge so a cut-off item reads as "more to
+       scroll to" instead of a hard, dead-end clip. */
+    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 20px), transparent 100%);
+    mask-image: linear-gradient(90deg, #000 calc(100% - 20px), transparent 100%);
   }
 
-  .navmenu__collapse::-webkit-scrollbar {
+  .navmenu__primary::-webkit-scrollbar {
     display: none;
   }
 
-  .navmenu__primary,
   .navmenu__secondary {
     flex: 0 0 auto;
     min-width: max-content;
@@ -343,7 +383,11 @@ body.theme-dark .navmenu__profile-dropdown .dropdown-item:focus {
   }
 
   .navmenu__primary--inline {
+    flex: 0 0 auto;
     margin-left: 0;
+    overflow-x: visible;
+    mask-image: none;
+    -webkit-mask-image: none;
   }
 
   .navmenu__secondary {

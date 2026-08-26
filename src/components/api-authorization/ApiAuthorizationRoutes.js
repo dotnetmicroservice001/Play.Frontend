@@ -9,22 +9,25 @@ export default class ApiAuthorizationRoutes extends Component {
   render () {
     return(
       <Fragment>
-          <Route path={AuthorizationPaths.Login} render={() => loginAction(LoginActions.Login)} />
-          <Route path={AuthorizationPaths.LoginFailed} render={() => loginAction(LoginActions.LoginFailed)} />
-          <Route path={AuthorizationPaths.LoginCallback} render={() => loginAction(LoginActions.LoginCallback)} />
-          <Route path={AuthorizationPaths.Profile} render={() => loginAction(LoginActions.Profile)} />
-          <Route path={AuthorizationPaths.Register} render={() => loginAction(LoginActions.Register)} />
-          <Route path={AuthorizationPaths.LogOut} render={() => logoutAction(LogoutActions.Logout)} />
-          <Route path={AuthorizationPaths.LogOutCallback} render={() => logoutAction(LogoutActions.LogoutCallback)} />
-          <Route path={AuthorizationPaths.LoggedOut} render={() => logoutAction(LogoutActions.LoggedOut)} />
+          <Route path={AuthorizationPaths.Login} render={(props) => loginAction(LoginActions.Login, props)} />
+          <Route path={AuthorizationPaths.LoginFailed} render={(props) => loginAction(LoginActions.LoginFailed, props)} />
+          <Route path={AuthorizationPaths.LoginCallback} render={(props) => loginAction(LoginActions.LoginCallback, props)} />
+          <Route path={AuthorizationPaths.Profile} render={(props) => loginAction(LoginActions.Profile, props)} />
+          <Route path={AuthorizationPaths.Register} render={(props) => loginAction(LoginActions.Register, props)} />
+          <Route path={AuthorizationPaths.LogOut} render={(props) => logoutAction(LogoutActions.Logout, props)} />
+          <Route path={AuthorizationPaths.LogOutCallback} render={(props) => logoutAction(LogoutActions.LogoutCallback, props)} />
+          <Route path={AuthorizationPaths.LoggedOut} render={(props) => logoutAction(LogoutActions.LoggedOut, props)} />
       </Fragment>);
   }
 }
 
-function loginAction(name){
-    return (<Login action={name}></Login>);
+// Route props (history/location/match) are forwarded so Login/Logout can
+// finish with a client-side history.replace instead of a hard page reload
+// — see Login.js's navigateToReturnUrl.
+function loginAction(name, routeProps) {
+    return (<Login {...routeProps} action={name}></Login>);
 }
 
-function logoutAction(name) {
-    return (<Logout action={name}></Logout>);
+function logoutAction(name, routeProps) {
+    return (<Logout {...routeProps} action={name}></Logout>);
 }

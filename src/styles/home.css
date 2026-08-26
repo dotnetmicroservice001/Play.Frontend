@@ -1,102 +1,462 @@
 .home {
+  position: relative;
   padding: clamp(32px, 5vw, 56px) clamp(24px, 6vw, 72px);
-  background: linear-gradient(180deg, rgba(244, 246, 255, 0.65) 0%, rgba(255, 255, 255, 0.95) 100%);
+  background: linear-gradient(180deg, rgba(var(--purple-100-rgb), 0.22) 0%, rgba(var(--purple-50-rgb), 0.55) 100%);
   min-height: calc(100vh - 120px);
-  display: grid;
-  gap: clamp(32px, 4vw, 48px);
-  color: var(--landing-ink, #0d0f14);
+  color: var(--ink);
   font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  overflow: hidden;
+}
+
+/* Same grid tiling used on the landing hero/outcomes sections, carried
+   over here so the post-login dashboard reads as part of the same site.
+   Masked so it fades in under the hero rather than sitting at flat
+   opacity everywhere — the hero reads as a lit clearing, and the grid
+   settles back to its normal density by the time the stat plate starts. */
+.home::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(90deg, var(--landing-grid-light) 1px, transparent 1px),
+    linear-gradient(var(--landing-grid-light) 1px, transparent 1px);
+  background-size: 32px 32px;
+  opacity: 0.32;
+  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0px, rgba(0, 0, 0, 1) 260px);
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0px, rgba(0, 0, 0, 1) 260px);
+  pointer-events: none;
+}
+
+.home__content {
+  position: relative;
+  z-index: 1;
+  max-width: 1080px;
+  margin: 0 auto;
+  display: grid;
+  gap: clamp(28px, 3.5vw, 40px);
 }
 
 .home-hero {
-  max-width: 680px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.home-hero__text {
+  position: relative;
+  z-index: 1;
   display: grid;
-  gap: 12px;
+  gap: 4px;
+}
+
+.home-hero__eyebrow {
+  margin: 0;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: rgba(var(--ink-rgb), 0.55);
 }
 
 .home-hero__title {
   margin: 0;
   font-family: 'Space Grotesk', sans-serif;
   font-size: clamp(2rem, 5vw, 2.4rem);
+  font-weight: 600;
   line-height: 1.25;
   color: inherit;
 }
 
-.home-hero__blurb {
-  margin: 0;
-  font-size: 1rem;
-  color: rgba(13, 15, 20, 0.72);
+/* The standalone wizard portrait (no cat, no tree canopy, no vine
+   frame) — a persistent small emblem rather than a repeat of the full
+   landing crest illustration, since this one greets the player every
+   session instead of once. */
+.home-hero__emblem {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  width: 68px;
+  height: 68px;
 }
 
-.home-actions {
+/* Ambient light behind the emblem — a quieter, single-source version of
+   the layered glows on the landing hero (landing.css). Landing gets to
+   spend a big atmospheric moment because you see it once; this is seen
+   every login, so it stays low-opacity rather than a full spotlight.
+   Centered on the emblem itself (not offset from the hero container)
+   so it stays concentric with it at any width. */
+.home-hero__glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 240px;
+  height: 240px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(var(--purple-400-rgb), 0.32), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.home-hero__emblem img {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 6px 10px rgba(var(--purple-600-rgb), 0.3));
+}
+
+/* Stat row — wallet balance + inventory-derived counts sitting free on
+   the page background, no outer card. It's status, not something
+   clickable, so it doesn't need a boxed container to read as a unit —
+   the icon medallions alone are enough to tie the three together. */
+.home-stats {
   display: grid;
-  gap: 18px;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: 1.3fr 1fr 1fr;
+  gap: 24px;
 }
 
-.home-pixel-card {
-  width: 100%;
-  height: 100%;
-}
-
-.home-actions__card {
-  display: flex;
-  flex-direction: column;
+.home-stat-segment {
+  display: grid;
+  grid-template-columns: auto 1fr;
   align-items: center;
-  justify-content: center;
-  gap: 14px;
-  padding: 20px 22px;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  border-radius: 18px;
-  border: 1px solid rgba(13, 15, 20, 0.2);
-  background: #0d0f14;
-  color: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 20px 36px rgba(13, 15, 20, 0.32);
-  text-decoration: none;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  gap: 4px 14px;
 }
 
-.home-actions__card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(96, 165, 250, 0.45);
-  box-shadow: 0 28px 44px rgba(15, 23, 42, 0.4);
+.home-stat-segment__body {
+  display: grid;
+  gap: 2px;
 }
 
-.home-actions__icon {
-  width: 56px;
-  height: 56px;
-  border-radius: 14px;
-  background: rgba(30, 64, 175, 0.16);
-  color: rgba(30, 64, 175, 0.9);
+.home-stat-segment__icon {
+  grid-row: 1 / span 3;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 3px solid var(--ink);
+  color: var(--ink);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.8rem;
+  font-size: 1.3rem;
+  box-shadow: 3px 3px 0 rgba(var(--purple-600-rgb), 0.9);
 }
 
-.home-actions__heading {
+/* Wallet leads the plate — bigger icon, bigger accent-colored value —
+   the "main resource" the way a HUD gives its primary stat more weight
+   than secondary ones, rather than treating all three as equals. */
+.home-stat-segment--primary .home-stat-segment__icon {
+  width: 56px;
+  height: 56px;
+  font-size: 1.6rem;
+}
+
+.home-stat-segment--primary .home-stat-segment__icon-img {
+  width: 28px;
+  height: 28px;
+}
+
+.home-stat-segment--primary .home-stat-segment__value {
+  font-size: 2rem;
+  color: var(--accent);
+}
+
+.home-stat-segment__icon-img {
+  width: 22px;
+  height: 22px;
+  image-rendering: pixelated;
+}
+
+.home-stat-segment__label {
   margin: 0;
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.3rem;
-  letter-spacing: 0.1em;
+  font-size: 0.7rem;
+  font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(var(--ink-rgb), 0.55);
+}
+
+.home-stat-segment__value {
+  margin: 0;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--ink);
+}
+
+.home-stat-segment__caption {
+  margin: 0;
+  font-size: 0.78rem;
+  color: rgba(var(--ink-rgb), 0.6);
+}
+
+.home-stat-segment__spinner {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 3px solid rgba(var(--purple-500-rgb), 0.18);
+  border-top-color: rgba(var(--purple-600-rgb), 0.85);
+  animation: data-page-spin 0.8s linear infinite;
+}
+
+@media (max-width: 640px) {
+  .home-stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Shared section header used above "Latest drops" and "Your bag". */
+.home-section {
+  display: grid;
+  gap: 16px;
+}
+
+.home-section__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.home-section__title {
+  margin: 0;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink);
+}
+
+.home-section__link {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.home-section__link:hover {
+  text-decoration: underline;
+}
+
+/* Main lane (Latest drops — wants width for its card grid) + a narrower
+   rail (Your bag, admin links, Dev Tools note — all short, list-like
+   "about you" content) instead of stacking every section full-width. */
+.home-columns {
+  display: grid;
+  grid-template-columns: 2fr minmax(280px, 1fr);
+  gap: clamp(28px, 3.5vw, 40px);
+  align-items: start;
+}
+
+.home-columns__rail {
+  display: grid;
+  gap: clamp(28px, 3.5vw, 40px);
+}
+
+@media (max-width: 1000px) {
+  .home-columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Latest drops — recommendation cards pointing into the store, styled
+   like a compact take on the store-card grid. */
+.home-drops {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.home-drop-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 10px;
+  border: 3px solid var(--ink);
+  background: #ffffff;
+  color: var(--ink);
+  text-decoration: none;
+  box-shadow: 6px 6px 0 rgba(var(--purple-600-rgb), 0.9);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.home-drop-card:hover {
+  transform: translate(-3px, -3px);
+  background: rgb(var(--purple-50-rgb));
+  box-shadow: 9px 9px 0 rgba(var(--purple-600-rgb), 0.9);
+  color: var(--ink);
+}
+
+.home-drop-card__image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 120px;
+  border-radius: 8px;
+  border: 2px solid var(--ink);
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.home-drop-card__image-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 10px;
+  image-rendering: pixelated;
+}
+
+.home-drop-card__image-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  color: rgba(var(--ink-rgb), 0.35);
+}
+
+.home-drop-card__body {
+  display: grid;
+  gap: 6px;
+}
+
+.home-drop-card__name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.05rem;
   font-weight: 700;
 }
 
-.home-actions__copy {
-  margin: 0;
-  font-size: 1.08rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.78);
-  line-height: 1.55;
+.home-drop-card__description {
+  font-size: 0.85rem;
+  color: rgba(var(--ink-rgb), 0.65);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.home-drop-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.home-drop-card__price {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* Your bag — a small pouch panel echoing Inventory's own chamfered
+   frame (inventory.css .inventory-panel), so the preview visually
+   mirrors the page it's teasing instead of looking like a plain widget.
+   Deliberately lighter than the real pouch: a single chamfer + one
+   shadow layer, no inlaid rivets or dashed-divider header — those stay
+   exclusive to the full Inventory page so they still feel earned there. */
+.home-bag-pouch {
+  position: relative;
+}
+
+.home-bag-pouch__shadow {
+  position: absolute;
+  inset: 0;
+  transform: translate(5px, 5px);
+  background: rgba(var(--purple-600-rgb), 0.9);
+  clip-path: polygon(
+    16px 0, calc(100% - 16px) 0, 100% 16px,
+    100% calc(100% - 16px), calc(100% - 16px) 100%, 16px 100%,
+    0 calc(100% - 16px), 0 16px
+  );
+}
+
+.home-bag-pouch__frame {
+  position: relative;
+  padding: 3px;
+  background: var(--ink);
+  clip-path: polygon(
+    16px 0, calc(100% - 16px) 0, 100% 16px,
+    100% calc(100% - 16px), calc(100% - 16px) 100%, 16px 100%,
+    0 calc(100% - 16px), 0 16px
+  );
+}
+
+.home-bag-pouch__inner {
+  padding: 16px;
+  background: #ffffff;
+  clip-path: polygon(
+    13px 0, calc(100% - 13px) 0, 100% 13px,
+    100% calc(100% - 13px), calc(100% - 13px) 100%, 13px 100%,
+    0 calc(100% - 13px), 0 13px
+  );
+}
+
+/* A strip of slot-thumbnails (image + quantity badge), mirroring
+   Inventory's own card-slot grid (inventory.css .inventory-card)
+   instead of a label/value row list — a peek into the pouch rather
+   than a mini data table. */
+.home-bag-slots {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(56px, 1fr));
+  gap: 10px;
+}
+
+.home-bag-slot {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  border: 2px solid var(--ink);
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.home-bag-slot__image-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 6px;
+  image-rendering: pixelated;
+}
+
+.home-bag-slot__glyph {
+  font-size: 1.1rem;
+  color: rgba(var(--ink-rgb), 0.4);
+}
+
+.home-bag-slot__qty {
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+  padding: 1px 5px;
+  border-radius: 6px;
+  border: 1.5px solid var(--ink);
+  background: #ffffff;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.66rem;
+  font-weight: 700;
+  color: var(--accent);
 }
 
 .home-admin {
   display: grid;
   gap: 12px;
-  max-width: 640px;
 }
 
 .home-admin__title {
@@ -118,36 +478,85 @@
   display: inline-flex;
   align-items: center;
   padding: 6px 16px;
-  border-radius: 12px;
-  background: #0d0f14;
-  color: #fff;
+  border-radius: 6px;
+  border: 2px solid var(--ink);
+  background: rgb(var(--purple-50-rgb));
+  color: var(--ink);
   text-decoration: none;
   font-family: 'Space Grotesk', sans-serif;
   font-size: 0.82rem;
   letter-spacing: 0.05em;
+  box-shadow: 2px 2px 0 rgba(var(--purple-600-rgb), 0.9);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
 }
 
 .home-admin__chip:hover {
-  background: rgba(13, 15, 20, 0.82);
+  transform: translate(-2px, -2px);
+  background: rgb(var(--purple-100-rgb));
+  box-shadow: 4px 4px 0 rgba(var(--purple-600-rgb), 0.9);
 }
 
-.home-devnote {
+.home-admin__chip:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 rgba(var(--purple-600-rgb), 0.9);
+}
+
+.home-devtools {
+  display: grid;
+  gap: 12px;
+}
+
+.home-devtools__title {
   margin: 0;
-  font-size: 0.88rem;
-  color: rgba(13, 15, 20, 0.6);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.05rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: inherit;
+}
+
+.home-devtools__grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.home-devtools__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 6px;
+  border: 2px solid var(--ink);
+  background: rgb(var(--purple-50-rgb));
+  color: var(--ink);
+  text-decoration: none;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.05em;
+  box-shadow: 2px 2px 0 rgba(var(--purple-600-rgb), 0.9);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.home-devtools__item:hover {
+  transform: translate(-2px, -2px);
+  background: rgb(var(--purple-100-rgb));
+  box-shadow: 4px 4px 0 rgba(var(--purple-600-rgb), 0.9);
+}
+
+.home-devtools__item:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 rgba(var(--purple-600-rgb), 0.9);
+}
+
+.home-devtools__icon {
+  height: 18px;
+  width: 18px;
+  object-fit: contain;
 }
 
 @media (max-width: 768px) {
   .home {
     padding: 28px 20px 48px;
-  }
-
-  .home-actions__card {
-    align-items: flex-start;
-    text-align: left;
-  }
-
-  .home-actions__icon {
-    margin-bottom: 4px;
   }
 }

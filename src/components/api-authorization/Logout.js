@@ -3,6 +3,7 @@ import { Component } from 'react';
 import authService from './AuthorizeService';
 import { AuthenticationResultStatus } from './AuthorizeService';
 import { QueryParameterNames, LogoutActions, AuthorizationPaths } from './ApiAuthorizationConstants';
+import StatusPage from '../common/StatusPage';
 
 // The main responsibility of this component is to handle the user's logout process.
 // This is the starting point for the logout process, which is usually initiated when a
@@ -48,14 +49,39 @@ export class Logout extends Component {
             return <div></div>
         }
         if (!!message) {
-            return (<div>{message}</div>);
+            const isSuccess = message === "You successfully logged out!";
+            return (
+                <StatusPage
+                    icon={isSuccess ? 'bi-check-circle' : 'bi-exclamation-octagon'}
+                    eyebrow={isSuccess ? 'Signed out' : 'Sign-out notice'}
+                    title={isSuccess ? "You're signed out" : 'Something needs your attention'}
+                    message={message}
+                    ctaLabel={isSuccess ? 'Back to home' : 'Go to login'}
+                    ctaTo={isSuccess ? '/' : AuthorizationPaths.Login}
+                    tone={isSuccess ? 'success' : 'danger'}
+                />
+            );
         } else {
             const action = this.props.action;
             switch (action) {
                 case LogoutActions.Logout:
-                    return (<div>Processing logout</div>);
+                    return (
+                        <StatusPage
+                            icon="bi-arrow-repeat"
+                            title="Signing you out…"
+                            message="Hang tight, this should only take a moment."
+                            spin
+                        />
+                    );
                 case LogoutActions.LogoutCallback:
-                    return (<div>Processing logout callback</div>);
+                    return (
+                        <StatusPage
+                            icon="bi-arrow-repeat"
+                            title="Finishing sign-out…"
+                            message="Hang tight, this should only take a moment."
+                            spin
+                        />
+                    );
                 case LogoutActions.LoggedOut:
                     return (<div>{message}</div>);
                 default:
@@ -123,6 +149,15 @@ export class Logout extends Component {
     }
 
     navigateToReturnUrl(returnUrl) {
-        return window.location.replace(returnUrl);
+        // Same rationale as Login.js's navigateToReturnUrl — a same-origin
+        // destination can go through the router instead of a hard reload
+        // that re-downloads the whole JS bundle a second time.
+        if (this.props.history && returnUrl.startsWith(window.location.origin)) {
+            const path = returnUrl.slice(window.location.origin.length) || '/';
+            this.props.history.replace(path);
+            return;
+        }
+
+        window.location.replace(returnUrl);
     }
 }

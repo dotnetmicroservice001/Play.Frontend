@@ -78,6 +78,33 @@ export class AuthorizeService {
         }
     }
 
+    // Skips the silent/popup attempts and redirects straight to the IdP,
+    // tagging the authorize request with ?demo=1 so the login page there
+    // knows to bypass its credential form and sign the demo user in
+    // immediately instead of waiting for a second click.
+    //
+    // NOTE: this does not force a fresh login when the browser already has
+    // an SSO cookie for a *different* account — IdentityServer will just
+    // silently reuse that session and skip the demo sign-in entirely.
+    // Fixing that (e.g. with `prompt: 'login'`) is still an open TODO —
+    // an earlier attempt was reverted after it appeared to cause an
+    // infinite redirect loop, but that loop turned out to be an artifact
+    // of testing inside Claude Code's sandboxed browser preview (its
+    // cross-origin cookie handling breaks automaticSilentRenew's
+    // check-session iframe) and did not reproduce in a real browser. A
+    // real fix attempt should be verified in an actual browser, not that
+    // preview.
+    async signInDemo(state) {
+        await this.ensureUserManagerInitialized();
+        try {
+            await this.userManager.signinRedirect(this.createArguments(state, { demo: '1' }));
+            return this.redirect();
+        } catch (redirectError) {
+            console.log("Redirect authentication error: ", redirectError);
+            return this.error(redirectError);
+        }
+    }
+
     async completeSignIn(url) {
         try {
             await this.ensureUserManagerInitialized();
@@ -158,8 +185,12 @@ export class AuthorizeService {
         }
     }
 
-    createArguments(state) {
-        return { useReplaceToNavigate: true, data: state };
+    createArguments(state, extraQueryParams) {
+        const args = { useReplaceToNavigate: true, data: state };
+        if (extraQueryParams) {
+            args.extraQueryParams = extraQueryParams;
+        }
+        return args;
     }
 
     error(message) {
@@ -199,6 +230,17 @@ export class AuthorizeService {
         this.userManager = new UserManager(settings);
 
         this.userManager.events.addUserSignedOut(async () => {
+            await this.userManager.removeUser();
+            this.updateState(undefined);
+        });
+
+        // automaticSilentRenew above tries to refresh the token via a hidden
+        // iframe before it expires; this only fires if that refresh didn't
+        // happen in time (e.g. the IdP session itself lapsed) and the token
+        // actually expires. Clearing local state here is what makes
+        // AuthorizeRoute (and every other authService subscriber, like
+        // NavMenu) immediately treat the user as signed out.
+        this.userManager.events.addAccessTokenExpired(async () => {
             await this.userManager.removeUser();
             this.updateState(undefined);
         });

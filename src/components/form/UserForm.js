@@ -7,7 +7,8 @@ export default class UserForm extends React.Component
     state = {
         id: 0,
         email: '',
-        gil: '',
+        nickname: '',
+        coin: '',
         alertVisible: false,
         validated: false
     }
@@ -15,8 +16,8 @@ export default class UserForm extends React.Component
     {
         if (this.props.user)
         {
-            const { id, email, gil } = this.props.user
-            this.setState({ id, email, gil });
+            const { id, email, gil, nickname } = this.props.user
+            this.setState({ id, email, coin: gil, nickname: nickname ?? '' });
         }
     }
     onChange = e =>
@@ -53,7 +54,8 @@ export default class UserForm extends React.Component
             body: JSON.stringify({
                 id: this.state.id,
                 email: this.state.email,
-                gil: parseFloat(this.state.gil)
+                gil: parseFloat(this.state.coin),
+                nickname: this.state.nickname
             })
         })
             .then(async response =>
@@ -92,9 +94,13 @@ export default class UserForm extends React.Component
                 <Form.Control.Feedback type="invalid">The Email field is required</Form.Control.Feedback>
             </Form.Group>
             <Form.Group>
-                <Form.Label htmlFor="gil">Gil:</Form.Label>
-                <Form.Control type="number" name="gil" onChange={this.onChange} value={this.state.gil} required />
-                <Form.Control.Feedback type="invalid">The Gil field is required</Form.Control.Feedback>
+                <Form.Label htmlFor="nickname">Nickname:</Form.Label>
+                <Form.Control type="text" name="nickname" onChange={this.onChange} value={this.state.nickname} maxLength={30} />
+            </Form.Group>
+            <Form.Group>
+                <Form.Label htmlFor="coin">Coins:</Form.Label>
+                <Form.Control type="number" name="coin" onChange={this.onChange} value={this.state.coin} required />
+                <Form.Control.Feedback type="invalid">The Coins field is required</Form.Control.Feedback>
             </Form.Group>
             <Button variant="primary" type="submit">Save</Button>
 

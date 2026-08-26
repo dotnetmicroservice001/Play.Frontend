@@ -15,12 +15,23 @@ export default class UserModal extends Component
     render()
     {
         let title = 'Edit User';
-        return <Fragment>
-            <Button
+        const button = this.props.compact
+            ? <Button
                 variant="primary"
-                onClick={this.toggle}><i className="bi bi-pencil-square mr-2" aria-hidden="true"></i>Edit</Button>
-            <Modal show={this.state.modal} className={this.props.className} onHide={this.toggle}>
-                <Modal.Header closeButton>{title}</Modal.Header>
+                size="sm"
+                onClick={this.toggle}
+                aria-label={`Edit ${this.props.user.email}`}
+                title="Edit"><i className="bi bi-pencil-square" aria-hidden="true"></i></Button>
+            : <Button
+                variant="primary"
+                onClick={this.toggle}><i className="bi bi-pencil-square mr-2" aria-hidden="true"></i>Edit</Button>;
+
+        return <Fragment>
+            {button}
+            <Modal show={this.state.modal} className={`app-modal ${this.props.className ?? ''}`.trim()} onHide={this.toggle}>
+                <Modal.Header closeButton>
+                    <Modal.Title>{title}</Modal.Title>
+                </Modal.Header>
                 <Modal.Body>
                     <UserForm
                         updateUserIntoState={this.props.updateUserIntoState}

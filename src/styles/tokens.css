@@ -1,0 +1,69 @@
+/* Design tokens shared across the whole app. */
+:root {
+  /* App chrome (navbar/buttons/forms/tables/footer) — intentionally
+     monochrome. Kept deliberately separate from the purple accent below
+     so the chrome stays neutral while the accent draws attention. */
+  --color-bg: #ffffff;
+  --color-fg: #111111;
+  --color-border: #e6e6e6;
+  --color-border-strong: #cccccc;
+  --color-black: #000000;
+  --color-white: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-muted: rgba(248, 249, 255, 0.96);
+  --color-shadow-soft: rgba(15, 23, 42, 0.12);
+  --color-shadow-strong: rgba(15, 23, 42, 0.18);
+
+  /* Ink — primary text color. Use as rgba(var(--ink-rgb), opacity) so one
+     color carries the whole text hierarchy instead of picking new grays. */
+  --ink: #0d0f14;
+  --ink-rgb: 13, 15, 20;
+
+  /* Secondary/muted text tone (previously hardcoded ad hoc across
+     landing.css as rgba(40,14,75,*) — and once mistyped as
+     rgba(39,14,76,*) — now a real, reusable token). */
+  --ink-secondary: #280e4b;
+  --ink-secondary-rgb: 40, 14, 75;
+
+  /* Purple accent scale — one hue from light tint to deep/rich, so every
+     accent color in the app is a step on this scale rather than a
+     hand-picked one-off. */
+  --purple-50-rgb: 244, 238, 255;
+  --purple-100-rgb: 230, 217, 255;
+  --purple-200-rgb: 199, 170, 255;
+  --purple-300-rgb: 163, 116, 255;
+  --purple-400-rgb: 124, 58, 237;
+  --purple-500-rgb: 91, 33, 182;
+  --purple-600-rgb: 76, 29, 149;
+  --purple-700-rgb: 59, 7, 100;
+  --purple-800-rgb: 46, 16, 101;
+  --purple-900-rgb: 30, 10, 66;
+
+  /* Accent — the brand purple. Anchored at purple-700 (dark/rich); hover
+     and active are lighter/darker steps of the SAME hue, not different
+     hues, so state changes never look like a different color family. */
+  --accent-rgb: var(--purple-700-rgb);
+  --accent: #3b0764;
+  --accent-hover: #4c1d95;
+  --accent-active: #2e1065;
+  --accent-tint: rgba(59, 7, 100, 0.12);
+
+  /* Separate "info" blue, used by loading spinners / info highlights —
+     distinct on purpose from the purple brand accent. */
+  --accent-blue-rgb: 30, 64, 175;
+
+  /* Semantic feedback colors (Alert success/danger). Kept as genuine
+     red/green — that cue is load-bearing for usability, not something to
+     sacrifice for brand consistency — but tuned to the same "deep, rich"
+     feel as the accent instead of leaving Bootstrap's stock red/green in
+     place. --danger reuses the wine tone already used for danger states
+     elsewhere in the design. Background/border are computed tints of the
+     base color (90%/72% mixed toward white), matching how Bootstrap
+     itself derives its alert tint pairs. */
+  --danger: #7a1244;
+  --danger-bg: #f2e7ec;
+  --danger-border: #dabdcb;
+  --success: #0f5132;
+  --success-bg: #e7eeea;
+  --success-border: #bccec6;
+}
