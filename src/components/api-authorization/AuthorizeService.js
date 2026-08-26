@@ -82,6 +82,18 @@ export class AuthorizeService {
     // tagging the authorize request with ?demo=1 so the login page there
     // knows to bypass its credential form and sign the demo user in
     // immediately instead of waiting for a second click.
+    //
+    // NOTE: this does not force a fresh login when the browser already has
+    // an SSO cookie for a *different* account — IdentityServer will just
+    // silently reuse that session and skip the demo sign-in entirely.
+    // Fixing that (e.g. with `prompt: 'login'`) is still an open TODO —
+    // an earlier attempt was reverted after it appeared to cause an
+    // infinite redirect loop, but that loop turned out to be an artifact
+    // of testing inside Claude Code's sandboxed browser preview (its
+    // cross-origin cookie handling breaks automaticSilentRenew's
+    // check-session iframe) and did not reproduce in a real browser. A
+    // real fix attempt should be verified in an actual browser, not that
+    // preview.
     async signInDemo(state) {
         await this.ensureUserManagerInitialized();
         try {
