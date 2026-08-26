@@ -7,6 +7,8 @@ export const QuestTimeline = () => {
   const lastActiveRef = useRef(null);
   const [activeQuestId, setActiveQuestId] = useState(null);
   const [entered, setEntered] = useState(false);
+  const [wizardTop, setWizardTop] = useState(0);
+  const [wizardSide, setWizardSide] = useState('right');
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => setEntered(true));
@@ -49,15 +51,56 @@ export const QuestTimeline = () => {
 
   const displayedQuests = quests;
 
+  // The wizard "hops" to the vertical center of whichever quest item is
+  // currently active, reusing the same activeQuestId the IntersectionObserver
+  // above already tracks — no separate scroll-position math needed. Falls
+  // back to the first item so the wizard has a resting spot before any quest
+  // has crossed the 60% visibility threshold. It also always sits on the
+  // side opposite the active card (desktop's left/right alternation), so it
+  // never overlaps the card it's standing next to.
+  useEffect(() => {
+    const questId = activeQuestId ?? displayedQuests[0]?.id;
+    const index = displayedQuests.findIndex((quest) => quest.id === questId);
+    const item = itemRefs.current[index];
+    if (!item) return undefined;
+
+    const updatePosition = () => {
+      setWizardTop(item.offsetTop + item.offsetHeight / 2);
+    };
+
+    updatePosition();
+    setWizardSide(index % 2 === 0 ? 'right' : 'left');
+    window.addEventListener('resize', updatePosition);
+    return () => window.removeEventListener('resize', updatePosition);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeQuestId, entered]);
+
   return (
     <section className={`quest-timeline quest-timeline--vertical ${entered ? 'quest-timeline--entered' : ''}`}>
-      <div className="quest-timeline__header text-center">
-        <h2 className="quest-timeline__title">Quest Timeline</h2>
-        <p className="quest-timeline__subtitle">Four moments take you from sign-in to a confirmed order, no waiting, no manual refresh.</p>
+      <div className="quest-timeline__map-wrap">
+        <div className="quest-timeline__map">
+          <div className="quest-timeline__map-shadow" aria-hidden="true"></div>
+          <div className="quest-timeline__map-frame">
+            <div className="quest-timeline__map-inner">
+              <img
+                src="/timeline.png"
+                alt="Quest map: enter the realm, receive coins, browse & buy, track & collect"
+                className="quest-timeline__map-img"
+              />
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className="quest-timeline__stage" role="list" aria-label="Play Economy quest timeline">
         <div className="quest-timeline__line" aria-hidden="true"></div>
+        <img
+          src="/11.png"
+          alt=""
+          aria-hidden="true"
+          className={`quest-timeline__wizard quest-timeline__wizard--${wizardSide}`}
+          style={{ top: `${wizardTop}px` }}
+        />
         {displayedQuests.map((quest, index) => {
           const placement = index % 2 === 0 ? 'left' : 'right';
           return (
@@ -85,9 +128,6 @@ export const QuestTimeline = () => {
           );
         })}
       </div>
-
-      <p className="quest-timeline__caption">You take the action, secure sign-in, live catalog, orchestrated purchase, instant status make it feel effortless.</p>
-
     </section>
   );
 };

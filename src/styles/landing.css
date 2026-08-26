@@ -64,21 +64,6 @@
   z-index: 1;
 }
 
-.landing-timeline-image {
-  width: 100%;
-  padding: 0 0 clamp(24px, 4vh, 40px);
-  display: flex;
-  justify-content: center;
-}
-
-.landing-timeline-image__img {
-  display: block;
-  width: 100%;
-  max-width: 720px;
-  height: auto;
-  border-radius: 12px;
-}
-
 .hero-bleed {
   width: 100%;
   padding: clamp(56px, 10vh, 96px) 0 clamp(16px, 3vh, 28px);

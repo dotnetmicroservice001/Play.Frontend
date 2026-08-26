@@ -106,15 +106,6 @@ export const Landing = () => {
                   {/* Placeholder anchor for case study navigation */}
         <div id="case-study" className="case-study-anchor" aria-hidden="true"></div>
 
-        {/* Quest timeline illustration */}
-        <section className="landing-timeline-image">
-          <img
-            src="/timeline.png"
-            alt="Quest timeline: enter the realm, receive coins, browse & buy, track & collect"
-            className="landing-timeline-image__img"
-          />
-        </section>
-
         {/* Quests timeline section */}
         <section id="quests" className="landing-section landing-section--gradient">
           <Container>

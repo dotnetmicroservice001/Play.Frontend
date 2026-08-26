@@ -43,33 +43,58 @@
   }
 }
 
-.quest-timeline__header {
+/* Quest map — a lead-in preview of the poster illustration, sized to match
+   the same content width as the card stage below it (.quest-timeline__stage,
+   max-width 920px) so it reads as proportionate to the cards rather than a
+   small thumbnail dwarfed by them. Same chamfered clip-path technique used
+   throughout, scaled up to match. */
+.quest-timeline__map-wrap {
   position: relative;
   z-index: 1;
-  max-width: 700px;
-  margin: 0 auto 2.5rem;
+  max-width: 900px;
+  margin: 0 auto 2.75rem;
 }
 
-.quest-timeline__title {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 2.35rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  margin-bottom: 1rem;
-  color: var(--timeline-accent-ink);
+.quest-timeline__map {
+  position: relative;
 }
 
-.quest-timeline__subtitle {
-  font-size: 1rem;
-  color: rgba(26, 26, 36, 0.72);
-  line-height: 1.6;
-  white-space: nowrap;
+.quest-timeline__map-shadow {
+  position: absolute;
+  inset: 0;
+  transform: translate(6px, 6px);
+  background: rgba(var(--purple-600-rgb), 0.9);
+  clip-path: polygon(
+    24px 0, calc(100% - 24px) 0, 100% 24px,
+    100% calc(100% - 24px), calc(100% - 24px) 100%, 24px 100%,
+    0 calc(100% - 24px), 0 24px
+  );
 }
 
-@media (max-width: 768px) {
-  .quest-timeline__subtitle {
-    white-space: normal;
-  }
+.quest-timeline__map-frame {
+  position: relative;
+  padding: 4px;
+  background: var(--ink);
+  clip-path: polygon(
+    24px 0, calc(100% - 24px) 0, 100% 24px,
+    100% calc(100% - 24px), calc(100% - 24px) 100%, 24px 100%,
+    0 calc(100% - 24px), 0 24px
+  );
+}
+
+.quest-timeline__map-inner {
+  background: #ffffff;
+  clip-path: polygon(
+    20px 0, calc(100% - 20px) 0, 100% 20px,
+    100% calc(100% - 20px), calc(100% - 20px) 100%, 20px 100%,
+    0 calc(100% - 20px), 0 20px
+  );
+}
+
+.quest-timeline__map-img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .quest-timeline__stage {
@@ -123,6 +148,29 @@
   box-shadow: 0 0 16px rgba(var(--purple-600-rgb), 0.35);
 }
 
+/* The wizard companion — hops to whichever quest is currently active
+   (QuestTimeline.jsx sets `top` in px as activeQuestId changes). Sits just
+   left of the line/dot so it never covers either side's card. */
+.quest-timeline__wizard {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 52px;
+  height: auto;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 6px 10px rgba(var(--purple-600-rgb), 0.35));
+  z-index: 2;
+  pointer-events: none;
+  transition: top 0.5s ease, left 0.5s ease;
+}
+
+.quest-timeline__wizard--left {
+  left: calc(50% - 46px);
+}
+
+.quest-timeline__wizard--right {
+  left: calc(50% + 46px);
+}
+
 .quest-timeline__card {
   display: flex;
   justify-content: center;
@@ -141,12 +189,16 @@
 }
 
 .quest-badge {
+  position: relative;
   width: min(100%, 340px);
-  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  transition: transform 0.35s ease;
 }
 
 .quest-badge:focus {
   outline: none;
+}
+
+.quest-badge:focus .quest-badge__frame {
   box-shadow: 0 0 0 3px rgba(var(--purple-600-rgb), 0.35);
 }
 
@@ -154,17 +206,45 @@
   transform: translateY(-8px);
 }
 
+/* Chamfered card frame, matching the clip-path technique used for Home's
+   bag pouch (home.css .home-bag-pouch) and the Landing timeline poster
+   frame (landing.css .landing-timeline-frame) — an RPG-styled alternative
+   to a plain rounded card, so the quest log reads as part of the same
+   visual language as the rest of the page. */
+.quest-badge__shadow {
+  position: absolute;
+  inset: 0;
+  transform: translate(6px, 6px);
+  background: rgba(var(--purple-600-rgb), 0.9);
+  clip-path: polygon(
+    14px 0, calc(100% - 14px) 0, 100% 14px,
+    100% calc(100% - 14px), calc(100% - 14px) 100%, 14px 100%,
+    0 calc(100% - 14px), 0 14px
+  );
+}
+
 .quest-badge__frame {
-  padding: 1.5rem 1.25rem;
-  border-radius: 20px;
-  background: linear-gradient(135deg, #ffffff, var(--timeline-surface));
-  border: 1px solid rgba(26, 26, 36, 0.1);
-  box-shadow: 0 12px 32px rgba(26, 26, 36, 0.12);
+  position: relative;
+  padding: 3px;
+  background: var(--ink);
+  clip-path: polygon(
+    14px 0, calc(100% - 14px) 0, 100% 14px,
+    100% calc(100% - 14px), calc(100% - 14px) 100%, 14px 100%,
+    0 calc(100% - 14px), 0 14px
+  );
   max-width: 900px;
-  /* Increase the maximum width of the badge frame */
   width: 100%;
-  /* Ensure it takes up the full width within its container */
   margin: 0 auto;
+}
+
+.quest-badge__inner {
+  padding: 1.5rem 1.25rem;
+  background: linear-gradient(135deg, #ffffff, var(--timeline-surface));
+  clip-path: polygon(
+    11px 0, calc(100% - 11px) 0, 100% 11px,
+    100% calc(100% - 11px), calc(100% - 11px) 100%, 11px 100%,
+    0 calc(100% - 11px), 0 11px
+  );
 }
 
 .quest-badge__icon {
@@ -263,16 +343,6 @@
   text-align: center;
 }
 
-.quest-timeline__caption {
-  position: relative;
-  z-index: 1;
-  max-width: 720px;
-  margin: 1.75rem auto 0;
-  font-size: 0.95rem;
-  color: rgba(26, 26, 36, 0.72);
-  text-align: center;
-  line-height: 1.5;
-}
 @media (max-width: 768px) {
   .quest-timeline__stage {
     padding: 0 1rem;
@@ -302,6 +372,11 @@
     left: 36px;
   }
 
+  .quest-timeline__wizard {
+    left: 36px;
+    width: 40px;
+  }
+
   .quest-badge {
     width: 100%;
     max-width: none;
@@ -312,7 +387,8 @@
 
   .quest-timeline,
   .quest-badge,
-  .quest-badge__frame {
+  .quest-badge__frame,
+  .quest-timeline__wizard {
     transition: none;
     animation: none !important;
   }

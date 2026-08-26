@@ -1,22 +1,22 @@
 export const quests = [
   {
     id: 1,
-    title: 'Step 1: Sign in & sync your profile',
-    description: 'Log in once and your player stats and wallet balance follow you anywhere you play.',
+    title: 'One Login, Everywhere',
+    description: 'Log in once, and that session carries your profile and wallet balance with you across the whole store.',
     tech: ['ASP.NET Core Identity', 'JWT (OAuth 2.0 PKCE)', 'Duende IdentityServer', 'Azure Key Vault'],
     icon: 'shield-lock'
   },
   {
     id: 2,
-    title: 'Step 2: Browse live catalog listings',
-    description: 'See accurate prices and availability the moment you open the marketplace.',
+    title: 'Live Catalog Data',
+    description: "Prices and stock update straight from the live catalog, so what you see is what's available right now.",
     tech: ['MongoDB', 'CosmosDb', 'Distributed cache'],
     icon: 'collection'
   },
   {
     id: 3,
-    title: 'Step 3: Confirm your purchase',
-    description: 'Reserve items and debit your wallet in under a second—no double charges, no surprises.',
+    title: 'Safe, Atomic Purchases',
+    description: 'Reserving the item and taking the payment happen as a single, all-or-nothing transaction, so your charge and your item always match up.',
     tech: ['Saga State Machine',
       'RabbitMQ', 'Azure Service Bus',
       'Distributed transactions'],
@@ -24,8 +24,8 @@ export const quests = [
   },
   {
     id: 4,
-    title: 'Step 4: Track status in real time',
-    description: 'Watch progress updates land instantly—no refresh button required.',
+    title: 'Real-Time Status Updates',
+    description: 'Order status updates land on your screen the moment they happen, so you can watch your order move in real time.',
     tech: ['SignalR (real-time updates)',
       'OpenTelemetry'],
     icon: 'diagram-3'
