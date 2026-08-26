@@ -47,7 +47,7 @@ const MIN_GRID_SLOTS = 12;
 /* CSS url() in inventory.css can't reach files under public/ — CRA's
    css-loader resolves them as module imports and fails to build. An
    inline style bypasses that, the same way the existing /wallet.png and
-   /gil.png <img> tags elsewhere already resolve public/ assets at
+   /coin.png <img> tags elsewhere already resolve public/ assets at
    runtime rather than through webpack. */
 const RIVET_STYLE = { backgroundImage: "url('/purplediamond.png')" };
 

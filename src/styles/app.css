@@ -345,7 +345,7 @@ button:focus-visible,
   overflow: hidden;
 }
 
-/* Wallet/gil balance icon — used in the Store header and Home dashboard
+/* Wallet/coin balance icon — used in the Store header and Home dashboard
    wallet stat, both of which set font-size on this element so it scales
    with each context via em. */
 .wallet-icon {

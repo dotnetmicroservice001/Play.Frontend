@@ -11,7 +11,7 @@ import ConfirmDialog from '../common/ConfirmDialog';
    never the server's own wording — while still logging the raw
    message to the console for debugging. */
 const FRIENDLY_FAULT_MESSAGES = [
-    { match: /insufficient|enough|balance|funds|afford/i, message: "You don't have enough Gil for this purchase." }
+    { match: /insufficient|enough|balance|funds|afford/i, message: "You don't have enough Coins for this purchase." }
 ];
 
 const getFriendlyFaultMessage = (rawMessage) =>
@@ -251,7 +251,7 @@ export default class PurchaseForm extends React.Component
             <div className="purchase-form__total-row">
                 <span className="purchase-form__row-label">Total</span>
                 <span className="purchase-form__total-value">
-                    <img src="/gil.png" alt="" className="gil-icon" aria-hidden="true" />
+                    <img src="/coin.png" alt="" className="coin-icon" aria-hidden="true" />
                     {total}
                 </span>
             </div>
@@ -279,7 +279,7 @@ export default class PurchaseForm extends React.Component
             <ConfirmDialog
                 show={this.state.confirmVisible}
                 title="Confirm purchase"
-                message={`Purchase ${this.state.quantity} ${this.state.name} for ${this.state.price * this.state.quantity} gil?`}
+                message={`Purchase ${this.state.quantity} ${this.state.name} for ${this.state.price * this.state.quantity} coins?`}
                 confirmLabel="Purchase"
                 cancelLabel="Cancel"
                 onConfirm={this.confirmPurchase}

@@ -4,13 +4,13 @@ import authService from './api-authorization/AuthorizeService';
 
 const initialState = {
   items: [],
-  userGil: 0,
+  userCoin: 0,
   loading: true,
   loadedSuccess: false,
 };
 
 export const Store = () => {
-  const [{ items, userGil, loading, loadedSuccess }, setState] = useState(initialState);
+  const [{ items, userCoin, loading, loadedSuccess }, setState] = useState(initialState);
   const [selectedItemId, setSelectedItemId] = useState(null);
   const [activeCategory, setActiveCategory] = useState('All');
 
@@ -29,13 +29,13 @@ export const Store = () => {
       const payload = await response.json();
       setState({
         items: payload.items ?? [],
-        userGil: payload.userGil ?? 0,
+        userCoin: payload.userGil ?? 0,
         loading: false,
         loadedSuccess: true,
       });
     } catch (error) {
       console.error(error);
-      setState({ items: [], userGil: 0, loading: false, loadedSuccess: false });
+      setState({ items: [], userCoin: 0, loading: false, loadedSuccess: false });
     }
   };
 
@@ -113,7 +113,7 @@ export const Store = () => {
             <span className="store-card__footer">
               <span className="store-card__price-group">
                 <span className="store-card__price">
-                  <img src="/gil.png" alt="" className="gil-icon" aria-hidden="true" />
+                  <img src="/coin.png" alt="" className="coin-icon" aria-hidden="true" />
                   {item.price}
                 </span>
                 {item.rarity && (
@@ -143,13 +143,13 @@ export const Store = () => {
           <h1 className="data-page__title">Browse the latest drops</h1>
         </div>
 
-        <div className="data-page__wallet" aria-label="Gil balance">
+        <div className="data-page__wallet" aria-label="Coin balance">
           {loading && <span className="data-page__wallet-spinner" role="status" aria-live="polite"></span>}
 
           {!loading && loadedSuccess && (
             <>
               <img src="/wallet.png" alt="" className="wallet-icon data-page__wallet-icon" aria-hidden="true" />
-              <span className="data-page__wallet-value">${userGil}</span>
+              <span className="data-page__wallet-value">${userCoin}</span>
             </>
           )}
 

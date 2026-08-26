@@ -80,7 +80,7 @@
   color: rgba(var(--ink-rgb), 0.7);
 }
 
-/* Gil balance shown as a wallet chip in the header, matching the Home
+/* Coin balance shown as a wallet chip in the header, matching the Home
    dashboard's .home-wallet treatment. */
 .data-page__wallet {
   display: inline-flex;
