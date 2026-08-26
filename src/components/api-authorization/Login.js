@@ -2,8 +2,14 @@ import React from 'react'
 import { Component } from 'react';
 import authService from './AuthorizeService';
 import { AuthenticationResultStatus } from './AuthorizeService';
-import { LoginActions, QueryParameterNames, AuthorizationPaths } from './ApiAuthorizationConstants';
+import { ApplicationName, LoginActions, QueryParameterNames, AuthorizationPaths } from './ApiAuthorizationConstants';
 import StatusPage from '../common/StatusPage';
+
+// Set right before a successful login-callback hands off to the app, and
+// consumed once by Home.js — lets the welcome tour distinguish "just
+// signed in" (including signing back in after a logout) from "refreshed
+// a page while an existing session was still valid".
+export const JUST_SIGNED_IN_KEY = `${ApplicationName}.justSignedIn`;
 
 // The main responsibility of this component is to handle the user's login process.
 // This is the starting point for the login process. Any component that needs to authenticate
@@ -127,6 +133,7 @@ export class Login extends Component {
                 // is when we are doing a redirect sign in flow.
                 throw new Error('Should not redirect.');
             case AuthenticationResultStatus.Success:
+                window.sessionStorage.setItem(JUST_SIGNED_IN_KEY, '1');
                 await this.navigateToReturnUrl(this.getReturnUrl(result.state));
                 break;
             case AuthenticationResultStatus.Fail:
@@ -164,8 +171,19 @@ export class Login extends Component {
     }
 
     navigateToReturnUrl(returnUrl) {
-        // It's important that we do a replace here so that we remove the callback uri with the
-        // fragment containing the tokens from the browser history.
+        // A same-origin destination can go through the router instead of a
+        // hard reload — window.location.replace was re-downloading and
+        // re-executing the whole JS bundle a second time (once for this
+        // callback page, once again for the destination), on top of the
+        // unavoidable reload from the external IdP redirect landing here.
+        // history.replace still keeps the token-bearing callback URL out
+        // of browser history, same as the reload did.
+        if (this.props.history && returnUrl.startsWith(window.location.origin)) {
+            const path = returnUrl.slice(window.location.origin.length) || '/';
+            this.props.history.replace(path);
+            return;
+        }
+
         window.location.replace(returnUrl);
     }
 }

@@ -149,6 +149,15 @@ export class Logout extends Component {
     }
 
     navigateToReturnUrl(returnUrl) {
-        return window.location.replace(returnUrl);
+        // Same rationale as Login.js's navigateToReturnUrl — a same-origin
+        // destination can go through the router instead of a hard reload
+        // that re-downloads the whole JS bundle a second time.
+        if (this.props.history && returnUrl.startsWith(window.location.origin)) {
+            const path = returnUrl.slice(window.location.origin.length) || '/';
+            this.props.history.replace(path);
+            return;
+        }
+
+        window.location.replace(returnUrl);
     }
 }

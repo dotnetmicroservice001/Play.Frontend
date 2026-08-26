@@ -221,6 +221,17 @@ export class AuthorizeService {
             await this.userManager.removeUser();
             this.updateState(undefined);
         });
+
+        // automaticSilentRenew above tries to refresh the token via a hidden
+        // iframe before it expires; this only fires if that refresh didn't
+        // happen in time (e.g. the IdP session itself lapsed) and the token
+        // actually expires. Clearing local state here is what makes
+        // AuthorizeRoute (and every other authService subscriber, like
+        // NavMenu) immediately treat the user as signed out.
+        this.userManager.events.addAccessTokenExpired(async () => {
+            await this.userManager.removeUser();
+            this.updateState(undefined);
+        });
     }
 
     static get instance() { return authService }
