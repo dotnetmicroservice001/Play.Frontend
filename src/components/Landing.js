@@ -8,30 +8,6 @@ import TextType from './TextType';
 import WarpText from './WarpText';
 import architectureImage from '../images/architecture.png';
 
-// Cards describing the main user outcomes
-const userOutcomeCards = [
-  {
-    id: 'secure-sign-in',
-    title: 'Sign in securely',
-    description: 'Save progress and protect your inventory with verified profiles and role-aware access.',
-    icon: 'bi-shield-lock'
-  },
-  {
-    id: 'browse-buy',
-    title: 'Browse & buy items',
-    description: 'See accurate prices and instant availability pulled straight from the catalog service.',
-    icon: 'bi-joystick'
-  },
-  {
-    id: 'track-status',
-    title: 'Track order status live',
-    description: 'Watch purchase updates stream to the UI in real time—no manual refresh required.',
-    icon: 'bi-lightning-charge'
-  }
-];
-
-
-
 export const Landing = () => {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isArchitectureOpen, setIsArchitectureOpen] = useState(false);
@@ -73,8 +49,7 @@ export const Landing = () => {
           <Container>
             <div className="landing-hero__content landing-hero__content--stack">
               <div className="landing-hero__mascots">
-                <img src="/12.png" alt="" aria-hidden="true" className="landing-hero__logo landing-hero__logo--companion" />
-                <img src="/11.png" alt="GamePlayEconomy" className="landing-hero__logo" />
+                <img src="/wizardcrest.png" alt="GamePlayEconomy" className="landing-hero__crest" />
               </div>
               <h1 className="landing-hero__warp">
                 <WarpText
@@ -92,12 +67,6 @@ export const Landing = () => {
                   style={{ height: 'clamp(120px, 18vw, 220px)' }}
                 />
               </h1>
-              <img
-                src="/herostrip.png"
-                alt=""
-                aria-hidden="true"
-                className="landing-hero__strip"
-              />
               <TextType
                 as="p"
                 className="hero-typer"
@@ -137,6 +106,15 @@ export const Landing = () => {
                   {/* Placeholder anchor for case study navigation */}
         <div id="case-study" className="case-study-anchor" aria-hidden="true"></div>
 
+        {/* Quest timeline illustration */}
+        <section className="landing-timeline-image">
+          <img
+            src="/timeline.png"
+            alt="Quest timeline: enter the realm, receive coins, browse & buy, track & collect"
+            className="landing-timeline-image__img"
+          />
+        </section>
+
         {/* Quests timeline section */}
         <section id="quests" className="landing-section landing-section--gradient">
           <Container>
@@ -144,30 +122,7 @@ export const Landing = () => {
           </Container>
         </section>
 
-        {/* User outcomes section */}
-              <section id="outcomes" className="landing-section landing-section--compact">
-                <Container>
-                <div className="outcomes">
-                  <h2 className="outcomes__title">Player Abilities</h2>
-                  <p className="outcomes__subtitle">Everything unlocked the moment you sign in.</p>
-                  <div className="outcomes__grid" role="list">
-                  {userOutcomeCards.map((card) => (
-                    <div key={card.id} className="outcomes__card" role="listitem">
-                    <div className="outcomes__card-icon" aria-hidden="true">
-                      <i className={`bi ${card.icon}`}></i>
-                    </div>
-                    <div className="outcomes__card-content">
-                      <h3 className="outcomes__card-title">{card.title}</h3>
-                      <p className="outcomes__card-body">{card.description}</p>
-                    </div>
-                    </div>
-                  ))}
-                  </div>
-                </div>
-                </Container>
-              </section>
-
-              {/* Architecture section */}
+        {/* Architecture section */}
           <section className="landing-section landing-section--gradient" id="architecture">
             <Container>
               <details
