@@ -135,7 +135,7 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  margin: -20px 0 -28px;
+  margin: -20px 0 0;
 }
 
 /* Wizard + wisteria tree + cat, framed in the ornate purple hex —
@@ -156,7 +156,6 @@
   text-shadow: none;
   color: rgba(var(--ink-rgb), 0.72);
   max-width: 620px;
-  margin-top: -80px;
 }
 
 .landing-hero__cta-row {

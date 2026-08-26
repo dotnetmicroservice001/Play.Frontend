@@ -64,13 +64,13 @@ export const Landing = () => {
                   pointerStrength={0.38}
                   refraction={0.005}
                   ripple
-                  style={{ height: 'clamp(120px, 18vw, 220px)' }}
+                  style={{ height: 'clamp(52px, 9.1vw, 116px)' }}
                 />
               </h1>
               <TextType
                 as="p"
                 className="hero-typer"
-                text="The store interface for your game inventory."
+                text="The store interface for your game."
                 loop={false}
                 typingSpeed={54}
                 pauseDuration={900}
