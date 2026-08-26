@@ -19,3 +19,5 @@ window.TRADING_SERVICE_URL = 'https://localhost:5007'
 window.PURCHASE_API_URL = `${window.TRADING_SERVICE_URL}/purchase`
 window.STORE_API_URL = `${window.TRADING_SERVICE_URL}/store`
 window.RABBITMQ_URL = 'http://localhost:15672'
+window.JAEGER_URL = 'http://localhost:16686'
+window.PROMETHEUS_URL = 'http://localhost:9090'

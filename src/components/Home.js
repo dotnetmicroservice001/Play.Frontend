@@ -4,6 +4,9 @@ import authService from './api-authorization/AuthorizeService';
 import { ApplicationPaths, DEMO_PLAYER_USERNAME } from './Constants';
 import { JUST_SIGNED_IN_KEY } from './api-authorization/Login';
 import WelcomeModal from './WelcomeModal';
+import PrometheusIcon from '../assets/icons/prometheus.svg';
+import JaegerIcon from '../assets/icons/jaegertracing.svg';
+import GrafanaIcon from '../assets/icons/grafana.svg';
 
 const initialStoreState = {
   userCoin: 0,
@@ -191,6 +194,36 @@ export const Home = () => {
     ),
     [userState.isAuthenticated, userState.role]
   );
+
+  // Same window.*_URL globals NavMenu's dev-tools dropdown reads, restricted
+  // here to admin and the seeded demo account so regular players don't see
+  // internal observability links on their home page.
+  const devToolsLinks = useMemo(() => {
+    const isAdmin = userState.role === 'Admin';
+    const isDemo = userState.userName === DEMO_PLAYER_USERNAME;
+
+    if (!userState.isAuthenticated || !(isAdmin || isDemo)) {
+      return [];
+    }
+
+    const links = [
+      window.PROMETHEUS_URL && { href: window.PROMETHEUS_URL, label: 'Prometheus', icon: PrometheusIcon },
+      window.JAEGER_URL && { href: window.JAEGER_URL, label: 'Jaeger', icon: JaegerIcon },
+      window.GRAFANA_URL && { href: window.GRAFANA_URL, label: 'Grafana', icon: GrafanaIcon }
+    ].filter(Boolean);
+
+    const uniqueLinks = [];
+    const seen = new Set();
+
+    links.forEach((link) => {
+      if (!seen.has(link.href)) {
+        seen.add(link.href);
+        uniqueLinks.push(link);
+      }
+    });
+
+    return uniqueLinks;
+  }, [userState.isAuthenticated, userState.role, userState.userName]);
 
   // Prefer the player's chosen display name; the Identity claim we get back
   // otherwise is just an email address, so fall back to its local part
@@ -408,6 +441,26 @@ export const Home = () => {
                     <Link key={link.to} to={link.to} className="home-admin__chip">
                       {link.label}
                     </Link>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {devToolsLinks.length > 0 && (
+              <section className="home-devtools">
+                <h3 className="home-devtools__title">Dev tools preview</h3>
+                <div className="home-devtools__grid">
+                  {devToolsLinks.map((link) => (
+                    <a
+                      key={link.href}
+                      href={link.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="home-devtools__item"
+                    >
+                      <img src={link.icon} alt="" className="home-devtools__icon" aria-hidden="true" />
+                      <span className="home-devtools__label">{link.label}</span>
+                    </a>
                   ))}
                 </div>
               </section>

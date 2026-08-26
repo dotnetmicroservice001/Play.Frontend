@@ -170,7 +170,6 @@ export class NavMenu extends Component
             {this.manageDropdown()}
           </Nav>
           <Nav className="navmenu__secondary">
-            {this.devToolsDropdown()}
             {this.profileAndLogoutItems()}
           </Nav>
         </Fragment>
@@ -185,7 +184,6 @@ export class NavMenu extends Component
             {this.renderPrimaryLinks(['home', 'store', 'inventory'])}
           </Nav>
           <Nav className="navmenu__secondary">
-            {this.devToolsDropdown()}
             {this.profileAndLogoutItems()}
           </Nav>
         </Fragment>
@@ -198,69 +196,9 @@ export class NavMenu extends Component
           {this.renderPrimaryLinks(['home'])}
         </Nav>
         <Nav className="navmenu__secondary">
-          {this.devToolsDropdown()}
           {this.profileAndLogoutItems()}
         </Nav>
       </Fragment>
-    );
-  }
-
-  devToolsDropdown()
-  {
-    const developerLinks = [
-      window.PROMETHEUS_URL && {
-        href: window.PROMETHEUS_URL,
-        label: 'Prometheus',
-        icon: 'bi bi-activity'
-      },
-      window.JAEGER_URL && {
-        href: window.JAEGER_URL,
-        label: 'Jaeger traces',
-        icon: 'bi bi-diagram-3'
-      },
-      window.GRAFANA_URL && {
-        href: window.GRAFANA_URL,
-        label: 'Grafana',
-        icon: 'bi bi-bar-chart-line'
-      }
-    ].filter(Boolean);
-
-    const uniqueLinks = [];
-    const seen = new Set();
-
-    developerLinks.forEach((link) =>
-    {
-      if (!seen.has(link.href))
-      {
-        seen.add(link.href);
-        uniqueLinks.push(link);
-      }
-    });
-
-    if (uniqueLinks.length === 0)
-    {
-      return null;
-    }
-
-    return (
-      <NavDropdown
-        title={<span><i className="bi bi-tools mr-1" aria-hidden="true"></i>Dev Tools</span>}
-        id="dev-tools-dropdown"
-        alignRight
-        className="navmenu__dropdown"
-      >
-        {uniqueLinks.map((link) => (
-          <NavDropdown.Item
-            key={link.href}
-            href={link.href}
-            target="_blank"
-            rel="noreferrer"
-          >
-            <i className={`${link.icon} mr-2`} aria-hidden="true"></i>
-            {link.label}
-          </NavDropdown.Item>
-        ))}
-      </NavDropdown>
     );
   }
 
