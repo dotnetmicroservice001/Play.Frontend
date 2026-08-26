@@ -8,21 +8,21 @@ const STEPS = [
     eyebrow: '1 of 3',
     title: 'Your journey begins',
     body: (
-      <>You've been granted <strong>200 Coins</strong> to begin exploring. Complete quests and visit new areas to earn more.</>
+      <>You've been granted <strong>200 Coins</strong> to begin exploring the Store.</>
     ),
     image: { src: '/welcometree.png', alt: 'A wizard and his cat beneath a wisteria tree' },
   },
   {
     eyebrow: '2 of 3',
     title: 'Explore the Store',
-    body: 'Browse items and discover different Store categories. The more you explore, the more Coins you can earn.',
+    body: 'Browse items and discover different Store categories to find gear for your journey.',
     cta: { label: 'Visit the Store →', to: ApplicationPaths.StorePath },
     image: { src: '/welcomecastle.png', alt: 'The wizard and his cat outside a castle tower' },
   },
   {
     eyebrow: '3 of 3',
     title: 'Build your collection',
-    body: 'Items you collect are stored in your Inventory. Visit it to view your items and complete another quest.',
+    body: 'Items you collect are stored in your Inventory. Visit it anytime to see what you’ve picked up.',
     cta: { label: 'Open Inventory →', to: ApplicationPaths.InventoryPath },
     image: { src: '/welcomemeadow.png', alt: 'The wizard and his cat resting in an open meadow' },
   },
