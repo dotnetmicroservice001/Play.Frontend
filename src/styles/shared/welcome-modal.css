@@ -218,6 +218,12 @@
   to { transform: rotate(360deg); }
 }
 
+.welcome-modal__claim-error {
+  margin: 4px 0 0;
+  font-size: 0.78rem;
+  color: #b3261e;
+}
+
 .welcome-modal__claimed {
   display: inline-flex;
   align-items: center;

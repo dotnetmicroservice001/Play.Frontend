@@ -1,14 +1,12 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import authService from './api-authorization/AuthorizeService';
-import { ApplicationPaths } from './Constants';
+import { ApplicationPaths, DEMO_PLAYER_USERNAME } from './Constants';
 import { JUST_SIGNED_IN_KEY } from './api-authorization/Login';
 import WelcomeModal from './WelcomeModal';
 
-const DEMO_PLAYER_USERNAME = 'demo@player.com';
-
 const initialStoreState = {
-  userGil: 0,
+  userCoin: 0,
   items: [],
   loading: true,
   loadedSuccess: false
@@ -29,6 +27,8 @@ export const Home = () => {
     userName: null,
     role: null
   });
+
+  const [displayName, setDisplayName] = useState(null);
 
   const [store, setStore] = useState(initialStoreState);
   const [inventory, setInventory] = useState(initialInventoryState);
@@ -56,6 +56,31 @@ export const Home = () => {
     return () => authService.unsubscribe(subscription);
   }, []);
 
+  // Fetch the player's chosen display name so the greeting can use it
+  // instead of the raw email — falls back silently if it's unset or the
+  // request fails, since Home.js already falls back to the stripped email.
+  useEffect(() => {
+    const fetchDisplayName = async () => {
+      try {
+        const token = await authService.getAccessToken();
+        const response = await fetch(`${window.PROFILE_API_URL}`, {
+          headers: !token ? {} : { Authorization: `Bearer ${token}` }
+        });
+
+        if (!response.ok) return;
+
+        const payload = await response.json();
+        setDisplayName(payload.nickname || null);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    if (userState.isAuthenticated) {
+      fetchDisplayName();
+    }
+  }, [userState.isAuthenticated]);
+
   // Onboarding tour opens on a fresh sign-in as the seeded demo account —
   // an initial login or a login after a logout — but not on a plain page
   // refresh of an already-signed-in session. Login.js sets the sessionStorage
@@ -71,7 +96,7 @@ export const Home = () => {
     }
   }, [userState.userName]);
 
-  // Same Store response Store.js reads from — one call gives us the gil
+  // Same Store response Store.js reads from — one call gives us the coin
   // balance for the wallet stat and the catalog for "Latest drops".
   useEffect(() => {
     const fetchStore = async () => {
@@ -90,7 +115,7 @@ export const Home = () => {
         const payload = await response.json();
 
         setStore({
-          userGil: payload.userGil ?? 0,
+          userCoin: payload.userGil ?? 0,
           items: payload.items ?? [],
           loading: false,
           loadedSuccess: true
@@ -167,14 +192,19 @@ export const Home = () => {
     [userState.isAuthenticated, userState.role]
   );
 
-  // The Identity claim we get back is an email address, not a display name —
-  // show the local part ("demo" from "demo@player.com") so the greeting
-  // reads like a name instead of a raw email.
-  const greetingName = userState.userName?.split('@')[0] ?? 'player';
+  // Prefer the player's chosen display name; the Identity claim we get back
+  // otherwise is just an email address, so fall back to its local part
+  // ("demo" from "demo@player.com") so the greeting still reads like a name.
+  const greetingName = displayName || userState.userName?.split('@')[0] || 'player';
 
   return (
     <div className="home">
-      {showWelcome && <WelcomeModal onClose={() => setShowWelcome(false)} />}
+      {showWelcome && (
+        <WelcomeModal
+          onClose={() => setShowWelcome(false)}
+          onClaimed={(newGil) => setStore((current) => ({ ...current, userCoin: newGil }))}
+        />
+      )}
       <div className="home__content">
         <section className="home-hero">
           <div className="home-hero__text">
@@ -190,13 +220,13 @@ export const Home = () => {
         <section className="home-stats">
           <div className="home-stat-segment home-stat-segment--primary">
             <span className="home-stat-segment__icon" aria-hidden="true">
-              <img src="/gil.png" alt="" className="home-stat-segment__icon-img" />
+              <img src="/coin.png" alt="" className="home-stat-segment__icon-img" />
             </span>
             <span className="home-stat-segment__body">
               <p className="home-stat-segment__label">Wallet</p>
               {store.loading && <span className="home-stat-segment__spinner" role="status" aria-live="polite"></span>}
               {!store.loading && store.loadedSuccess && (
-                <p className="home-stat-segment__value">${store.userGil}</p>
+                <p className="home-stat-segment__value">${store.userCoin}</p>
               )}
               {!store.loading && !store.loadedSuccess && <p className="home-stat-segment__value">—</p>}
               <p className="home-stat-segment__caption">Available balance</p>
@@ -272,7 +302,7 @@ export const Home = () => {
                       <span className="home-drop-card__description">{item.description}</span>
                       <span className="home-drop-card__footer">
                         <span className="home-drop-card__price">
-                          <img src="/gil.png" alt="" className="gil-icon" aria-hidden="true" />
+                          <img src="/coin.png" alt="" className="coin-icon" aria-hidden="true" />
                           {item.price}
                         </span>
                         {item.rarity && (

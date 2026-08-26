@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ApplicationPaths } from './Constants';
+import authService from './api-authorization/AuthorizeService';
 
 const STEPS = [
   {
     eyebrow: '1 of 3',
     title: 'Your journey begins',
     body: (
-      <>You've been granted <strong>200 Gil</strong> to begin exploring. Complete quests and visit new areas to earn more.</>
+      <>You've been granted <strong>200 Coins</strong> to begin exploring. Complete quests and visit new areas to earn more.</>
     ),
     image: { src: '/welcometree.png', alt: 'A wizard and his cat beneath a wisteria tree' },
   },
   {
     eyebrow: '2 of 3',
     title: 'Explore the Store',
-    body: 'Browse items and discover different Store categories. The more you explore, the more Gil you can earn.',
-    reward: '+25 Gil',
+    body: 'Browse items and discover different Store categories. The more you explore, the more Coins you can earn.',
+    reward: '+25 Coins',
     cta: { label: 'Visit the Store →', to: ApplicationPaths.StorePath },
     image: { src: '/welcomecastle.png', alt: 'The wizard and his cat outside a castle tower' },
   },
@@ -23,7 +24,7 @@ const STEPS = [
     eyebrow: '3 of 3',
     title: 'Build your collection',
     body: 'Items you collect are stored in your Inventory. Visit it to view your items and complete another quest.',
-    reward: '+15 Gil',
+    reward: '+15 Coins',
     cta: { label: 'Open Inventory →', to: ApplicationPaths.InventoryPath },
     image: { src: '/welcomemeadow.png', alt: 'The wizard and his cat resting in an open meadow' },
   },
@@ -34,14 +35,14 @@ const STEPS = [
  * "who sees this" check. Reappears every time the demo player lands on
  * Home (no "seen it" flag), so it doubles as a quick product walkthrough.
  *
- * Step 1's "Claim 200 Gil" is a UI stub: there's no backend endpoint yet
- * to actually grant starter Gil, so this only plays the claim animation
- * and does not touch the real wallet balance shown elsewhere in the app.
+ * Step 1's "Claim 200 Coins" calls the Identity service's starter-Gil
+ * endpoint and reports the new balance back to Home via onClaimed.
  */
-export const WelcomeModal = ({ onClose }) => {
+export const WelcomeModal = ({ onClose, onClaimed }) => {
   const [activeStep, setActiveStep] = useState(0);
   const [claiming, setClaiming] = useState(false);
   const [claimed, setClaimed] = useState(false);
+  const [claimError, setClaimError] = useState(null);
 
   useEffect(() => {
     const onKeyDown = (event) => {
@@ -51,18 +52,32 @@ export const WelcomeModal = ({ onClose }) => {
     return () => document.removeEventListener('keydown', onKeyDown);
   }, [onClose]);
 
-  const handleClaim = () => {
+  const handleClaim = async () => {
     if (claiming || claimed) return;
     setClaiming(true);
+    setClaimError(null);
 
-    // TODO: replace with a real claim call once a starter-Gil endpoint
-    // exists (e.g. POST {STORE_API_URL}/wallet/claim-starter), then
-    // reconcile Home's wallet stat with the response.
-    setTimeout(() => {
+    try {
+      const token = await authService.getAccessToken();
+      const response = await fetch(`${window.WALLET_API_URL}/claim-starter-gil`, {
+        method: 'post',
+        headers: !token ? {} : { Authorization: `Bearer ${token}` },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to claim starter Coins');
+      }
+
+      const payload = await response.json();
       setClaiming(false);
       setClaimed(true);
+      onClaimed?.(payload.gil);
       setTimeout(() => setActiveStep(1), 850);
-    }, 700);
+    } catch (error) {
+      console.error(error);
+      setClaiming(false);
+      setClaimError("Couldn't claim your Coins. Try again in a moment.");
+    }
   };
 
   const step = STEPS[activeStep];
@@ -91,7 +106,7 @@ export const WelcomeModal = ({ onClose }) => {
 
           {step.reward && (
             <span className="welcome-modal__reward">
-              <img src="/gil.png" alt="" />
+              <img src="/coin.png" alt="" />
               {step.reward}
             </span>
           )}
@@ -106,16 +121,20 @@ export const WelcomeModal = ({ onClose }) => {
               {claiming ? (
                 <span className="welcome-modal__spinner" aria-hidden="true"></span>
               ) : (
-                <img src="/gil.png" alt="" />
+                <img src="/coin.png" alt="" />
               )}
-              {claiming ? 'Claiming…' : 'Claim 200 Gil'}
+              {claiming ? 'Claiming…' : 'Claim 200 Coins'}
             </button>
+          )}
+
+          {activeStep === 0 && claimError && (
+            <p className="welcome-modal__claim-error">{claimError}</p>
           )}
 
           {activeStep === 0 && claimed && (
             <span className="welcome-modal__claimed">
-              <img src="/gil.png" alt="" />
-              +200 Gil claimed!
+              <img src="/coin.png" alt="" />
+              +200 Coins claimed!
             </span>
           )}
 

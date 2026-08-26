@@ -45,9 +45,9 @@ export const Users = () => {
 
   const stats = useMemo(() => {
     const totalUsers = users.length;
-    const totalGil = users.reduce((sum, user) => sum + (user.gil ?? 0), 0);
-    const averageGil = totalUsers ? Math.round(totalGil / totalUsers) : 0;
-    return { totalUsers, totalGil, averageGil };
+    const totalCoins = users.reduce((sum, user) => sum + (user.gil ?? 0), 0);
+    const averageCoins = totalUsers ? Math.round(totalCoins / totalUsers) : 0;
+    return { totalUsers, totalCoins, averageCoins };
   }, [users]);
 
   const filteredUsers = useMemo(() => {
@@ -89,7 +89,7 @@ export const Users = () => {
         <div className="data-empty">
           <i className="bi bi-people data-empty__icon" aria-hidden="true"></i>
           <h3>No users yet</h3>
-          <p>Provision a player to see their gil balance and inventory here.</p>
+          <p>Provision a player to see their coin balance and inventory here.</p>
         </div>
       );
     }
@@ -124,7 +124,8 @@ export const Users = () => {
                 <tr>
                   <th scope="col">Id</th>
                   <th scope="col">Email</th>
-                  <th scope="col">Gil</th>
+                  <th scope="col">Nickname</th>
+                  <th scope="col">Coins</th>
                   <th scope="col">Inventory</th>
                   <th scope="col" className="data-table__actions">Actions</th>
                 </tr>
@@ -134,7 +135,8 @@ export const Users = () => {
                   <tr key={user.id}>
                     <td data-title="Id">{user.id}</td>
                     <td data-title="Email">{user.email}</td>
-                    <td data-title="Gil">{user.gil}</td>
+                    <td data-title="Nickname">{user.nickname || '—'}</td>
+                    <td data-title="Coins">{user.gil}</td>
                     <td data-title="Inventory">
                       <Link
                         to={{
@@ -187,12 +189,12 @@ export const Users = () => {
           <span className="data-page__stat-value">{stats.totalUsers}</span>
         </div>
         <div className="data-page__stat">
-          <span className="data-page__stat-label">Total gil</span>
-          <span className="data-page__stat-value">{stats.totalGil}</span>
+          <span className="data-page__stat-label">Total coins</span>
+          <span className="data-page__stat-value">{stats.totalCoins}</span>
         </div>
         <div className="data-page__stat">
-          <span className="data-page__stat-label">Average gil</span>
-          <span className="data-page__stat-value">{stats.averageGil}</span>
+          <span className="data-page__stat-label">Average coins</span>
+          <span className="data-page__stat-value">{stats.averageCoins}</span>
         </div>
       </section>
 

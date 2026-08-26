@@ -5,3 +5,5 @@ export const ApplicationPaths = {
   UsersPath: '/users',
   StorePath: '/store'
 };
+
+export const DEMO_PLAYER_USERNAME = 'demo@player.com';
