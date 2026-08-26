@@ -5,6 +5,8 @@ import authService from './api-authorization/AuthorizeService';
 import { AuthorizationPaths } from './api-authorization/ApiAuthorizationConstants';
 import { ApplicationPaths } from './Constants';
 
+const DISPLAY_NAME_MAX_LENGTH = 30;
+
 export class NavMenu extends Component
 {
   static displayName = NavMenu.name;
@@ -16,7 +18,11 @@ export class NavMenu extends Component
     this.state = {
       isAuthenticated: false,
       userName: null,
-      role: null
+      role: null,
+      displayName: '',
+      displayNameInput: '',
+      savingDisplayName: false,
+      displayNameError: null
     };
   }
 
@@ -34,11 +40,74 @@ export class NavMenu extends Component
   async populateState()
   {
     const [isAuthenticated, user] = await Promise.all([authService.isAuthenticated(), authService.getUser()]);
+    const wasAuthenticated = this.state.isAuthenticated;
     this.setState({
       isAuthenticated,
       userName: user && user.name,
       role: user && user.role
     });
+
+    if (isAuthenticated && !wasAuthenticated)
+    {
+      this.fetchProfile();
+    }
+  }
+
+  async fetchProfile()
+  {
+    try
+    {
+      const token = await authService.getAccessToken();
+      const response = await fetch(`${window.PROFILE_API_URL}`, {
+        headers: !token ? {} : { Authorization: `Bearer ${token}` }
+      });
+
+      if (!response.ok) return;
+
+      const payload = await response.json();
+      this.setState({ displayName: payload.nickname ?? '', displayNameInput: payload.nickname ?? '' });
+    }
+    catch (error)
+    {
+      console.error(error);
+    }
+  }
+
+  onDisplayNameInputChange = (e) =>
+  {
+    this.setState({ displayNameInput: e.target.value });
+  }
+
+  saveDisplayName = async () =>
+  {
+    const nickname = this.state.displayNameInput.trim();
+    this.setState({ savingDisplayName: true, displayNameError: null });
+
+    try
+    {
+      const token = await authService.getAccessToken();
+      const response = await fetch(`${window.PROFILE_API_URL}/nickname`, {
+        method: 'put',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ nickname })
+      });
+
+      if (!response.ok)
+      {
+        throw new Error('Failed to save display name');
+      }
+
+      const payload = await response.json();
+      this.setState({ displayName: payload.nickname ?? '', displayNameInput: payload.nickname ?? '', savingDisplayName: false });
+    }
+    catch (error)
+    {
+      console.error(error);
+      this.setState({ savingDisplayName: false, displayNameError: "Couldn't save. Try again." });
+    }
   }
 
   render()
@@ -55,7 +124,7 @@ export class NavMenu extends Component
           <Container>
             <Navbar.Brand as={Link} to="/">
               <img src="/favicon.png" alt="" className="navmenu__logo" />
-              GamePlayEconomy
+              <span className="navmenu__brand-text">GamePlayEconomy</span>
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav" className="navmenu__collapse">
@@ -246,19 +315,54 @@ export class NavMenu extends Component
   {
     const logoutPath = { pathname: `${AuthorizationPaths.LogOut}`, state: { local: true } };
     const shortName = this.state.userName ? this.state.userName.split('@')[0] : '';
+    const accountLabel = this.state.displayName || shortName;
+    const displayNameChanged = this.state.displayNameInput.trim() !== (this.state.displayName || '');
+
     return (
       <Fragment>
         <NavDropdown
           title={
             <span className="navmenu__greeting navmenu__greeting--dropdown" title={this.state.userName}>
               <i className="bi bi-person-circle" aria-hidden="true"></i>
-              {shortName}
+              {accountLabel}
             </span>
           }
           id="profile-dropdown"
           alignRight
           className="navmenu__profile-dropdown navmenu__dropdown"
         >
+          <div className="navmenu__display-name-editor" onClick={(e) => e.stopPropagation()}>
+            <div className="navmenu__display-name-label-row">
+              <label htmlFor="navmenu-display-name-input" className="navmenu__display-name-label">Display name</label>
+              <span className="navmenu__display-name-count">
+                {this.state.displayNameInput.length}/{DISPLAY_NAME_MAX_LENGTH}
+              </span>
+            </div>
+            <div className="navmenu__display-name-row">
+              <input
+                id="navmenu-display-name-input"
+                type="text"
+                maxLength={DISPLAY_NAME_MAX_LENGTH}
+                placeholder="Add a display name"
+                value={this.state.displayNameInput}
+                onChange={this.onDisplayNameInputChange}
+                disabled={this.state.savingDisplayName}
+              />
+              <button
+                type="button"
+                onClick={this.saveDisplayName}
+                disabled={this.state.savingDisplayName || !displayNameChanged}
+              >
+                {this.state.savingDisplayName ? '…' : 'Save'}
+              </button>
+            </div>
+            {this.state.displayNameError && (
+              <span className="navmenu__display-name-error">{this.state.displayNameError}</span>
+            )}
+          </div>
+
+          <NavDropdown.Divider />
+
           <NavDropdown.Item
             as={Link}
             to={logoutPath}

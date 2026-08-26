@@ -65,7 +65,16 @@
   justify-content: space-between;
   flex-wrap: nowrap;
   gap: 12px;
-  width: 100%;
+  /* Bootstrap's own .navbar-collapse sets flex-basis:100%/flex-grow:1
+     (meant for the collapsed-menu-drops-to-a-new-row pattern we don't
+     use, since `expand` is always on). Left alone, that plus width:100%
+     made this claim the container's full content width *in addition to*
+     the brand before it, overflowing the container's right edge by
+     however much the brand takes up. flex:1 1 auto + min-width:0 sizes
+     it to the space actually left over instead. */
+  flex: 1 1 auto;
+  min-width: 0;
+  width: auto;
 }
 
 .navmenu__primary,
@@ -232,6 +241,76 @@
   font-size: 0.95rem;
 }
 
+.navmenu__display-name-editor {
+  padding: 6px 12px 10px;
+}
+
+.navmenu__display-name-label-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 0 6px;
+}
+
+.navmenu__display-name-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(var(--ink-rgb), 0.6);
+}
+
+.navmenu__display-name-count {
+  font-size: 0.7rem;
+  color: rgba(var(--ink-rgb), 0.45);
+  white-space: nowrap;
+}
+
+.navmenu__display-name-row {
+  display: flex;
+  gap: 6px;
+}
+
+.navmenu__display-name-row input {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 0.85rem;
+  color: var(--ink);
+}
+
+.navmenu__display-name-row input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.navmenu__display-name-row button {
+  flex: 0 0 auto;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  background: rgb(var(--purple-300-rgb));
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.navmenu__display-name-row button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.navmenu__display-name-error {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.76rem;
+  color: #b3261e;
+}
+
 @media (max-width: 992px) {
   .navmenu__collapse {
     gap: 10px;
@@ -253,19 +332,50 @@
 }
 
 @media (max-width: 768px) {
+  /* The wordmark was eating ~190px of a ~340px-wide row on phones — it
+     doesn't shrink below its own content width, so it starved the nav
+     links down to a sliver. Icon-only frees that space back up. */
+  .navmenu__brand-text {
+    display: none;
+  }
+
+  .navbar-light .navbar-brand {
+    gap: 0;
+  }
+
+  .navbar.navmenu .container {
+    position: relative;
+  }
+
   .navmenu__collapse {
     justify-content: flex-start;
+    gap: 8px;
+  }
+
+  /* Only the primary links (Home/Store/Inventory) scroll horizontally.
+     The account/dev-tools dropdowns stay in normal flow, fixed-width and
+     un-clipped — their menus are plain absolute-positioned elements (no
+     Popper inside a Navbar, so no popperConfig escape hatch), and an
+     overflow-x:auto ancestor would force overflow-y:auto too, clipping
+     any dropdown menu that opens below it. Keeping them out of the
+     scroller sidesteps that, and means Logout is never a scroll away. */
+  .navmenu__primary {
+    flex: 1 1 auto;
+    min-width: 0;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     gap: 8px;
+    /* Fades the trailing edge so a cut-off item reads as "more to
+       scroll to" instead of a hard, dead-end clip. */
+    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 20px), transparent 100%);
+    mask-image: linear-gradient(90deg, #000 calc(100% - 20px), transparent 100%);
   }
 
-  .navmenu__collapse::-webkit-scrollbar {
+  .navmenu__primary::-webkit-scrollbar {
     display: none;
   }
 
-  .navmenu__primary,
   .navmenu__secondary {
     flex: 0 0 auto;
     min-width: max-content;
@@ -273,7 +383,11 @@
   }
 
   .navmenu__primary--inline {
+    flex: 0 0 auto;
     margin-left: 0;
+    overflow-x: visible;
+    mask-image: none;
+    -webkit-mask-image: none;
   }
 
   .navmenu__secondary {
