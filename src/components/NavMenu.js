@@ -123,8 +123,8 @@ export class NavMenu extends Component
         >
           <Container>
             <Navbar.Brand as={Link} to="/">
-              <img src="/favicon.png" alt="" className="navmenu__logo" />
-              <span className="navmenu__brand-text">GamePlayEconomy</span>
+              <img src="/favicon.svg" alt="" className="navmenu__logo" />
+              <span className="navmenu__brand-text">GamePlay Economy</span>
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav" className="navmenu__collapse">

@@ -6,7 +6,6 @@ import authService from './api-authorization/AuthorizeService';
 import { QuestTimeline } from './QuestTimeline';
 import { TechStackOverview } from './TechStackOverview';
 import TextType from './TextType';
-import WarpText from './WarpText';
 import architectureImage from '../images/architecture.png';
 
 export const Landing = () => {
@@ -69,21 +68,8 @@ export const Landing = () => {
               <div className="landing-hero__mascots">
                 <img src="/wizardcrest.png" alt="GamePlayEconomy" className="landing-hero__crest" />
               </div>
-              <h1 className="landing-hero__warp">
-                <WarpText
-                  text="GAMEPLAYECONOMY"
-                  color="var(--ink)"
-                  fontWeight={700}
-                  fontSize="clamp(2.4rem, 7vw, 5.5rem)"
-                  warpStrength={0.025}
-                  warpScale={0.6}
-                  speed={0.55}
-                  pointerInfluence={0.42}
-                  pointerStrength={0.38}
-                  refraction={0.005}
-                  ripple
-                  style={{ height: 'clamp(52px, 9.1vw, 116px)' }}
-                />
+              <h1 className="landing-hero__warp landing-hero__title">
+                GAMEPLAY <span className="landing-hero__title-accent">ECONOMY</span>
               </h1>
               <TextType
                 as="p"
@@ -113,12 +99,15 @@ export const Landing = () => {
                         className="hero-cta hero-cta--primary"
                       >
                       <i className="bi bi-person-plus" aria-hidden="true"></i>
-                        Sign in as Demo Player
+                        Guest Access
                       </Link>
                     )}
 
 
                     </div>
+                    <p className="hero-disclaimer">
+                      A portfolio project, built end-to-end as a production-ready microservices system.
+                    </p>
                   </div>
                   </Container>
                   </section>
@@ -145,6 +134,9 @@ export const Landing = () => {
                 <summary className="architecture-details__summary">How it's built</summary>
                 <div className="architecture-details__content">
             <h1 className="architecture-details__title">Architecture</h1>
+            <p className="architecture-details__intro">
+              This project demonstrates real production patterns: independently deployable services, event-driven messaging between them, container images built and shipped through CI/CD, and infrastructure provisioned as code.
+            </p>
             <div className="architecture-details__image">
               <img
                 src={architectureImage}
