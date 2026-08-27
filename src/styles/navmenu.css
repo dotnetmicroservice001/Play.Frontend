@@ -33,9 +33,8 @@
 }
 
 .navmenu__logo {
-  height: 24px;
-  width: 24px;
-  image-rendering: pixelated;
+  height: 34px;
+  width: 34px;
 }
 
 .navbar-light .nav-link,

@@ -1,5 +1,7 @@
 # Play.Frontend
-React based frontend for the Play Economy system. 
+React based frontend for the Play Economy system.
+
+> **Portfolio project.** Built to demonstrate a production-ready microservices architecture end-to-end: independently deployable services, event-driven communication via message bus, CI/CD, and containerized deployment, designed and operated the way a real production system would be.
 
 ## Prerequisites
 * [Latest Node.JS LTS version (64 bit)](https://nodejs.org/en/download)
