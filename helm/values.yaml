@@ -15,6 +15,8 @@ configValues:
   INVENTORY_ITEMS_API_URL: ${window.location.origin}/inventory-svc/items
   IDENTITY_SERVICE_URL: ${window.location.origin}/identity-svc
   USERS_API_URL: ${window.location.origin}/identity-svc/users
+  WALLET_API_URL: ${window.location.origin}/identity-svc/wallet
+  PROFILE_API_URL: ${window.location.origin}/identity-svc/profile
   TRADING_SERVICE_URL: ${window.location.origin}/trading-svc
   PURCHASE_API_URL: ${window.location.origin}/trading-svc/purchase
   STORE_API_URL: ${window.location.origin}/trading-svc/store
