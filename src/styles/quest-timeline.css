@@ -22,9 +22,12 @@
   top: -18%;
   left: 50%;
   transform: translateX(-50%);
-  width: min(720px, 92vw);
+  /* Wide enough to sit behind the whole card stage (920px) with room to
+     fade, and an ellipse sized to the box (closest-side) so the glow reaches
+     zero before the edges — no hard vertical seams beside the cards. */
+  width: min(1100px, 100%);
   height: 120%;
-  background: radial-gradient(circle at center, rgba(var(--purple-400-rgb), 0.22) 0%, rgba(var(--purple-600-rgb), 0.1) 38%, rgba(var(--purple-50-rgb), 0) 70%);
+  background: radial-gradient(ellipse closest-side at center, rgba(var(--purple-400-rgb), 0.22) 0%, rgba(var(--purple-600-rgb), 0.1) 45%, rgba(var(--purple-50-rgb), 0) 100%);
   opacity: 0.6;
   filter: blur(0px);
   pointer-events: none;
@@ -190,7 +193,8 @@
 
 .quest-badge {
   position: relative;
-  width: min(100%, 340px);
+  /* Fills its timeline column (~420px at the 920px stage width) */
+  width: min(100%, 420px);
   transition: transform 0.35s ease;
 }
 
@@ -268,6 +272,7 @@
 
 .quest-badge__title {
   font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700; /* match the page's other Space Grotesk headings */
   font-size: 1.2rem;
   color: var(--timeline-text);
   margin-bottom: 0.75rem;
@@ -312,34 +317,56 @@
   transform: rotate(45deg);
 }
 
+/* Desktop: "Under the hood" is always shown (QuestBadge renders a plain
+   label, not a <summary>), so drop the toggle affordances. */
+.quest-badge__details--static .quest-badge__details-summary {
+  margin: 0 0 0.6rem;
+  cursor: default;
+}
+
+.quest-badge__details--static .quest-badge__details-summary::after {
+  content: none;
+}
+
+.quest-badge__details--static .quest-badge__details-summary:hover {
+  color: rgba(var(--ink-secondary-rgb), 0.72);
+}
+
 .quest-badge__details-summary:hover,
 .quest-badge__details-summary:focus {
   color: rgba(var(--purple-600-rgb), 0.9);
   outline: none;
 }
 
+/* Content-sized chips in a row that wrap only when they run out of room,
+   like the Tech Stack chips — names never break mid-chip. */
 .quest-badge__tech {
-  display: grid;
-  gap: 0.6rem;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   color: rgba(26, 26, 36, 0.72);
 }
 
 .quest-badge__tech li {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  white-space: nowrap;
+  max-width: 100%;
   background: rgb(var(--purple-50-rgb));
   border: 2px solid var(--ink);
   border-radius: 4px;
-  padding: 0.5rem 0.6rem;
+  padding: 0.3rem 0.6rem;
   box-shadow: 2px 2px 0 rgba(var(--purple-600-rgb), 0.9);
 }
 
+/* Same type as the Tech Stack chips (.techstack-chip): mixed case keeps
+   product names like "Cosmos DB" and "ASP.NET Core" spelled correctly. */
 .quest-badge__chip {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  line-height: 1.3;
   color: var(--ink);
-  text-transform: uppercase;
   text-align: center;
 }
 
@@ -380,6 +407,25 @@
   .quest-badge {
     width: 100%;
     max-width: none;
+  }
+}
+
+@media (max-width: 576px) {
+  .quest-badge__chip {
+    font-size: 0.8rem;
+  }
+
+  /* Narrow phone cards: a long label like "Distributed transactions"
+     wraps inside its chip instead of poking out of the card */
+  .quest-badge__tech li {
+    white-space: normal;
+  }
+
+  /* Card body copy was 15.2px — too heavy for the narrow cards on phones */
+  .quest-badge__description {
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    margin-bottom: 0.75rem;
   }
 }
 

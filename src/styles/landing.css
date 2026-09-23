@@ -66,7 +66,7 @@
 
 .hero-bleed {
   width: 100%;
-  padding: clamp(56px, 10vh, 96px) 0 clamp(16px, 3vh, 28px);
+  padding: clamp(32px, 5vh, 96px) 0 clamp(12px, 2vh, 28px);
   background: linear-gradient(180deg, rgba(var(--purple-50-rgb), 0.85), rgba(var(--purple-50-rgb), 0.6));
 }
 
@@ -77,6 +77,12 @@
 
 #quests {
   padding-top: clamp(8px, 2vh, 20px);
+}
+
+/* Tight top padding so the ARCHITECTURE heading peeks above the fold on a
+   typical laptop viewport, signalling there's more below the hero. */
+#architecture {
+  padding-top: clamp(24px, 5vh, 56px);
 }
 
 .landing-hero::before {
@@ -141,21 +147,28 @@
 /* Wizard + wisteria tree + cat, framed in the ornate purple hex —
    replaces the separate wizard/companion-cat pair with one crest. */
 .landing-hero__crest {
-  height: clamp(190px, 26vw, 280px);
+  /* Scales with viewport height too, so short laptop screens keep the
+     architecture heading above the fold. */
+  height: clamp(150px, min(26vw, 24vh), 280px);
   width: auto;
   image-rendering: pixelated;
   filter: drop-shadow(0 12px 20px rgba(var(--purple-600-rgb), 0.25));
 }
 
-.hero-typer {
+/* .text-type.hero-typer beats TextType.css's .text-type letter-spacing;
+   weight (600) still comes from .text-type. */
+.text-type.hero-typer {
   font-family: 'Space Mono', 'Fira Code', 'Courier New', monospace;
-  font-size: clamp(0.92rem, 1.6vw, 1.3rem);
-  line-height: 1.5;
-  letter-spacing: 0.02em;
+  font-size: clamp(1.1rem, 1.95vw, 1.75rem);
+  line-height: 1.4;
+  letter-spacing: 0.01em;
   text-transform: none;
   text-shadow: none;
-  color: rgba(var(--ink-rgb), 0.72);
-  max-width: 620px;
+  color: rgba(var(--ink-rgb), 0.85);
+  max-width: 760px;
+  margin: 0; /* drop Bootstrap's <p> bottom margin; spacing comes from the stack gap */
+  justify-content: center;
+  text-wrap: balance;
 }
 
 .landing-hero__cta-row {
@@ -163,15 +176,20 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 12px;
-  margin-top: -8px;
+  /* Extra room above the buttons so they read as the hero's final step */
+  margin-top: 8px;
 }
 
+/* Lighter than the tagline (smaller, regular weight, softer colour). */
 .hero-disclaimer {
   font-family: 'Space Mono', 'Fira Code', 'Courier New', monospace;
-  font-size: 1.02rem;
-  letter-spacing: 0.02em;
-  color: rgba(var(--ink-rgb), 0.75);
-  margin: 10px 0 0;
+  font-size: clamp(1rem, 1.35vw, 1.2rem);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  color: rgba(var(--ink-rgb), 0.68);
+  /* Pulled up under the tagline so the two read as one subheading block */
+  margin: -12px 0 0;
+  text-wrap: balance;
 }
 
 @media (min-width: 900px) {
@@ -283,8 +301,8 @@
 }
 
 @media (max-width: 768px) {
-  .hero-typer {
-    font-size: clamp(0.85rem, 4vw, 1.15rem);
+  .text-type.hero-typer {
+    font-size: clamp(1rem, 4.5vw, 1.25rem);
   }
 
   .trade-ticker__inner {
@@ -292,580 +310,74 @@
   }
 }
 
-/* Architecture map */
-.architecture-map {
-  max-width: 1200px;
+/* Documentation sections (Architecture, Tech Stack) — deliberately unlike
+ * the quest poster: no heavy frame, offset shadow or chamfered corners.
+ * Centered heading and intro on the section background, content in thin,
+ * subtle panels. Wider than the quest map (900px) for denser content. */
+.doc-section {
+  max-width: 1160px;
   margin: 0 auto;
-  padding: clamp(36px, 5vw, 48px) clamp(16px, 4vw, 36px);
-  position: relative;
-  background: #ffffff;
-  border: 1px solid #e6e8ee;
-  border-radius: 28px;
-  box-shadow: 0 32px 52px rgba(15, 23, 42, 0.08);
 }
 
-.architecture-map__intro {
-  max-width: 760px;
-  margin-bottom: 40px;
+/* Left-aligned to the diagram's left edge (Quest Timeline stays centered). */
+/* Architecture: cap the width by viewport height so heading + diagram +
+ * caption fit in one desktop screen. The diagram is ~1.5:1, and ~190px
+ * covers the heading, gaps, panel padding, caption and scroll margin.
+ * Stays at 1160px on tall screens; never narrower than 640px. */
+.doc-section--fit {
+  max-width: clamp(640px, calc((100vh - 190px) * 1.5), 1160px);
+  /* Breathing room when "See How It's Built" scrolls the section into view */
+  scroll-margin-top: 24px;
 }
 
-.architecture-map__overlays {
-  margin-bottom: 32px;
+.doc-section__header {
+  margin: 0 0 clamp(16px, 2vw, 24px);
+  text-align: left;
 }
 
-.architecture-map__overlay-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
-}
-
-.architecture-map__overlay-btn {
-  border: 1px solid rgba(var(--purple-600-rgb), 0.22);
-  background: #ffffff;
-  padding: 10px 18px;
-  border-radius: 999px;
-  font-size: 0.85rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  cursor: pointer;
+.doc-section__title {
+  margin: 0;
   font-family: 'Space Grotesk', sans-serif;
-  font-weight: 600;
-  transition: color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-  color: rgba(var(--ink-secondary-rgb), 0.75);
-}
-
-.architecture-map__overlay-btn.is-active,
-.architecture-map__overlay-btn:hover {
-  border-color: rgba(var(--purple-600-rgb), 0.45);
-  color: var(--accent);
-  box-shadow: 0 12px 24px rgba(var(--purple-600-rgb), 0.18);
-}
-
-.architecture-map__overlay-caption {
-  margin-top: 14px;
-  font-size: 0.95rem;
-  color: rgba(var(--ink-secondary-rgb), 0.7);
-  text-align: center;
-}
-
-.architecture-map__diagram {
-  position: relative;
-  padding: clamp(32px, 5vw, 48px) clamp(16px, 4vw, 36px);
-  background: #ffffff;
-  border-radius: 28px;
-  box-shadow: 0 28px 48px rgba(15, 23, 42, 0.1);
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(220px, 260px);
-  gap: 32px;
-  align-items: start;
-  border: 1px solid #e6e8ee;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.architecture-map__stack {
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-}
-
-.architecture-map__top-edge {
-  display: flex;
-  gap: 28px;
-  justify-content: center;
-  align-items: flex-start;
-  margin-bottom: 40px;
-}
-
-.architecture-map__box {
-  position: relative;
-  padding: 16px 18px;
-  min-width: 160px;
-  font-size: 0.82rem;
-  letter-spacing: 0.04em;
+  font-weight: 700;
+  font-size: clamp(1.9rem, 3.3vw, 2.875rem);
+  line-height: 1.1;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  border-left: 3px solid var(--accent);
-  background: rgba(var(--purple-50-rgb), 0.94);
-  border-radius: 16px;
-  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.12);
   color: var(--ink);
 }
 
-.architecture-map__box--edge::before,
-.architecture-map__box--edge::after {
-  display: none;
-}
-.architecture-map__edge-connector {
-  position: absolute;
-  top: 50%;
-  left: calc(100% + 14px);
-  width: clamp(28px, 5vw, 60px);
-  height: 2px;
-  background: linear-gradient(90deg, rgba(var(--ink-rgb), 0.3), rgba(var(--ink-rgb), 0.08));
-  transform: translateY(-50%);
-  border-radius: 999px;
-  pointer-events: none;
+.architecture-doc {
+  margin: 0;
 }
 
-.architecture-map__box.is-highlighted .architecture-map__edge-connector {
-  background: linear-gradient(90deg, rgba(var(--purple-600-rgb), 0.75), rgba(var(--purple-600-rgb), 0.35));
+/* Architecture diagram panel: fill matches the PNG's backdrop
+ * (233,228,241) so the image blends into it. */
+.architecture-doc__figure {
+  padding: clamp(8px, 1.5vw, 16px);
+  background: rgb(233, 228, 241);
+  border: 1px solid rgba(var(--purple-600-rgb), 0.24);
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(var(--ink-rgb), 0.04), 0 12px 32px rgba(var(--purple-600-rgb), 0.08);
 }
 
-.architecture-map__box-label {
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 600;
+/* Caption-sized, clearly smaller than body/description text */
+.architecture-doc__caption {
+  margin-top: 10px;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: rgba(var(--ink-secondary-rgb), 0.62);
 }
 
-.architecture-map__box-support,
-.architecture-map__tooltip,
-.architecture-map__lane-subtitle,
-.architecture-map__metric-item {
-  font-family: 'Inter', sans-serif;
-}
-
-.architecture-map__tooltip {
-  position: absolute;
-  left: 0;
-  bottom: calc(100% + 10px);
-  background: rgba(var(--ink-rgb), 0.9);
-  color: #ffffff;
-  font-size: 0.75rem;
-  padding: 8px 10px;
-  border-radius: 6px;
-  max-width: 240px;
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity 0.2s ease, transform 0.2s ease;
-  pointer-events: none;
-}
-
-.architecture-map__box:hover .architecture-map__tooltip,
-.architecture-map__service:hover .architecture-map__tooltip,
-.architecture-map__db:hover .architecture-map__tooltip,
-.architecture-map__event-chip:hover .architecture-map__tooltip,
-.architecture-map__ops-card:hover .architecture-map__tooltip,
-.architecture-map__box:focus-visible .architecture-map__tooltip,
-.architecture-map__service:focus-visible .architecture-map__tooltip,
-.architecture-map__db:focus-visible .architecture-map__tooltip,
-.architecture-map__event-chip:focus-visible .architecture-map__tooltip,
-.architecture-map__ops-card:focus-visible .architecture-map__tooltip {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.architecture-map__lanes {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 28px;
-  margin-bottom: 32px;
-}
-
-.architecture-image {
-  width: 70%;
-  max-width: 500px;
+/* The PNG bakes in a "GamePlayEconomy Cloud-Native Distributed Architecture"
+ * caption along its bottom edge (rows ~1100-1130 of 1176) that repeats the
+ * section heading; crop it off by clamping the aspect ratio to the diagram. */
+.architecture-doc__img {
+  display: block;
+  width: 100%;
   height: auto;
-}
-
-.architecture-map__lane {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  position: relative;
-  padding-bottom: 0;
-}
-
-.architecture-map__service {
-  padding: 22px 20px;
-  border-radius: 18px;
-  border: 1px solid #e6e8ee;
-  background: #ffffff;
-  box-shadow: 0 20px 32px rgba(15, 23, 42, 0.1);
-  color: var(--ink);
-}
-
-.architecture-map__service-header {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.architecture-map__lane-title {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.9rem;
-  letter-spacing: 0.05em;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: var(--ink);
-}
-
-.architecture-map__lane-subtitle {
-  font-size: 0.85rem;
-  color: rgba(var(--ink-rgb), 0.65);
-}
-
-.architecture-map__lane-connector {
-  position: absolute;
-  left: 50%;
-  bottom: -24px;
-  transform: translateX(-50%);
-  width: 0;
-  height: 24px;
-  border-left: 2px dashed rgba(var(--purple-600-rgb), 0.4);
-}
-
-.architecture-map__lane-connector.is-active {
-  border-left-color: rgba(var(--purple-600-rgb), 0.75);
-}
-
-.architecture-map__db {
-  height: 78px;
-  border-radius: 34px / 18px;
-  border: 1px solid rgba(var(--purple-600-rgb), 0.18);
-  background: rgba(var(--purple-50-rgb), 0.92);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem;
-  letter-spacing: 0.05em;
-  box-shadow: inset 0 6px 12px rgba(var(--purple-600-rgb), 0.12);
-  color: rgba(var(--ink-secondary-rgb), 0.7);
-}
-
-.architecture-map__bus {
-  position: relative;
-  margin: 32px auto 0;
-  border: 1px solid rgba(var(--purple-600-rgb), 0.2);
-  background: rgba(var(--purple-50-rgb), 0.9);
-  padding: 20px 24px;
-  border-radius: 16px;
-  box-shadow: 0 18px 32px rgba(15, 23, 42, 0.12);
-}
-
-.architecture-map__bus::before {
-  content: '';
-  position: absolute;
-  top: -24px;
-  left: 12%;
-  right: 12%;
-  border-top: 2px dashed rgba(var(--purple-600-rgb), 0.45);
-  pointer-events: none;
-}
-
-.architecture-map__bus.is-highlighted::before {
-  border-top-color: rgba(var(--purple-600-rgb), 0.75);
-}
-
-.architecture-map__bus-label {
-  display: block;
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(var(--ink-secondary-rgb), 0.75);
-  margin-bottom: 12px;
-}
-
-.architecture-map__bus-events {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.architecture-map__event-chip {
-  padding: 6px 12px;
-  background: rgba(var(--purple-50-rgb), 0.95);
-  border: 1px solid rgba(var(--purple-600-rgb), 0.22);
-  border-radius: 10px;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-family: 'Space Grotesk', sans-serif;
-  box-shadow: 0 12px 22px rgba(var(--purple-600-rgb), 0.15);
-  color: var(--accent);
-}
-
-.architecture-map__ops {
-  position: static;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  align-self: flex-start;
-}
-
-.architecture-map__ops-card {
-  padding: 14px 16px;
-  border: 1px solid #e6e8ee;
-  border-radius: 14px;
-  background: #ffffff;
-  box-shadow: 0 16px 30px rgba(15, 23, 42, 0.08);
-  font-size: 0.78rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 600;
-  color: var(--ink);
-}
-
-.architecture-map__ribbon {
-  margin-top: 36px;
-  padding: 12px 16px;
-  background: rgba(var(--purple-50-rgb), 0.85);
-  border: 1px solid rgba(var(--purple-600-rgb), 0.18);
-  border-radius: 12px;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  text-align: center;
-  color: rgba(var(--ink-secondary-rgb), 0.75);
-}
-
-.architecture-map__overlay-steps {
-  margin-top: 32px;
-  display: grid;
-  gap: 14px;
-}
-
-.architecture-map__overlay-step {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  padding: 12px 16px;
-  border: 1px solid rgba(var(--purple-600-rgb), 0.18);
-  border-radius: 14px;
-  background: rgba(var(--purple-50-rgb), 0.85);
-  color: rgba(var(--ink-secondary-rgb), 0.75);
-}
-
-.architecture-map__step-badge {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: var(--accent);
-  color: #fff;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-}
-
-.architecture-map__step-title {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.82rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  font-weight: 600;
-}
-
-.architecture-map__step-desc {
-  font-size: 0.82rem;
-  color: rgba(var(--ink-secondary-rgb), 0.7);
-  font-family: 'Inter', sans-serif;
-}
-
-.architecture-map__legend-row {
-  margin-top: 36px;
-  display: grid;
-  gap: 18px;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-}
-
-.architecture-map__legend,
-.architecture-map__reasons,
-.architecture-map__metrics {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.architecture-map__legend-item {
-  font-size: 0.82rem;
-  letter-spacing: 0.05em;
-  color: rgba(var(--ink-secondary-rgb), 0.72);
-  padding: 10px 16px;
-  border-radius: 999px;
-  background: rgba(var(--purple-50-rgb), 0.85);
-  border: 1px solid rgba(var(--purple-600-rgb), 0.18);
-}
-
-.architecture-map__reason-badge {
-  padding: 10px 14px;
-  border-radius: 12px;
-  border: 1px solid rgba(var(--purple-600-rgb), 0.2);
-  background: rgba(var(--purple-50-rgb), 0.85);
-  font-size: 0.82rem;
-  letter-spacing: 0.04em;
-  color: rgba(var(--ink-secondary-rgb), 0.72);
-}
-
-.architecture-map__metric-item {
-  padding: 10px 14px;
-  border-radius: 12px;
-  background: rgba(var(--purple-600-rgb), 0.08);
-  border: 1px solid rgba(var(--purple-600-rgb), 0.18);
-  font-size: 0.86rem;
-  color: rgba(var(--ink-secondary-rgb), 0.75);
-}
-
-@media (max-width: 992px) {
-  .architecture-map__diagram {
-    padding: 28px 20px;
-    grid-template-columns: repeat(1, minmax(0, 1fr));
-  }
-
-  .architecture-map__lanes {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .architecture-map__ops {
-    margin-top: 24px;
-  }
-
-  .architecture-map__edge-connector,
-  .architecture-map__lane-connector {
-    display: none;
-  }
-
-  .architecture-map__bus::before {
-    content: none;
-  }
-}
-
-@media (max-width: 768px) {
-  .architecture-map {
-    padding: 44px 20px;
-  }
-
-  .architecture-map__top-edge {
-    flex-direction: column;
-    gap: 18px;
-    align-items: flex-start;
-  }
-
-  .architecture-map__lanes {
-    grid-template-columns: repeat(1, minmax(0, 1fr));
-  }
-
-  .architecture-map__ops {
-    margin-top: 20px;
-  }
-}
-
-.architecture-details {
-  margin-top: 32px;
-  display: block;
-}
-
-.architecture-details--primary {
-  margin: 0;
-  border: 3px solid var(--ink);
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.96);
-  box-shadow: 6px 6px 0 rgba(var(--purple-600-rgb), 0.9);
-  overflow: hidden;
-}
-
-.architecture-details__summary {
-  padding: 18px 28px;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.92rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border-bottom: 1px solid rgba(var(--ink-rgb), 0.08);
-  color: var(--ink);
-  background: transparent;
-}
-
-.architecture-details__summary::after {
-  content: '+';
-  margin-left: auto;
-  transition: transform 0.2s ease;
-}
-
-.architecture-details[open] .architecture-details__summary::after {
-  transform: rotate(45deg);
-}
-
-.architecture-details__content {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-  color: rgba(var(--ink-secondary-rgb), 0.74);
-  background: transparent;
-  padding: clamp(24px, 4vw, 36px);
-}
-
-.architecture-details__intro {
-  margin: 0;
-  max-width: 760px;
-  font-size: 1.02rem;
-  line-height: 1.65;
-}
-
-.architecture-details__title {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: clamp(1.5rem, 2.6vw, 1.9rem);
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: var(--ink);
-  margin: 0;
-}
-
-.architecture-details__image {
-  border: 3px solid var(--ink);
-  border-radius: 10px;
-  background: rgb(var(--purple-50-rgb));
-  box-shadow: 4px 4px 0 rgba(var(--purple-600-rgb), 0.9);
-  padding: clamp(12px, 2vw, 20px);
-  overflow: hidden;
-}
-
-.architecture-details__image .reduced-centered-image {
-  border-radius: 4px;
-}
-
-.architecture-details__grid {
-  display: grid;
-  gap: 20px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.architecture-details__item {
-  background: rgba(var(--purple-50-rgb), 0.85);
-  border: 1px solid rgba(var(--purple-600-rgb), 0.12);
-  border-radius: 18px;
-  padding: 18px 20px;
-  height: 100%;
-}
-
-.architecture-details__item-title {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.9rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-bottom: 6px;
-  color: rgba(var(--ink-secondary-rgb), 0.78);
-}
-
-.architecture-details__item-body {
-  margin: 0;
-  font-size: 0.92rem;
-  color: rgba(var(--ink-secondary-rgb), 0.7);
-  line-height: 1.6;
-}
-
-@media (max-width: 992px) {
-  .architecture-details__grid {
-    grid-template-columns: repeat(1, minmax(0, 1fr));
-  }
+  aspect-ratio: 1600 / 1066;
+  object-fit: cover;
+  object-position: top;
 }
 
 /* Case study sheet */
@@ -1182,13 +694,6 @@
     font-size: 1.35rem;
   }
 }
-.reduced-centered-image {
-  display: block;
-  margin: 0 auto;
-  width: 50%; /* Reduce the size to 50% of its original width */
-  height: auto; /* Maintain aspect ratio */
-}
-
 .centered-text {
   text-align: center;
 }
@@ -1202,81 +707,269 @@
  * your design without overriding global definitions.
  */
 
-/* Container wrapper for the Tech Stack integrated into the architecture section */
-.tech-stack-section {
-  /* Add vertical space above the section so it doesn't butt up against
-   * preceding content.  You can adjust this as needed. */
-  margin-top: 2rem;
+/* Tech stack — collapsed by default behind a summary bar; expands into a
+ * 2x2 grid of cards. Both use the site's brand box (ink border + hard purple
+ * offset shadow, as in .home-drop-card / .store-card); the bar lifts on
+ * hover and sits "pressed" while open, like .store-card--active. */
+.techstack-details {
+  margin-top: clamp(24px, 3vw, 36px);
 }
 
-/* Ensure tech stack cards inherit the same look and feel as other cards
- * on the page: a subtle white background with a lightly coloured
- * border and shadow. */
-.tech-stack-section .card {
-  background: rgba(255, 255, 255, 0.98);
-  border: 2px solid var(--ink);
-  border-radius: 8px;
-  box-shadow: 4px 4px 0 rgba(var(--purple-600-rgb), 0.75);
-}
-/* Header styling: accent bar and coloured background.  The span with
- * class `techstack-header__bar` draws a vertical accent line, while
- * `techstack-header__title` styles the heading text. */
-.techstack-header {
+.techstack-details__summary {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px clamp(18px, 2vw, 24px);
+  background: #ffffff;
+  border: 3px solid var(--ink);
+  border-radius: 10px;
+  box-shadow: 6px 6px 0 rgba(var(--purple-600-rgb), 0.9);
+  cursor: pointer;
+  list-style: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.techstack-details__summary::-webkit-details-marker {
+  display: none;
+}
+
+.techstack-details__summary:hover {
+  transform: translate(-3px, -3px);
+  background: rgb(var(--purple-50-rgb));
+  box-shadow: 9px 9px 0 rgba(var(--purple-600-rgb), 0.9);
+}
+
+.techstack-details[open] .techstack-details__summary {
+  transform: translate(3px, 3px);
   background: rgb(var(--purple-100-rgb));
-  border-bottom: 2px solid var(--ink);
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
+  box-shadow: 3px 3px 0 rgba(var(--purple-600-rgb), 0.9);
 }
 
-.techstack-header__bar {
-  width: 6px;
-  height: 24px;
-  background: var(--ink);
-  margin-right: 0.75rem;
-  border-radius: 2px;
+.techstack-details__summary:focus-visible {
+  outline: 2px solid rgb(var(--purple-600-rgb));
+  outline-offset: 2px;
 }
 
-.techstack-header__title {
-  color: var(--ink);
-  font-size: 0.95rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+.techstack-details__title {
   font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
 }
-/* Chip styles: compact pixel-bordered tags for each item, matching the
- * quest-badge__tech chips elsewhere on the page. */
+
+.techstack-details__chevron {
+  flex: none;
+  font-size: 1.1rem;
+  color: var(--ink);
+  transition: transform 0.2s ease;
+}
+
+.techstack-details[open] .techstack-details__chevron {
+  transform: rotate(180deg);
+}
+
+.techstack-details[open] .techstack-grid {
+  margin-top: clamp(20px, 2.5vw, 28px);
+}
+
+.techstack-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(16px, 2vw, 24px);
+}
+
+.techstack-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: clamp(18px, 2vw, 24px);
+  background: #ffffff;
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  box-shadow: 4px 4px 0 rgba(var(--purple-600-rgb), 0.9);
+}
+
+.techstack-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(var(--purple-600-rgb), 0.14);
+}
+
+.techstack-card__title {
+  margin: 0;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.techstack-card__tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.techstack-card__tool {
+  display: block;
+  height: 28px;
+  width: auto;
+}
+
+.techstack-card__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
 .techstack-chip {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.4rem 0.7rem;
-  border-radius: 4px;
-  background: rgba(var(--purple-600-rgb), 0.08);
-  border: 1px solid rgba(var(--purple-600-rgb), 0.28);
+  gap: 0.45rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(var(--purple-600-rgb), 0.06);
+  border: 1px solid rgba(var(--purple-600-rgb), 0.2);
   color: var(--ink);
   font-size: 0.85rem;
   font-weight: 500;
+  line-height: 1.3;
 }
 
 .techstack-chip i {
-  color: var(--ink);
+  color: rgb(var(--purple-600-rgb));
 }
 
-/* Section heading styles for the tech stack.  Apply consistent
- * typography and spacing here instead of inline styles in React. */
-.tech-stack-section h3 {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.3rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 1rem;
+@media (max-width: 900px) {
+  .techstack-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
-/* Increase spacing between chips on medium and larger screens.  You can
- * customise the gap by overriding this rule in your own CSS if you
- * prefer tighter or looser spacing. */
-.tech-stack-section .card-body .d-flex.flex-wrap {
-  gap: 0.75rem 1rem;
+
+/* ---- Small screens: hero, architecture diagram, tech stack ---- */
+
+@media (max-width: 640px) {
+  /* Thinner panel padding so the scaled diagram gets as much width as possible */
+  .architecture-doc__figure {
+    padding: 6px;
+    border-radius: 10px;
+  }
+
+  /* Smaller still on phones, under the scaled-down diagram */
+  .architecture-doc__caption {
+    margin-top: 8px;
+    font-size: 0.6875rem;
+    line-height: 1.45;
+  }
+}
+
+@media (max-width: 576px) {
+  /* Overrides the older max-width: 992px hero padding. Small bottom padding
+     so Architecture starts soon after the CTAs. */
+  .landing-hero {
+    padding: 48px 0 40px;
+  }
+
+  .landing-hero__content--stack {
+    gap: 24px;
+  }
+
+  /* Architecture follows the hero closely on phones */
+  #architecture {
+    padding-top: 24px;
+  }
+
+  /* Crest ~17% smaller than the 150px desktop floor */
+  .landing-hero__crest {
+    height: 124px;
+  }
+
+  /* One line with ~30px breathing room each side on a 375px phone */
+  .landing-hero__title {
+    font-size: clamp(1.6rem, 7.4vw, 1.85rem);
+  }
+
+  .text-type.hero-typer {
+    line-height: 1.25;
+  }
+
+  /* Tighter, smaller context line: two lines instead of three.
+     13px is kept as a legibility floor for monospace body text. */
+  .hero-disclaimer {
+    margin-top: -12px;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    letter-spacing: -0.02em;
+  }
+
+  /* Stack the CTAs at equal width instead of two ragged pills; 44px tall
+     (Apple/WCAG minimum touch target) instead of 52px. */
+  .landing-hero__cta-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    width: 100%;
+    max-width: 320px;
+    margin-top: 8px;
+  }
+
+  .landing-hero__cta-row .hero-cta {
+    justify-content: center;
+    min-height: 44px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  .techstack-details__summary {
+    padding: 14px 16px;
+  }
+
+  .techstack-card {
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .techstack-card__header {
+    padding-bottom: 12px;
+  }
+
+  .techstack-card__title {
+    font-size: 0.92rem;
+  }
+
+  .techstack-card__tool {
+    height: 24px;
+  }
+
+  .techstack-card__chips {
+    gap: 6px;
+  }
+
+  .techstack-chip {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.6rem;
+  }
+}
+
+/* Genuinely narrow phones: let the title wrap rather than overflow */
+@media (max-width: 340px) {
+  .landing-hero__title {
+    white-space: normal;
+  }
 }
