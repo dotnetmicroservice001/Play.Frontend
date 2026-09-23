@@ -381,9 +381,11 @@
     gap: 8px;
   }
 
+  /* Logged-out view (just Login): keep it pushed to the right edge, as on
+     desktop — the collapse is justify-content:flex-start at this width. */
   .navmenu__primary--inline {
     flex: 0 0 auto;
-    margin-left: 0;
+    margin-left: auto;
     overflow-x: visible;
     mask-image: none;
     -webkit-mask-image: none;

@@ -6,9 +6,10 @@ body {
   margin: 0;
   background-color: var(--color-bg);
   color: var(--color-fg);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  /* Inter everywhere (navbar, footer, all pages) so text outside page
+     wrappers matches page content; loaded via landing.css's font import. */
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+    'Helvetica Neue', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   cursor: url('../assets/icons/mouse.png') 1 1, auto;
