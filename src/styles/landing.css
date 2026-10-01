@@ -6,9 +6,26 @@
 }
 
 .landing-page {
+  /* Type scale shared by every landing section (quest-timeline.css too).
+   * Space Grotesk = headings and labels, Inter = body, Space Mono = the hero typer only.
+   *   h2    section title (uppercase)
+   *   h3    subsection title (sentence case)
+   *   h4    card title (uppercase, tracked)
+   *   label eyebrow / small caps label
+   *   body  descriptions and captions */
+  --font-heading: 'Space Grotesk', sans-serif;
+  --font-body: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'Space Mono', 'Fira Code', 'Courier New', monospace;
+  --fs-h2: clamp(1.9rem, 3.3vw, 2.875rem);
+  --fs-h3: clamp(1.125rem, 1.6vw, 1.375rem);
+  --fs-h4: 1.0625rem;
+  --fs-label: 0.75rem;
+  --fs-body: 0.9375rem;
+  --lh-body: 1.55;
+
   color: var(--ink);
   overflow-x: hidden;
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-body);
   line-height: 1.65;
   background-color: var(--landing-base);
   background-image:
@@ -158,7 +175,7 @@
 /* .text-type.hero-typer beats TextType.css's .text-type letter-spacing;
    weight (600) still comes from .text-type. */
 .text-type.hero-typer {
-  font-family: 'Space Mono', 'Fira Code', 'Courier New', monospace;
+  font-family: var(--font-mono);
   font-size: clamp(1.1rem, 1.95vw, 1.75rem);
   line-height: 1.4;
   letter-spacing: 0.01em;
@@ -180,12 +197,11 @@
   margin-top: 8px;
 }
 
-/* Lighter than the tagline (smaller, regular weight, softer colour). */
+/* Lighter than the tagline: body face (not mono), smaller, regular weight, softer colour. */
 .hero-disclaimer {
-  font-family: 'Space Mono', 'Fira Code', 'Courier New', monospace;
+  font-family: var(--font-body);
   font-size: clamp(1rem, 1.35vw, 1.2rem);
   font-weight: 400;
-  letter-spacing: 0.01em;
   color: rgba(var(--ink-rgb), 0.68);
   /* Pulled up under the tagline so the two read as one subheading block */
   margin: -12px 0 0;
@@ -337,9 +353,9 @@
 
 .doc-section__title {
   margin: 0;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: var(--font-heading);
   font-weight: 700;
-  font-size: clamp(1.9rem, 3.3vw, 2.875rem);
+  font-size: var(--fs-h2);
   line-height: 1.1;
   letter-spacing: 0.03em;
   text-transform: uppercase;
@@ -358,6 +374,285 @@
   border: 1px solid rgba(var(--purple-600-rgb), 0.24);
   border-radius: 12px;
   box-shadow: 0 1px 2px rgba(var(--ink-rgb), 0.04), 0 12px 32px rgba(var(--purple-600-rgb), 0.08);
+}
+
+/* Engineering canvas: no frames. Every section (runtime flow and both supporting views) uses the
+ * same pattern, a small label over a hairline rule, then the image, so the hierarchy is consistent.
+ * Runtime flow on top, the two supporting views side by side below it, caption last. It breaks out
+ * of the narrow text column; one spacing unit (--arch-gap) drives every gap. */
+.arch-canvas {
+  --arch-gap: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--arch-gap);
+  position: relative;
+  left: 50%;
+  width: min(1100px, calc(100vw - 48px));
+  transform: translateX(-50%);
+  margin-bottom: var(--arch-gap);
+}
+
+.arch-canvas__primary,
+.arch-canvas__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 0;
+  min-width: 0;
+}
+
+/* Supporting views are full sections in their own right: stacked, with room between them */
+.arch-canvas__support {
+  display: flex;
+  flex-direction: column;
+  gap: var(--support-gap);
+  /* Clear gap after the framed diagram so the panels read as supporting detail */
+  margin-top: clamp(28px, 4.5vw, 52px);
+}
+
+/* The runtime diagram is the section's centrepiece: framed like the page's other
+ * cards (ink border, purple offset shadow), caption inside under a hairline. */
+.arch-canvas__primary {
+  padding: clamp(12px, 2vw, 24px);
+  background: #ffffff;
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  box-shadow: 4px 4px 0 rgba(var(--purple-600-rgb), 0.9);
+}
+
+/* Heading + framed diagram + caption fit one viewport (what "See How It's Built"
+ * scrolls to). ~280px covers the h2, card padding and a caption that may wrap to
+ * two lines; the diagram shrinks proportionally and centres in the full-width
+ * card. The 320px floor keeps it usable on very short windows. */
+.arch-canvas__primary > .arch-canvas__img {
+  max-height: max(320px, calc(100vh - 280px));
+  max-height: max(320px, calc(100svh - 280px));
+  object-fit: contain;
+}
+
+.arch-canvas__primary .arch-canvas__title {
+  margin-top: clamp(8px, 1.2vw, 14px);
+  padding-top: clamp(12px, 1.6vw, 18px);
+  border-top: 1px solid rgba(var(--purple-600-rgb), 0.14);
+}
+
+.arch-canvas__label {
+  margin: 0;
+  padding-bottom: 6px;
+  font-family: var(--font-heading);
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgb(var(--purple-600-rgb));
+  border-bottom: 1px solid rgba(var(--purple-600-rgb), 0.2);
+}
+
+/* Primary flow leads: stronger rule */
+.arch-canvas__primary > .arch-canvas__label {
+  border-bottom-color: rgba(var(--purple-600-rgb), 0.45);
+}
+
+/* h3 for the supporting views: same size as the main diagram title, left rule for focus */
+.arch-canvas__heading {
+  margin: 0;
+  padding-left: 12px;
+  font-family: var(--font-heading);
+  font-size: var(--fs-h3);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--ink);
+  border-left: 4px solid rgb(var(--purple-600-rgb));
+}
+
+.arch-canvas__desc {
+  margin: 0;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: rgba(var(--ink-rgb), 0.75);
+}
+
+/* Heading, description and diagram share one 700px column, so the text no longer
+ * stretches across the full canvas while the image sits narrower in the middle. */
+.arch-canvas__panel {
+  width: 100%;
+  max-width: 700px;
+  margin-inline: auto;
+}
+
+.arch-canvas__img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* h3 directly under the main diagram */
+.arch-canvas__title {
+  margin: 4px 0 0;
+  font-family: var(--font-heading);
+  font-size: var(--fs-h3);
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: center;
+  color: var(--ink);
+}
+
+.arch-canvas__note {
+  margin: 0;
+  text-align: center;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: rgba(var(--ink-rgb), 0.7);
+}
+
+/* Inline SVG flow diagrams (ArchFlowDiagrams.jsx): same card language as the
+ * tech stack and quest cards. Sizes are viewBox units; the diagrams are ~426
+ * units wide and capped near that, so one unit is ~1px on desktop and phones. */
+.flow-diagram {
+  display: block;
+  width: 100%;
+  max-width: 460px;
+  height: auto;
+  overflow: visible;
+}
+
+.flow-diagram__card {
+  fill: #ffffff;
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.flow-diagram__card--hub {
+  fill: rgb(var(--purple-100-rgb));
+}
+
+.flow-diagram__shadow {
+  fill: rgb(var(--purple-600-rgb));
+}
+
+.flow-diagram__line {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.flow-diagram__line--dashed {
+  stroke: rgb(var(--purple-600-rgb));
+  stroke-dasharray: 6 5;
+}
+
+.flow-diagram__arrowhead {
+  fill: var(--ink);
+}
+
+.flow-diagram__arrowhead--dashed {
+  fill: rgb(var(--purple-600-rgb));
+}
+
+.flow-diagram__title {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 700;
+  fill: var(--ink);
+}
+
+.flow-diagram__sub {
+  font-family: var(--font-body);
+  font-size: 13px;
+  fill: rgba(var(--ink-rgb), 0.65);
+}
+
+.flow-diagram__edge-label {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  fill: rgb(var(--purple-600-rgb));
+}
+
+.flow-diagram__tile {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border: 1px solid rgba(var(--purple-600-rgb), 0.18);
+  border-radius: 9px;
+  background: rgb(var(--purple-50-rgb));
+  color: rgb(var(--purple-600-rgb));
+  line-height: 1;
+}
+
+.flow-diagram__tile img {
+  object-fit: contain;
+}
+
+.flow-diagram__lift {
+  transition: transform 0.15s ease;
+}
+
+.flow-diagram__node:hover .flow-diagram__lift {
+  transform: translate(-2px, -2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flow-diagram__lift {
+    transition: none;
+  }
+}
+
+/* Desktop/tablet: the two supporting sections sit side by side, each with its own heading and text */
+/* Hairline between the two supporting panels (vertical side by side,
+ * horizontal when stacked). */
+.arch-canvas__support {
+  --support-gap: clamp(40px, 6vw, 72px);
+}
+
+.arch-canvas__panel + .arch-canvas__panel {
+  position: relative;
+}
+
+.arch-canvas__panel + .arch-canvas__panel::before {
+  content: '';
+  position: absolute;
+  top: calc(var(--support-gap) / -2);
+  left: 0;
+  right: 0;
+  border-top: 1px solid rgba(var(--purple-600-rgb), 0.22);
+}
+
+@media (min-width: 768px) {
+  .arch-canvas__support {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: var(--support-gap);
+    align-items: stretch;
+  }
+
+  .arch-canvas__panel + .arch-canvas__panel::before {
+    top: 0;
+    bottom: 0;
+    left: calc(var(--support-gap) / -2);
+    right: auto;
+    border-top: 0;
+    border-left: 1px solid rgba(var(--purple-600-rgb), 0.22);
+  }
+
+  .arch-canvas__panel {
+    max-width: none;
+    margin-inline: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .arch-canvas {
+    --arch-gap: 12px;
+  }
+
+  .arch-canvas__support {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Caption-sized, clearly smaller than body/description text */
@@ -711,67 +1006,22 @@
  * 2x2 grid of cards. Both use the site's brand box (ink border + hard purple
  * offset shadow, as in .home-drop-card / .store-card); the bar lifts on
  * hover and sits "pressed" while open, like .store-card--active. */
-.techstack-details {
-  margin-top: clamp(24px, 3vw, 36px);
+.techstack {
+  /* Same breakout width as .arch-canvas, so the section edges line up */
+  position: relative;
+  left: 50%;
+  width: min(1100px, calc(100vw - 48px));
+  transform: translateX(-50%);
+  margin-top: clamp(40px, 6vw, 72px);
+  padding-top: clamp(28px, 4vw, 44px);
+  border-top: 1px solid rgba(var(--purple-600-rgb), 0.22);
 }
 
-.techstack-details__summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 18px clamp(18px, 2vw, 24px);
-  background: #ffffff;
-  border: 3px solid var(--ink);
-  border-radius: 10px;
-  box-shadow: 6px 6px 0 rgba(var(--purple-600-rgb), 0.9);
-  cursor: pointer;
-  list-style: none;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+.techstack > .arch-canvas__heading {
+  margin-bottom: clamp(18px, 2.4vw, 26px);
 }
 
-.techstack-details__summary::-webkit-details-marker {
-  display: none;
-}
-
-.techstack-details__summary:hover {
-  transform: translate(-3px, -3px);
-  background: rgb(var(--purple-50-rgb));
-  box-shadow: 9px 9px 0 rgba(var(--purple-600-rgb), 0.9);
-}
-
-.techstack-details[open] .techstack-details__summary {
-  transform: translate(3px, 3px);
-  background: rgb(var(--purple-100-rgb));
-  box-shadow: 3px 3px 0 rgba(var(--purple-600-rgb), 0.9);
-}
-
-.techstack-details__summary:focus-visible {
-  outline: 2px solid rgb(var(--purple-600-rgb));
-  outline-offset: 2px;
-}
-
-.techstack-details__title {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.05rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--ink);
-}
-
-.techstack-details__chevron {
-  flex: none;
-  font-size: 1.1rem;
-  color: var(--ink);
-  transition: transform 0.2s ease;
-}
-
-.techstack-details[open] .techstack-details__chevron {
-  transform: rotate(180deg);
-}
-
-.techstack-details[open] .techstack-grid {
+.techstack-grid {
   margin-top: clamp(20px, 2.5vw, 28px);
 }
 
@@ -794,18 +1044,16 @@
 
 .techstack-card__header {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px 16px;
+  flex-direction: column;
+  gap: 12px;
   padding-bottom: 14px;
   border-bottom: 1px solid rgba(var(--purple-600-rgb), 0.14);
 }
 
 .techstack-card__title {
   margin: 0;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 1rem;
+  font-family: var(--font-heading);
+  font-size: var(--fs-h4);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -816,16 +1064,48 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.techstack-card__tool {
-  display: block;
-  height: 28px;
-  width: auto;
+/* Tools read as solid tags (ink outline, small offset shadow), concepts as soft chips */
+.techstack-tool {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 3px 10px 3px 3px;
+  background: #ffffff;
+  border: 1.5px solid var(--ink);
+  border-radius: 8px;
+  box-shadow: 2px 2px 0 rgba(var(--purple-600-rgb), 0.9);
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+/* Same tile as the architecture flow diagrams (.flow-diagram__tile) */
+.techstack-tool__tile {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: 1px solid rgba(var(--purple-600-rgb), 0.18);
+  border-radius: 6px;
+  background: rgb(var(--purple-50-rgb));
+  color: rgb(var(--purple-600-rgb));
+  font-size: 0.85rem;
+}
+
+.techstack-tool__tile img {
+  width: 72%;
+  height: 72%;
+  object-fit: contain;
 }
 
 .techstack-card__chips {
@@ -879,6 +1159,13 @@
 }
 
 @media (max-width: 576px) {
+  /* Phone type scale: body and card titles step down once, everywhere */
+  .landing-page {
+    --fs-h4: 0.95rem;
+    --fs-body: 0.875rem;
+    --lh-body: 1.5;
+  }
+
   /* Overrides the older max-width: 992px hero padding. Small bottom padding
      so Architecture starts soon after the CTAs. */
   .landing-hero {
@@ -908,13 +1195,11 @@
     line-height: 1.25;
   }
 
-  /* Tighter, smaller context line: two lines instead of three.
-     13px is kept as a legibility floor for monospace body text. */
+  /* Tighter, smaller context line: two lines instead of three. */
   .hero-disclaimer {
     margin-top: -12px;
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
     line-height: 1.5;
-    letter-spacing: -0.02em;
   }
 
   /* Stack the CTAs at equal width instead of two ragged pills; 44px tall
@@ -936,10 +1221,6 @@
     line-height: 1.2;
   }
 
-  .techstack-details__summary {
-    padding: 14px 16px;
-  }
-
   .techstack-card {
     gap: 12px;
     padding: 16px;
@@ -949,12 +1230,8 @@
     padding-bottom: 12px;
   }
 
-  .techstack-card__title {
-    font-size: 0.92rem;
-  }
-
-  .techstack-card__tool {
-    height: 24px;
+  .techstack-tool {
+    font-size: 0.75rem;
   }
 
   .techstack-card__chips {

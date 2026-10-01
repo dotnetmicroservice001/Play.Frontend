@@ -26,8 +26,7 @@ export const quests = [
     id: 4,
     title: 'Real-Time Order Status',
     description: "Status changes are pushed to the user's screen the moment they happen.",
-    tech: ['SignalR',
-      'OpenTelemetry'],
+    tech: ['SignalR'],
     icon: 'diagram-3'
   }
 ];

@@ -4,8 +4,9 @@ import React from 'react';
  * TechStackOverview
  *
  * Renders the tech stack as a grid of cards, one per layer of the system.
- * Each card lists the tools used (logos, named for tooltips/screen readers)
- * and the concepts implemented with them (chips).
+ * Each card lists the tools used (logo tile + visible name, same tile as the
+ * architecture flow diagrams; a Bootstrap icon where there is no logo) and the
+ * concepts implemented with them (chips).
  */
 
 import DotnetIcon from '../assets/icons/dotnetcore.svg';
@@ -32,14 +33,14 @@ const sections = [
     title: 'Core Microservices',
     items: [
       { text: 'REST APIs', icon: 'bi-code-slash' },
-      { text: 'Database storage', icon: 'bi-hdd-stack' },
-      { text: 'Code reuse', icon: 'bi-arrow-repeat' },
+      { text: 'Database per service', icon: 'bi-hdd-stack' },
+      { text: 'Shared NuGet libraries', icon: 'bi-arrow-repeat' },
       { text: 'Inter‑service communication', icon: 'bi-chat-dots' },
       { text: 'Eventual consistency', icon: 'bi-clock-history' },
-      { text: 'Token based security', icon: 'bi-shield-lock' },
+      { text: 'Token-based security', icon: 'bi-shield-lock' },
       { text: 'Authentication & authorization', icon: 'bi-person-check' },
       { text: 'Sagas', icon: 'bi-lightning-charge' },
-      { text: 'Frontend integration', icon: 'bi-window' },
+      { text: 'React SPA', icon: 'bi-window' },
       { text: 'Real‑time communication', icon: 'bi-broadcast' }
     ],
     tools: [
@@ -47,14 +48,16 @@ const sections = [
       { src: MongoDBIcon, name: 'MongoDB' },
       { src: PostmanIcon, name: 'Postman' },
       { src: RabbitMQIcon, name: 'RabbitMQ' },
-      { src: NugetIcon, name: 'NuGet' }
+      { src: NugetIcon, name: 'NuGet' },
+      { icon: 'shield-lock', name: 'Duende IdentityServer' },
+      { icon: 'broadcast', name: 'SignalR' }
     ]
   },
   {
     title: 'Cloud Infrastructure & Deployment',
     items: [
-      { text: 'Microservices as containers', icon: 'bi-box-seam' },
-      { text: 'Integration with Azure resources', icon: 'bi-cloud' },
+      { text: 'Containerized services', icon: 'bi-box-seam' },
+      { text: 'Azure resource integration', icon: 'bi-cloud' },
       { text: 'Kubernetes deployment', icon: 'bi-diagram-3' },
       { text: 'Health checks', icon: 'bi-heart-pulse' },
       { text: 'Secrets management', icon: 'bi-key' },
@@ -67,15 +70,17 @@ const sections = [
       { src: cosmosDbIcon, name: 'Cosmos DB' },
       { src: AcrIcon, name: 'Azure Container Registry' },
       { src: KubernetesIcon, name: 'Kubernetes' },
-      { src: EmissaryIcon, name: 'Emissary-ingress' }
+      { src: EmissaryIcon, name: 'Emissary-ingress' },
+      { icon: 'envelope-paper', name: 'Service Bus' },
+      { icon: 'key-fill', name: 'Key Vault' }
     ]
   },
   {
     title: 'CI/CD',
     items: [
-      { text: 'Using Helm charts', icon: 'bi-stack' },
+      { text: 'Helm charts', icon: 'bi-stack' },
       { text: 'Versioning', icon: 'bi-clock-history' },
-      { text: 'Connecting GitHub with Azure', icon: 'bi-github' },
+      { text: 'GitHub → Azure deploys', icon: 'bi-github' },
       { text: 'Continuous integration', icon: 'bi-play-circle' },
       { text: 'Continuous deployment', icon: 'bi-upload' }
     ],
@@ -88,17 +93,18 @@ const sections = [
   {
     title: 'Observability',
     items: [
-      { text: 'Adding logging', icon: 'bi-journal-text' },
-      { text: 'Querying logs', icon: 'bi-search' },
+      { text: 'Structured logging', icon: 'bi-journal-text' },
+      { text: 'Log search', icon: 'bi-search' },
       { text: 'Distributed tracing', icon: 'bi-diagram-3' },
-      { text: 'Using metrics', icon: 'bi-graph-up' },
-      { text: 'Monitoring', icon: 'bi-eye' }
+      { text: 'Metrics', icon: 'bi-graph-up' },
+      { text: 'Alerting & monitoring', icon: 'bi-eye' }
     ],
     tools: [
       { src: PrometheusIcon, name: 'Prometheus' },
       { src: GrafanaIcon, name: 'Grafana' },
       { src: OpenTelemetryIcon, name: 'OpenTelemetry' },
-      { src: JaegerIcon, name: 'Jaeger' }
+      { src: JaegerIcon, name: 'Jaeger' },
+      { icon: 'file-earmark-text', name: 'Seq' }
     ]
   }
 ];
@@ -108,11 +114,14 @@ export const TechStackOverview = () => (
     {sections.map((section) => (
       <article key={section.title} className="techstack-card">
         <header className="techstack-card__header">
-          <h3 className="techstack-card__title">{section.title}</h3>
+          <h4 className="techstack-card__title">{section.title}</h4>
           <ul className="techstack-card__tools" aria-label={`${section.title} tools`}>
             {section.tools.map((tool) => (
-              <li key={tool.name}>
-                <img src={tool.src} alt={tool.name} title={tool.name} className="techstack-card__tool" />
+              <li key={tool.name} className="techstack-tool">
+                <span className="techstack-tool__tile" aria-hidden="true">
+                  {tool.src ? <img src={tool.src} alt="" /> : <i className={`bi bi-${tool.icon}`}></i>}
+                </span>
+                <span>{tool.name}</span>
               </li>
             ))}
           </ul>

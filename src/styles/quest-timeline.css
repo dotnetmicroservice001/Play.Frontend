@@ -1,6 +1,5 @@
 /* Quest timeline styling */
 .quest-timeline {
-  --timeline-bg: rgba(var(--purple-50-rgb), 0.4);
   --timeline-text: var(--color-fg);
   --timeline-surface: rgba(255, 255, 255, 0.92);
   --timeline-accent: var(--accent);
@@ -9,11 +8,7 @@
   position: relative;
   padding: clamp(48px, 6vw, 64px) 0;
   overflow: hidden;
-  background: var(--timeline-bg);
-}
-
-.quest-timeline--entered {
-  animation: quest-fade 0.6s ease forwards;
+  /* No fill of its own: a tint here showed as a box inside the section gradient */
 }
 
 .quest-timeline::before {
@@ -22,7 +17,7 @@
   top: -18%;
   left: 50%;
   transform: translateX(-50%);
-  /* Wide enough to sit behind the whole card stage (920px) with room to
+  /* Wide enough to sit behind the whole card grid (900px) with room to
      fade, and an ellipse sized to the box (closest-side) so the glow reaches
      zero before the edges — no hard vertical seams beside the cards. */
   width: min(1100px, 100%);
@@ -34,28 +29,17 @@
   z-index: 0;
 }
 
-@keyframes quest-fade {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Quest map — a lead-in preview of the poster illustration, sized to match
-   the same content width as the card stage below it (.quest-timeline__stage,
-   max-width 920px) so it reads as proportionate to the cards rather than a
-   small thumbnail dwarfed by them. Same chamfered clip-path technique used
+/* Quest map — a lead-in preview of the poster illustration, at the same width
+   as the quest card grid below it. Same chamfered clip-path technique used
    throughout, scaled up to match. */
 .quest-timeline__map-wrap {
   position: relative;
   z-index: 1;
-  max-width: 900px;
-  margin: 0 auto 2.75rem;
+  /* Same 1100px canvas as the quest card row below it */
+  left: 50%;
+  width: min(1100px, calc(100vw - 48px));
+  margin: 0 0 2.75rem;
+  transform: translateX(-50%);
 }
 
 .quest-timeline__map {
@@ -100,114 +84,28 @@
   height: auto;
 }
 
-.quest-timeline__stage {
+/* All four quests in one row at the page's 1100px canvas width (same as the
+ * Architecture and Tech Stack sections); two per row on tablets, one on phones. */
+.quest-timeline__grid {
   position: relative;
   z-index: 1;
-  margin: 0 auto;
-  max-width: 920px;
-  padding: 0 1.25rem 0;
-  color: var(--timeline-text);
-}
-
-.quest-timeline__line {
-  position: absolute;
-  top: 0;
-  bottom: 0;
   left: 50%;
-  transform: translateX(-50%);
-  width: 4px;
-  border-radius: 999px;
-  background: linear-gradient(180deg, rgba(var(--purple-600-rgb), 0.85) 0%, rgba(var(--purple-50-rgb), 0.4) 100%);
-}
-
-.quest-timeline__item {
-  position: relative;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: 2.4rem;
-  align-items: center;
-  margin-bottom: 3.5rem;
-  color: var(--timeline-text);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(16px, 2vw, 24px);
+  width: min(1100px, calc(100vw - 48px));
+  margin: 0;
+  transform: translateX(-50%);
 }
 
-.quest-timeline__item:last-child {
-  margin-bottom: 0;
-}
-
-.quest-timeline__dot {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: rgba(var(--purple-600-rgb), 0.12);
-  border: 4px solid rgba(var(--purple-600-rgb), 0.55);
-}
-
-.quest-timeline__item.is-active .quest-timeline__dot {
-  background: var(--timeline-accent);
-  box-shadow: 0 0 16px rgba(var(--purple-600-rgb), 0.35);
-}
-
-/* The wizard companion — hops to whichever quest is currently active
-   (QuestTimeline.jsx sets `top` in px as activeQuestId changes). Sits just
-   left of the line/dot so it never covers either side's card. */
-.quest-timeline__wizard {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  width: 52px;
-  height: auto;
-  image-rendering: pixelated;
-  filter: drop-shadow(0 6px 10px rgba(var(--purple-600-rgb), 0.35));
-  z-index: 2;
-  pointer-events: none;
-  transition: top 0.5s ease, left 0.5s ease;
-}
-
-.quest-timeline__wizard--left {
-  left: calc(50% - 46px);
-}
-
-.quest-timeline__wizard--right {
-  left: calc(50% + 46px);
-}
-
-.quest-timeline__card {
+.quest-timeline__grid > li {
   display: flex;
-  justify-content: center;
-  max-width: 900px;
-  /* Increase the maximum width of the card */
-}
-
-.quest-timeline__item--left .quest-timeline__card {
-  grid-column: 1;
-  justify-content: flex-end;
-}
-
-.quest-timeline__item--right .quest-timeline__card {
-  grid-column: 2;
-  justify-content: flex-start;
 }
 
 .quest-badge {
   position: relative;
-  /* Fills its timeline column (~420px at the 920px stage width) */
-  width: min(100%, 420px);
-  transition: transform 0.35s ease;
-}
-
-.quest-badge:focus {
-  outline: none;
-}
-
-.quest-badge:focus .quest-badge__frame {
-  box-shadow: 0 0 0 3px rgba(var(--purple-600-rgb), 0.35);
-}
-
-.quest-badge--active {
-  transform: translateY(-8px);
+  display: flex;
+  width: 100%;
 }
 
 /* Chamfered card frame, matching the clip-path technique used for Home's
@@ -236,13 +134,15 @@
     100% calc(100% - 14px), calc(100% - 14px) 100%, 14px 100%,
     0 calc(100% - 14px), 0 14px
   );
-  max-width: 900px;
+  display: flex;
   width: 100%;
-  margin: 0 auto;
 }
 
 .quest-badge__inner {
-  padding: 1.5rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 1.25rem 1.25rem 1.35rem;
   background: linear-gradient(135deg, #ffffff, var(--timeline-surface));
   clip-path: polygon(
     11px 0, calc(100% - 11px) 0, 100% 11px,
@@ -251,9 +151,18 @@
   );
 }
 
+/* Icon beside the title: the card reads as one row of identity, then content */
+.quest-badge__head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 0.85rem;
+}
+
 .quest-badge__icon {
-  width: 56px;
-  height: 56px;
+  flex: none;
+  width: 48px;
+  height: 48px;
   border-radius: 6px;
   background: rgb(var(--purple-100-rgb));
   border: 3px solid var(--ink);
@@ -261,181 +170,70 @@
   align-items: center;
   justify-content: center;
   image-rendering: pixelated;
-  box-shadow: 4px 4px 0 rgba(var(--purple-600-rgb), 0.9);
-  margin-bottom: 0.85rem;
+  box-shadow: 3px 3px 0 rgba(var(--purple-600-rgb), 0.9);
 }
 
 .quest-badge__icon i {
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   color: var(--ink);
 }
 
 .quest-badge__title {
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 700; /* match the page's other Space Grotesk headings */
-  font-size: 1.2rem;
+  font-family: var(--font-heading);
+  font-weight: 700; /* h4: same as the tech stack card titles */
+  font-size: var(--fs-h4);
   color: var(--timeline-text);
-  margin-bottom: 0.75rem;
-  letter-spacing: 0.04em;
+  margin: 0;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
 .quest-badge__description {
-  font-size: 0.95rem;
+  font-size: var(--fs-body);
   color: rgba(26, 26, 36, 0.75);
   margin-bottom: 1rem;
-  line-height: 1.5;
+  line-height: var(--lh-body);
 }
 
 .quest-badge__details {
-  margin-top: 1rem;
+  /* Pinned to the card bottom so the "Under the hood" rows line up across a grid row */
+  margin-top: auto;
   padding-top: 0.75rem;
   border-top: 1px dashed rgba(var(--purple-600-rgb), 0.25);
 }
 
 .quest-badge__details-summary {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.82rem;
-  font-family: 'Space Grotesk', sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  cursor: pointer;
-  color: rgba(var(--ink-secondary-rgb), 0.72);
-  transition: color 0.2s ease;
-}
-
-.quest-badge__details-summary::after {
-  content: '+';
-  margin-left: auto;
-  transition: transform 0.2s ease;
-}
-
-.quest-badge__details[open] .quest-badge__details-summary::after {
-  transform: rotate(45deg);
-}
-
-/* Desktop: "Under the hood" is always shown (QuestBadge renders a plain
-   label, not a <summary>), so drop the toggle affordances. */
-.quest-badge__details--static .quest-badge__details-summary {
   margin: 0 0 0.6rem;
-  cursor: default;
-}
-
-.quest-badge__details--static .quest-badge__details-summary::after {
-  content: none;
-}
-
-.quest-badge__details--static .quest-badge__details-summary:hover {
+  font-size: var(--fs-label);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   color: rgba(var(--ink-secondary-rgb), 0.72);
 }
 
-.quest-badge__details-summary:hover,
-.quest-badge__details-summary:focus {
-  color: rgba(var(--purple-600-rgb), 0.9);
-  outline: none;
-}
-
-/* Content-sized chips in a row that wrap only when they run out of room,
-   like the Tech Stack chips — names never break mid-chip. */
+/* Same soft pills as the Tech Stack concepts (.techstack-chip in landing.css) */
 .quest-badge__tech {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  color: rgba(26, 26, 36, 0.72);
 }
 
-.quest-badge__tech li {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  white-space: nowrap;
-  max-width: 100%;
-  background: rgb(var(--purple-50-rgb));
-  border: 2px solid var(--ink);
-  border-radius: 4px;
-  padding: 0.3rem 0.6rem;
-  box-shadow: 2px 2px 0 rgba(var(--purple-600-rgb), 0.9);
-}
-
-/* Same type as the Tech Stack chips (.techstack-chip): mixed case keeps
-   product names like "Cosmos DB" and "ASP.NET Core" spelled correctly. */
-.quest-badge__chip {
-  font-size: 0.85rem;
-  font-weight: 500;
-  line-height: 1.3;
-  color: var(--ink);
-  text-align: center;
+@media (max-width: 1099px) {
+  .quest-timeline__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 768px) {
-  .quest-timeline__stage {
-    padding: 0 1rem;
-  }
-
-  .quest-timeline__line {
-    left: 36px;
-  }
-
-  .quest-timeline__item {
+  .quest-timeline__grid {
     grid-template-columns: minmax(0, 1fr);
-    margin-bottom: 3rem;
-    padding-left: 2.5rem;
-  }
-
-  .quest-timeline__item--left .quest-timeline__card,
-  .quest-timeline__item--right .quest-timeline__card {
-    grid-column: 1;
-    justify-content: flex-start;
-  }
-
-  .quest-timeline__card {
-    margin-left: 3.25rem;
-  }
-
-  .quest-timeline__dot {
-    left: 36px;
-  }
-
-  .quest-timeline__wizard {
-    left: 36px;
-    width: 40px;
-  }
-
-  .quest-badge {
-    width: 100%;
-    max-width: none;
   }
 }
 
 @media (max-width: 576px) {
-  .quest-badge__chip {
-    font-size: 0.8rem;
-  }
-
-  /* Narrow phone cards: a long label like "Distributed transactions"
-     wraps inside its chip instead of poking out of the card */
-  .quest-badge__tech li {
-    white-space: normal;
-  }
-
-  /* Card body copy was 15.2px — too heavy for the narrow cards on phones */
+  /* Size comes from the phone --fs-body token; just tighten the gap */
   .quest-badge__description {
-    font-size: 0.8125rem;
-    line-height: 1.45;
     margin-bottom: 0.75rem;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-
-  .quest-timeline,
-  .quest-badge,
-  .quest-badge__frame,
-  .quest-timeline__wizard {
-    transition: none;
-    animation: none !important;
   }
 }

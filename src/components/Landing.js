@@ -5,8 +5,9 @@ import { AuthorizationPaths } from './api-authorization/ApiAuthorizationConstant
 import authService from './api-authorization/AuthorizeService';
 import { QuestTimeline } from './QuestTimeline';
 import { TechStackOverview } from './TechStackOverview';
+import { BuildDeliveryDiagram, ObservabilityDiagram } from './ArchFlowDiagrams';
 import TextType from './TextType';
-import architectureImage from '../images/architecture.png';
+// Old diagram, removed for now: import architectureImage from '../images/architecture.png';
 
 export const Landing = () => {
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -120,27 +121,43 @@ export const Landing = () => {
               <header className="doc-section__header">
                 <h2 className="doc-section__title">Architecture</h2>
               </header>
-              <figure className="architecture-doc">
-                <div className="architecture-doc__figure">
-                  <img
-                    src={architectureImage}
-                    alt="Architecture diagram: API gateway, microservices, RabbitMQ message bus and data stores"
-                    className="architecture-doc__img"
-                  />
-                </div>
-                <figcaption className="architecture-doc__caption">
-                  Four .NET services, Catalog, Inventory, Identity, and Trading, each own their data and communicate through RabbitMQ. The system runs behind Emissary on AKS and deploys through GitHub Actions and Helm.
-                </figcaption>
-              </figure>
 
-              {/* Tech stack: collapsed by default, sits right under the diagram */}
-              <details className="techstack-details" id="tech-stack">
-                <summary className="techstack-details__summary">
-                  <span className="techstack-details__title">Tech Stack</span>
-                  <i className="bi bi-chevron-down techstack-details__chevron" aria-hidden="true"></i>
-                </summary>
+              {/* Engineering canvas: runtime flow on top, two supporting views below */}
+              <div className="arch-canvas">
+                <section className="arch-canvas__primary">
+                  <img
+                    src="/categories/new-arch-diagram.themed.svg"
+                    alt="Runtime architecture: client, Emissary ingress, four services, CosmosDB and Azure Service Bus on AKS"
+                    className="arch-canvas__img"
+                  />
+                  <h3 className="arch-canvas__title">GamePlayEconomy Distributed Application Architecture</h3>
+                  <p className="arch-canvas__note">
+                    Four .NET services, Catalog, Inventory, Identity, and Trading, each own their data and communicate through asynchronous messaging.
+                  </p>
+                </section>
+                <div className="arch-canvas__support">
+                  <section className="arch-canvas__panel">
+                    <h3 className="arch-canvas__heading">Build and delivery</h3>
+                    <p className="arch-canvas__desc">
+                      Every service ships through one pipeline, from commit to AKS.
+                    </p>
+                    <BuildDeliveryDiagram />
+                  </section>
+                  <section className="arch-canvas__panel">
+                    <h3 className="arch-canvas__heading">Operations and observability</h3>
+                    <p className="arch-canvas__desc">
+                      Collected once with OpenTelemetry, routed to each tool.
+                    </p>
+                    <ObservabilityDiagram />
+                  </section>
+                </div>
+              </div>
+
+              {/* Tech stack: a subsection like the two supporting panels, at the canvas width */}
+              <section className="techstack" id="tech-stack">
+                <h3 className="arch-canvas__heading">Tech Stack</h3>
                 <TechStackOverview />
-              </details>
+              </section>
             </div>
           </Container>
         </section>
