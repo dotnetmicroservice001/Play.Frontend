@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="122 0 354 315">
+  <!-- Azure Service Bus: grey brackets around a blue envelope. Redrawn as SVG
+       from the PNG embedded in public/categories/new-arch-diagram.drawio.svg. -->
+  <defs>
+    <linearGradient id="servicebus-base" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0078d4" />
+      <stop offset="1" stop-color="#003067" />
+    </linearGradient>
+  </defs>
+  <path fill="#949494" d="M140 0H458a18 18 0 0 1 18 18V60a18 18 0 0 1-36 0V38H158V60a18 18 0 0 1-36 0V18a18 18 0 0 1 18-18Z" />
+  <path fill="#949494" d="M140 315H458a18 18 0 0 0 18-18V255a18 18 0 0 0-36 0V277H158V255a18 18 0 0 0-36 0V297a18 18 0 0 0 18 18Z" />
+  <path fill="#50e6ff" d="M208 125 300 62 390 125 300 185Z" />
+  <path fill="#32bedd" d="M208 125 300 185 208 245Z" />
+  <path fill="#198ab3" d="M390 125 390 245 300 185Z" />
+  <path fill="url(#servicebus-base)" d="M208 245 300 185 390 245Z" />
+</svg>

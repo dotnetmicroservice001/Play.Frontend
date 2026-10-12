@@ -20,7 +20,7 @@ export const Layout = ({ children }) => {
 
   return (
     <div className="app-wrapper">
-      <NavMenu />
+      <NavMenu isLanding={location.pathname === '/'} />
       <main className="content">
         {isFullWidth ? (
           <div className="page-full">{children}</div>

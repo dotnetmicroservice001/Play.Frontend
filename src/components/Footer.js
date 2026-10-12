@@ -14,7 +14,11 @@ export const Footer = () => {
       <div className="container footer__inner" aria-label="Site footer">
         <div className="footer__brand">
           <img src="/favicon.svg" alt="" className="footer__logo" />
-          <p className="footer__text">© {year} Sneha Basnet · A portfolio project built for demonstration.</p>
+          <p className="footer__text">
+            © {year} Sneha Basnet
+            {/* Dropped on phones so the footer fits on one line */}
+            <span className="footer__tagline"> · A portfolio project built for demonstration.</span>
+          </p>
         </div>
         <ul className="footer__contact">
           {links.map((link) => (

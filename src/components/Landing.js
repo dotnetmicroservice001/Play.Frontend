@@ -4,17 +4,19 @@ import { Link, useHistory, useLocation } from 'react-router-dom';
 import { AuthorizationPaths } from './api-authorization/ApiAuthorizationConstants';
 import authService from './api-authorization/AuthorizeService';
 import { QuestTimeline } from './QuestTimeline';
+import { EngineeringDecisions } from './EngineeringDecisions';
 import { TechStackOverview } from './TechStackOverview';
-import { BuildDeliveryDiagram, ObservabilityDiagram } from './ArchFlowDiagrams';
+import { BuildDeliveryDiagram, MobileArchitectureDiagram, ObservabilityDiagram } from './ArchFlowDiagrams';
+import { LANDING_SECTIONS } from './LandingSectionLinks';
+import { CICD_WORKFLOW_URL, GITHUB_ORG_URL, LIVE_DASHBOARDS, SERVICE_REPOS } from '../data/sourceLinks';
 import TextType from './TextType';
 // Old diagram, removed for now: import architectureImage from '../images/architecture.png';
 
 export const Landing = () => {
-  const [showScrollTop, setShowScrollTop] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const location = useLocation();
   const history = useHistory();
-  const { hash, pathname, search } = location;
+  const { hash, key, pathname, search } = location;
   const architectureRef = useRef(null);
 
   // "Sign in as Demo Player" always redirects straight to the IdP with no
@@ -33,10 +35,6 @@ export const Landing = () => {
     return () => authService.unsubscribe(subscription);
   }, []);
 
-  const handleScroll = useCallback(() => {
-    setShowScrollTop(window.scrollY > 600);
-  }, []);
-
   const scrollToArchitecture = useCallback(() => {
     requestAnimationFrame(() => {
       if (architectureRef.current) {
@@ -45,17 +43,19 @@ export const Landing = () => {
     });
   }, []);
 
+  // Hash links (hero CTA, navbar section links) scroll to their section. Keyed
+  // on location.key so clicking the same link again still scrolls.
   useEffect(() => {
-    if (hash === '#architecture') {
+    const id = hash.slice(1);
+    if (id === 'architecture') {
+      // The heading + diagram block, so the whole architecture view fits on screen
       scrollToArchitecture();
+    } else if (LANDING_SECTIONS.some((section) => section.id === id)) {
+      requestAnimationFrame(() => {
+        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
     }
-  }, [hash, scrollToArchitecture]);
-
-  useEffect(() => {
-    handleScroll();
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [handleScroll]);
+  }, [hash, key, scrollToArchitecture]);
 
   return (
     <div className="landing-page" id="top">
@@ -83,12 +83,14 @@ export const Landing = () => {
                 cursorCharacter="▍"
               />
               <p className="hero-disclaimer">
-                A portfolio project, built end-to-end as a production-ready microservices system.
+                Event-driven .NET microservices on AKS: sagas, Service Bus and distributed tracing, end to end.
               </p>
+              {/* Guest access (try the demo) is the primary action; when already signed in
+                  there's no guest button, so "See how it's built" takes the emphasis */}
               <div className="landing-hero__cta-row">
                 <button
                   type="button"
-                  className="hero-cta"
+                  className={`hero-cta${isAuthenticated ? ' hero-cta--primary' : ''}`}
                   // Scroll to the architecture heading + diagram; also set #architecture so the
                   // URL is shareable. Scrolling here (not only via the hash
                   // effect) keeps repeat clicks working once the hash is set.
@@ -98,15 +100,19 @@ export const Landing = () => {
                   }}
                 >
                   <i className="bi bi-diagram-3" aria-hidden="true"></i>
-                  See How It's Built
+                  See how it's built
                 </button>
+                <a className="hero-cta" href={GITHUB_ORG_URL} target="_blank" rel="noreferrer">
+                  <i className="bi bi-github" aria-hidden="true"></i>
+                  View source
+                </a>
                 {!isAuthenticated && (
                   <Link
                     to={{ pathname: AuthorizationPaths.Login, search: '?demo=1' }}
                     className="hero-cta hero-cta--primary"
                   >
                     <i className="bi bi-person-plus" aria-hidden="true"></i>
-                    Guest Access
+                    Guest access
                   </Link>
                 )}
               </div>
@@ -128,62 +134,101 @@ export const Landing = () => {
                   <img
                     src="/categories/new-arch-diagram.themed.svg"
                     alt="Runtime architecture: client, Emissary ingress, four services, CosmosDB and Azure Service Bus on AKS"
-                    className="arch-canvas__img"
+                    className="arch-canvas__img arch-canvas__img--desktop"
                   />
+                  {/* Phones: the same runtime system redrawn top to bottom so it stays readable */}
+                  <div className="arch-canvas__mobile">
+                    <MobileArchitectureDiagram />
+                  </div>
                   <h3 className="arch-canvas__title">GamePlayEconomy Distributed Application Architecture</h3>
                   <p className="arch-canvas__note">
-                    Four .NET services, Catalog, Inventory, Identity, and Trading, each own their data and communicate through asynchronous messaging.
+                    Catalog, Inventory, Identity and Trading each have their own database and talk to each other over a message bus.
                   </p>
+                  <ul className="arch-canvas__repos" aria-label="Source repositories">
+                    {SERVICE_REPOS.map((repo) => (
+                      <li key={repo.name}>
+                        <a className="source-link" href={repo.url} target="_blank" rel="noreferrer">
+                          <i className="bi bi-github" aria-hidden="true"></i>
+                          {repo.name}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
                 </section>
+                {/* Build and runtime as one pair: matching frames (title bar + body, equal
+                    height), told apart by material: a light plan for the pipeline, a dark
+                    console for what runs in production */}
                 <div className="arch-canvas__support">
                   <section className="arch-canvas__panel">
                     <h3 className="arch-canvas__heading">Build and delivery</h3>
                     <p className="arch-canvas__desc">
-                      Every service ships through one pipeline, from commit to AKS.
+                      Each service repo has its own GitHub Actions workflow and Helm chart.
                     </p>
-                    <BuildDeliveryDiagram />
+                    <div className="arch-canvas__frame">
+                      <div className="arch-canvas__frame-bar">
+                        <span className="arch-canvas__frame-status">
+                          <i className="bi bi-git" aria-hidden="true"></i>
+                          On push to main
+                        </span>
+                        <a className="source-link" href={CICD_WORKFLOW_URL} target="_blank" rel="noreferrer">
+                          cicd.yml
+                          <i className="bi bi-box-arrow-up-right" aria-hidden="true"></i>
+                        </a>
+                      </div>
+                      <div className="arch-canvas__frame-body">
+                        <BuildDeliveryDiagram />
+                      </div>
+                    </div>
                   </section>
                   <section className="arch-canvas__panel">
                     <h3 className="arch-canvas__heading">Operations and observability</h3>
                     <p className="arch-canvas__desc">
-                      Collected once with OpenTelemetry, routed to each tool.
+                      Each service exports traces, metrics and logs through OpenTelemetry.
                     </p>
-                    <ObservabilityDiagram />
+                    <div className="arch-canvas__frame arch-canvas__frame--console">
+                      <div className="arch-canvas__frame-bar">
+                        <ul className="arch-canvas__live" aria-label="Live dashboards">
+                          {LIVE_DASHBOARDS.map((d) => (
+                            <li key={d.label}>
+                              <a className="source-link" href={d.url} target="_blank" rel="noreferrer">
+                                {d.label}
+                                <i className="bi bi-box-arrow-up-right" aria-hidden="true"></i>
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div className="arch-canvas__frame-body">
+                        <ObservabilityDiagram />
+                      </div>
+                    </div>
                   </section>
                 </div>
               </div>
 
-              {/* Tech stack: a subsection like the two supporting panels, at the canvas width */}
+              {/* Tech stack: full-bleed ink band, the page's one change of background */}
               <section className="techstack" id="tech-stack">
-                <h3 className="arch-canvas__heading">Tech Stack</h3>
+                <h2 className="doc-section__title techstack__title">Tech Stack</h2>
                 <TechStackOverview />
               </section>
             </div>
           </Container>
         </section>
 
-                  {/* Placeholder anchor for case study navigation */}
-        <div id="case-study" className="case-study-anchor" aria-hidden="true"></div>
+        {/* Key decisions, with the purchase saga as a worked example */}
+        <section id="decisions" className="landing-section">
+          <Container>
+            <EngineeringDecisions />
+          </Container>
+        </section>
 
-        {/* Quests timeline section */}
-        <section id="quests" className="landing-section landing-section--gradient">
+        {/* Quest timeline: the player's journey, closing the page */}
+        <section id="quests" className="landing-section">
           <Container>
             <QuestTimeline />
           </Container>
         </section>
       </main>
-
-      {/* Scroll-to-top button */}
-      {showScrollTop && (
-        <button
-          type="button"
-          className="landing-scroll-top"
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        >
-          <span className="sr-only">Back to top</span>
-          <i className="bi bi-arrow-up-short" aria-hidden="true"></i>
-        </button>
-      )}
     </div>
   );
 };

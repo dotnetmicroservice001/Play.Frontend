@@ -1,132 +1,143 @@
-/* Quest timeline styling */
+/* Quest timeline and Key Decisions styling. */
 .quest-timeline {
-  --timeline-text: var(--color-fg);
-  --timeline-surface: rgba(255, 255, 255, 0.92);
-  --timeline-accent: var(--accent);
-  --timeline-accent-ink: var(--ink-secondary);
-
   position: relative;
-  padding: clamp(48px, 6vw, 64px) 0;
-  overflow: hidden;
+  /* Little top padding: the decisions section's bottom padding already
+     separates it (a full top padding stacked on that left ~140px blank).
+     No bottom padding: the picture is the last thing in the section. */
+  padding: 8px 0 0;
+  /* Not hidden: that would crop the full-width picture to the content column.
+     .landing-page clips horizontal overflow at the viewport (overflow-x: clip). */
+  overflow: visible;
   /* No fill of its own: a tint here showed as a box inside the section gradient */
 }
 
-.quest-timeline::before {
-  content: '';
-  position: absolute;
-  top: -18%;
-  left: 50%;
-  transform: translateX(-50%);
-  /* Wide enough to sit behind the whole card grid (900px) with room to
-     fade, and an ellipse sized to the box (closest-side) so the glow reaches
-     zero before the edges — no hard vertical seams beside the cards. */
-  width: min(1100px, 100%);
-  height: 120%;
-  background: radial-gradient(ellipse closest-side at center, rgba(var(--purple-400-rgb), 0.22) 0%, rgba(var(--purple-600-rgb), 0.1) 45%, rgba(var(--purple-50-rgb), 0) 100%);
-  opacity: 0.6;
-  filter: blur(0px);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Quest map — a lead-in preview of the poster illustration, at the same width
-   as the quest card grid below it. Same chamfered clip-path technique used
-   throughout, scaled up to match. */
-.quest-timeline__map-wrap {
+/* Same left-aligned section opener as Architecture, Tech Stack and Key
+   Decisions, on the shared 1100px canvas */
+.quest-timeline__header {
   position: relative;
   z-index: 1;
-  /* Same 1100px canvas as the quest card row below it */
   left: 50%;
   width: min(1100px, calc(100vw - 48px));
-  margin: 0 0 2.75rem;
+  margin-bottom: clamp(28px, 3.5vw, 40px);
   transform: translateX(-50%);
 }
 
-.quest-timeline__map {
+/* Quest map as a full-width picture: no frame, edge to edge across the
+   viewport, bottom resting on the footer. The image's top edge fades into the
+   page (the mask is on the image, so the home button stays fully opaque). */
+.quest-timeline__picture {
   position: relative;
+  z-index: 1;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
 }
 
-.quest-timeline__map-shadow {
+.quest-timeline__picture .quest-timeline__map-img {
+  /* Short fade: the tighter crop puts the flags near the top edge */
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 8%);
+  mask-image: linear-gradient(180deg, transparent 0, #000 8%);
+}
+
+/* Home button straddling the picture's top edge (over the faded strip, so it
+   never covers the artwork), lined up with the page's 1100px content edge;
+   flat, like the secondary hero buttons */
+.quest-timeline__home {
   position: absolute;
-  inset: 0;
-  transform: translate(6px, 6px);
-  background: rgba(var(--purple-600-rgb), 0.9);
-  clip-path: polygon(
-    24px 0, calc(100% - 24px) 0, 100% 24px,
-    100% calc(100% - 24px), calc(100% - 24px) 100%, 24px 100%,
-    0 calc(100% - 24px), 0 24px
-  );
-}
-
-.quest-timeline__map-frame {
-  position: relative;
-  padding: 4px;
-  background: var(--ink);
-  clip-path: polygon(
-    24px 0, calc(100% - 24px) 0, 100% 24px,
-    100% calc(100% - 24px), calc(100% - 24px) 100%, 24px 100%,
-    0 calc(100% - 24px), 0 24px
-  );
-}
-
-.quest-timeline__map-inner {
+  top: 0;
+  translate: 0 -50%;
+  right: max(16px, calc((100vw - 1100px) / 2));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 2px solid var(--ink);
+  border-radius: 10px;
   background: #ffffff;
-  clip-path: polygon(
-    20px 0, calc(100% - 20px) 0, 100% 20px,
-    100% calc(100% - 20px), calc(100% - 20px) 100%, 20px 100%,
-    0 calc(100% - 20px), 0 20px
-  );
+  color: var(--ink);
+  font-size: 1.3rem;
+  transition: background 0.15s ease;
 }
 
+.quest-timeline__home:hover {
+  background: rgb(var(--purple-100-rgb));
+}
+
+.quest-timeline__home:focus-visible {
+  outline: 2px solid rgb(var(--purple-600-rgb));
+  outline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+  .quest-timeline__home {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+  }
+}
+
+/* The PNG (1716×917) bakes in a "QUEST TIMELINE" title, sky above the flags,
+   and a summary strip + grass below the step text, none of which the section
+   needs. Show only rows 240–708 (flags down to the last step line): cover-crop
+   to that aspect, anchored so 240px comes off the top and 209px off the bottom
+   (240 / 449 ≈ 53.5%). */
 .quest-timeline__map-img {
   display: block;
   width: 100%;
   height: auto;
+  aspect-ratio: 1716 / 468;
+  /* Very wide screens: cap the height and let the crop widen instead */
+  max-height: 50vh;
+  object-fit: cover;
+  object-position: 50% 53.5%;
 }
 
-/* All four quests in one row at the page's 1100px canvas width (same as the
- * Architecture and Tech Stack sections); two per row on tablets, one on phones. */
-.quest-timeline__grid {
+/* Phones: the strip would be ~100px tall, so keep the looser crop
+   (rows ~200–860) there */
+@media (max-width: 640px) {
+  .quest-timeline__map-img {
+    aspect-ratio: 1716 / 660;
+    object-position: 50% 78%;
+  }
+}
+
+/* Key decisions (EngineeringDecisions.jsx): heading, then the decisions three
+   across on the page's 1100px canvas; two on tablets, one on phones. */
+.decisions__header,
+.decisions__grid {
   position: relative;
-  z-index: 1;
   left: 50%;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: clamp(16px, 2vw, 24px);
   width: min(1100px, calc(100vw - 48px));
-  margin: 0;
   transform: translateX(-50%);
 }
 
-.quest-timeline__grid > li {
+.decisions__header {
+  margin-bottom: clamp(16px, 2vw, 24px);
+}
+
+.decisions__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(16px, 2vw, 24px);
+  margin: 0;
+}
+
+.decisions__grid > li {
   display: flex;
 }
 
-.quest-badge {
-  position: relative;
+/* Chamfered card: the 3px ink padding of the frame shows as the outline
+   around the clipped inner panel (same clip-path shape as Home's bag pouch,
+   home.css .home-bag-pouch). Flat, no offset shadow. */
+.decision,
+.decision__frame {
   display: flex;
   width: 100%;
 }
 
-/* Chamfered card frame, matching the clip-path technique used for Home's
-   bag pouch (home.css .home-bag-pouch) and the Landing timeline poster
-   frame (landing.css .landing-timeline-frame) — an RPG-styled alternative
-   to a plain rounded card, so the quest log reads as part of the same
-   visual language as the rest of the page. */
-.quest-badge__shadow {
-  position: absolute;
-  inset: 0;
-  transform: translate(6px, 6px);
-  background: rgba(var(--purple-600-rgb), 0.9);
-  clip-path: polygon(
-    14px 0, calc(100% - 14px) 0, 100% 14px,
-    100% calc(100% - 14px), calc(100% - 14px) 100%, 14px 100%,
-    0 calc(100% - 14px), 0 14px
-  );
-}
-
-.quest-badge__frame {
-  position: relative;
+.decision__frame {
   padding: 3px;
   background: var(--ink);
   clip-path: polygon(
@@ -134,16 +145,14 @@
     100% calc(100% - 14px), calc(100% - 14px) 100%, 14px 100%,
     0 calc(100% - 14px), 0 14px
   );
-  display: flex;
-  width: 100%;
 }
 
-.quest-badge__inner {
+.decision__inner {
   display: flex;
   flex-direction: column;
   width: 100%;
   padding: 1.25rem 1.25rem 1.35rem;
-  background: linear-gradient(135deg, #ffffff, var(--timeline-surface));
+  background: linear-gradient(135deg, #ffffff, rgba(255, 255, 255, 0.92));
   clip-path: polygon(
     11px 0, calc(100% - 11px) 0, 100% 11px,
     100% calc(100% - 11px), calc(100% - 11px) 100%, 11px 100%,
@@ -151,89 +160,217 @@
   );
 }
 
-/* Icon beside the title: the card reads as one row of identity, then content */
-.quest-badge__head {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 0.85rem;
-}
-
-.quest-badge__icon {
-  flex: none;
-  width: 48px;
-  height: 48px;
-  border-radius: 6px;
-  background: rgb(var(--purple-100-rgb));
-  border: 3px solid var(--ink);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  image-rendering: pixelated;
-  box-shadow: 3px 3px 0 rgba(var(--purple-600-rgb), 0.9);
-}
-
-.quest-badge__icon i {
-  font-size: 1.4rem;
+.decision__title {
+  margin: 0 0 0.6rem;
+  font-family: var(--font-heading);
+  font-size: var(--fs-h4);
+  font-weight: 700;
   color: var(--ink);
 }
 
-.quest-badge__title {
-  font-family: var(--font-heading);
-  font-weight: 700; /* h4: same as the tech stack card titles */
-  font-size: var(--fs-h4);
-  color: var(--timeline-text);
-  margin: 0;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.quest-badge__description {
+.decision__why {
+  margin: 0 0 1rem;
   font-size: var(--fs-body);
-  color: rgba(26, 26, 36, 0.75);
-  margin-bottom: 1rem;
   line-height: var(--lh-body);
+  color: rgba(var(--ink-rgb), 0.75);
 }
 
-.quest-badge__details {
-  /* Pinned to the card bottom so the "Under the hood" rows line up across a grid row */
-  margin-top: auto;
+.decision__tradeoff {
   padding-top: 0.75rem;
-  border-top: 1px dashed rgba(var(--purple-600-rgb), 0.25);
+  border-top: 1px dashed rgba(var(--purple-600-rgb), 0.3);
 }
 
-.quest-badge__details-summary {
-  margin: 0 0 0.6rem;
-  font-size: var(--fs-label);
-  font-family: var(--font-heading);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: rgba(var(--ink-secondary-rgb), 0.72);
+.decision__tradeoff-label {
+  margin: 0 0 0.35rem;
+  font-size: var(--fs-body);
+  font-weight: 600;
+  color: rgb(var(--purple-600-rgb));
 }
 
-/* Same soft pills as the Tech Stack concepts (.techstack-chip in landing.css) */
-.quest-badge__tech {
+.decision__tradeoff-text {
+  margin: 0;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--ink);
+}
+
+/* "See the purchase saga" jump link under decision 02. The ::after pads the
+   tap area to ~37px tall without moving the text or underline. */
+.decision__link {
+  position: relative;
+  align-self: flex-start;
+  margin-top: 14px;
+}
+
+.decision__link::after {
+  content: '';
+  position: absolute;
+  inset: -8px -6px;
+}
+
+/* Purchase saga: diagram + engineering notes, on the same canvas, set off
+   from the cards above by a hairline */
+.saga {
+  position: relative;
+  z-index: 1;
+  left: 50%;
+  width: min(1100px, calc(100vw - 48px));
+  margin-top: clamp(48px, 6vw, 72px);
+  padding-top: clamp(32px, 4vw, 44px);
+  border-top: 1px solid rgba(var(--purple-600-rgb), 0.22);
+  transform: translateX(-50%);
+}
+
+.saga__lede {
+  margin: 6px 0 0;
+}
+
+/* Text column left (heading, intro, notes), diagram right at its own 420-unit
+   width; the text column takes the rest and spreads over the diagram's height */
+.saga__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 440px);
+  gap: clamp(28px, 5vw, 64px);
+  align-items: stretch;
+}
+
+.saga__text {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* Notes sit at the foot of the column, level with the frame's bottom, at
+   least a clear gap below the intro */
+.saga__notes {
+  margin-top: auto;
+  padding-top: clamp(20px, 2.4vw, 28px);
+}
+
+.saga__diagram {
+  align-self: center;
+}
+
+.saga__diagram .flow-diagram {
+  margin-inline: auto;
+}
+
+.saga__source {
+  align-self: flex-start;
+  margin-top: 10px;
+}
+
+/* Notes as a ruled list: a hairline above every item */
+.saga__notes ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.saga__notes li {
+  padding: 14px 0;
+  border-top: 1px solid rgba(var(--purple-600-rgb), 0.16);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: rgba(var(--ink-rgb), 0.78);
+}
+
+.saga__notes li:last-child {
+  padding-bottom: 0;
+}
+
+.saga__notes code {
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: rgb(var(--purple-50-rgb));
+  border: 1px solid rgba(var(--purple-600-rgb), 0.14);
+  font-family: var(--font-mono);
+  font-size: 0.8em;
+  color: var(--ink);
+}
+
+/* Two or three across: each card's four parts (head, why, trade-off, optional
+   link) share row tracks with its neighbours through nested subgrids, so the
+   trade-offs line up across the row however long each description runs */
+@media (min-width: 769px) {
+  .decisions__grid > li,
+  .decisions__grid .decision,
+  .decisions__grid .decision__frame,
+  .decisions__grid .decision__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: subgrid;
+    grid-row: span 4;
+    row-gap: 0;
+  }
+
+  .decisions__grid .decision__tradeoff {
+    align-self: start;
+  }
+}
+
+/* Below 1000px the text column would get too narrow beside the 474px frame:
+   stack them (intro, notes, then the diagram, centred) */
+@media (max-width: 999px) {
+  .saga__body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .saga__diagram {
+    width: 100%;
+    max-width: 440px;
+    margin-inline: auto;
+  }
 }
 
 @media (max-width: 1099px) {
-  .quest-timeline__grid {
+  .decisions__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 768px) {
-  .quest-timeline__grid {
+  .decisions__grid,
+  .saga__body {
     grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Saga diagram: desktop layout by default; phones get the compact (330-unit)
+   layout, which renders near 1:1 so its labels stay readable */
+.saga__diagram--compact {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .saga__diagram--desktop {
+    display: none;
+  }
+
+  .saga__diagram--compact {
+    display: block;
+  }
+
+  .saga__diagram--compact .flow-diagram {
+    max-width: 380px;
+    margin: 0 auto;
+  }
+
+  /* Phones: the saga is just its intro and diagram; the notes (and the
+     source link inside them) are desktop-only, like the architecture extras */
+  .saga__notes {
+    display: none;
   }
 }
 
 @media (max-width: 576px) {
   /* Size comes from the phone --fs-body token; just tighten the gap */
-  .quest-badge__description {
+  .decision__why {
     margin-bottom: 0.75rem;
+  }
+
+  /* Phones: the three cards stack, so trim each one */
+  .decision__inner {
+    padding: 1rem 1rem 1.1rem;
   }
 }

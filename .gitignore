@@ -34,3 +34,5 @@ pnpm-debug.log*
 
 # Local dev orchestration (scripts/dev.sh logs & pids)
 .dev/
+
+.DS_Store

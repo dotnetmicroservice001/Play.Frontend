@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Azure Key Vault: gold key inside a blue ring. Redrawn as SVG from the PNG
+       embedded in public/categories/new-arch-diagram.drawio.svg. -->
+  <defs>
+    <linearGradient id="keyvault-ring" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5ea0ef" />
+      <stop offset="1" stop-color="#0078d4" />
+    </linearGradient>
+    <linearGradient id="keyvault-key" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffd70f" />
+      <stop offset="1" stop-color="#ffa800" />
+    </linearGradient>
+  </defs>
+  <circle cx="256" cy="256" r="228" fill="none" stroke="url(#keyvault-ring)" stroke-width="28" />
+  <!-- Key bow -->
+  <path
+    d="M256 40 L382 160 L296 278 L216 278 L130 160 Z"
+    fill="url(#keyvault-key)"
+    stroke="url(#keyvault-key)"
+    stroke-width="24"
+    stroke-linejoin="round"
+  />
+  <circle cx="256" cy="98" r="29" fill="#ffffff" />
+  <rect x="186" y="164" width="144" height="16" rx="8" fill="#f29c00" />
+  <rect x="186" y="192" width="144" height="16" rx="8" fill="#f29c00" />
+  <!-- Shaft with teeth on the right -->
+  <path
+    d="M210 270 H298 V300 L316 318 L298 336 L316 354 L298 372 L316 390 L298 408 V438 L256 476 L210 436 Z"
+    fill="url(#keyvault-key)"
+  />
+  <rect x="230" y="310" width="12" height="122" rx="6" fill="#f29c00" />
+</svg>

@@ -157,15 +157,42 @@ code {
   outline-offset: 2px;
 }
 
+/* Phones: one line, copyright left and icons right; the tagline is dropped
+   (the hero already says it's a portfolio project) and the text is smaller */
 @media (max-width: 600px) {
   .footer__inner {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
+    flex-wrap: nowrap;
+    gap: 12px;
+  }
+
+  .footer__brand {
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .footer__logo {
+    width: 20px;
+    height: 20px;
+  }
+
+  .footer__text {
+    font-size: 0.75rem;
+    white-space: nowrap;
+  }
+
+  .footer__tagline {
+    display: none;
   }
 
   .footer__contact {
-    margin-left: -6px; /* icon glyphs line up with the logo edge */
+    flex-wrap: nowrap;
+    gap: 2px;
+  }
+
+  .footer__link {
+    width: 30px;
+    height: 30px;
+    font-size: 0.95rem;
   }
 }
 
