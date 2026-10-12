@@ -83,7 +83,10 @@ export const Landing = () => {
                 cursorCharacter="▍"
               />
               <p className="hero-disclaimer">
-                Event-driven .NET microservices on AKS: sagas, Service Bus and distributed tracing, end to end.
+                <span className="hero-disclaimer__line">Event-driven microservices on Kubernetes, running in production.</span>
+                <span className="hero-disclaimer__line">
+                  Saga-based distributed transactions, push‑to‑deploy pipelines and distributed tracing.
+                </span>
               </p>
               {/* Guest access (try the demo) is the primary action; when already signed in
                   there's no guest button, so "See how it's built" takes the emphasis */}

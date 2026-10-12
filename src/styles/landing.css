@@ -197,12 +197,17 @@
 /* Lighter than the tagline: body face (not mono), smaller, regular weight, softer colour. */
 .hero-disclaimer {
   font-family: var(--font-body);
-  font-size: clamp(1rem, 1.35vw, 1.2rem);
+  font-size: clamp(0.9rem, 1.1vw, 1.05rem);
   font-weight: 400;
   color: rgba(var(--ink-rgb), 0.68);
   /* Pulled up under the tagline so the two read as one subheading block */
   margin: -12px 0 0;
   text-wrap: balance;
+}
+
+/* Two lines: what it is, then what's in it */
+.hero-disclaimer__line {
+  display: block;
 }
 
 @media (min-width: 900px) {
@@ -982,7 +987,7 @@
   /* Tighter, smaller context line: two lines instead of three. */
   .hero-disclaimer {
     margin-top: -12px;
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
     line-height: 1.5;
   }
 
