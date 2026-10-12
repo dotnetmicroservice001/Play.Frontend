@@ -1,9 +1,10 @@
 import React, { Component, Fragment } from 'react';
 import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import authService from './api-authorization/AuthorizeService';
 import { AuthorizationPaths } from './api-authorization/ApiAuthorizationConstants';
 import { ApplicationPaths } from './Constants';
+import { LandingSectionLinks } from './LandingSectionLinks';
 
 const DISPLAY_NAME_MAX_LENGTH = 30;
 
@@ -113,7 +114,8 @@ export class NavMenu extends Component
   render()
   {
     return (
-      <header>
+      // Sticky on the landing page only, so its section links stay in reach
+      <header className={this.props.isLanding ? 'navmenu-header--sticky' : undefined}>
         <Navbar
           bg="light"
           variant="light"
@@ -128,6 +130,7 @@ export class NavMenu extends Component
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav" className="navmenu__collapse">
+              {this.props.isLanding && <LandingSectionLinks />}
               {this.checkAuthAndRenderMenuItems()}
             </Navbar.Collapse>
           </Container>
@@ -161,6 +164,20 @@ export class NavMenu extends Component
 
   authenticatedView()
   {
+    // Landing page: the section links take the middle of the bar, so only
+    // Home (into the app) sits beside the account menu
+    if (this.props.isLanding)
+    {
+      return (
+        <Nav className="navmenu__secondary">
+          <Nav className="navmenu__primary">
+            {this.renderPrimaryLinks(['home'])}
+          </Nav>
+          {this.profileAndLogoutItems()}
+        </Nav>
+      );
+    }
+
     if (this.state.role === 'Admin')
     {
       return (
@@ -208,7 +225,6 @@ export class NavMenu extends Component
     const linkMap = {
       home: { to: homeDestination, icon: 'bi-house', label: 'Home' },
       login: { to: AuthorizationPaths.Login, icon: 'bi-box-arrow-in-right', label: 'Login' },
-      caseStudy: { to: { pathname: '/', hash: '#case-study' }, icon: 'bi-journal-richtext', label: 'Case Study' },
       store: { to: ApplicationPaths.StorePath, icon: 'bi-bag', label: 'Store' },
       inventory: { to: ApplicationPaths.InventoryPath, icon: 'bi-box-seam', label: 'Inventory' }
     };
@@ -217,7 +233,9 @@ export class NavMenu extends Component
       .map((key) => linkMap[key])
       .filter(Boolean)
       .map((link) => (
-        <Nav.Link key={link.label} as={Link} to={link.to}>
+        // NavLink marks the current page (is-active), underlined like the
+        // landing section links
+        <Nav.Link key={link.label} as={NavLink} to={link.to} activeClassName="is-active" exact={link.to === '/'}>
           <i className={`bi ${link.icon} mr-1`} aria-hidden="true"></i>
           {link.label}
         </Nav.Link>

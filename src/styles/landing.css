@@ -6,9 +6,32 @@
 }
 
 .landing-page {
+  /* Type scale shared by every landing section (quest-timeline.css too).
+   * Space Grotesk = headings and labels, Inter = body, Space Mono = the hero typer only.
+   *   h2    section title (uppercase)
+   *   h3    subsection title (sentence case)
+   *   h4    card title (uppercase, tracked)
+   *   label eyebrow / small caps label
+   *   body  descriptions and captions */
+  --font-heading: 'Space Grotesk', sans-serif;
+  --font-body: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'Space Mono', 'Fira Code', 'Courier New', monospace;
+  --fs-h2: clamp(1.9rem, 3.3vw, 2.875rem);
+  --fs-h3: clamp(1.125rem, 1.6vw, 1.375rem);
+  --fs-h4: 1.0625rem;
+  --fs-label: 0.75rem;
+  --fs-body: 0.9375rem;
+  --lh-body: 1.55;
+  /* The one functional (non-brand) colour: only ever "asynchronous message".
+   * Same value as ASYNC in scripts/theme-arch-diagram.js. */
+  --signal-async: #0e7490;
+
   color: var(--ink);
+  /* clip, not hidden: hidden makes this a scroll container, which breaks
+     position: sticky inside it. hidden stays as the fallback. */
   overflow-x: hidden;
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  overflow-x: clip;
+  font-family: var(--font-body);
   line-height: 1.65;
   background-color: var(--landing-base);
   background-image:
@@ -38,36 +61,11 @@
   padding: clamp(56px, 8vh, 88px) 0;
 }
 
-.landing-section--compact {
-  padding: clamp(40px, 6vh, 64px) 0;
-}
-
-.landing-section--gradient {
-  position: relative;
-  background: linear-gradient(180deg, rgba(var(--purple-600-rgb), 0.06), rgba(var(--purple-50-rgb), 0.5));
-  overflow: hidden;
-}
-
-.landing-section--gradient::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(640px at 12% 18%, rgba(var(--purple-400-rgb), 0.18), transparent 70%),
-    radial-gradient(520px at 88% 26%, rgba(var(--purple-400-rgb), 0.15), transparent 72%),
-    radial-gradient(780px at 50% 96%, rgba(var(--purple-400-rgb), 0.08), transparent 78%);
-  mix-blend-mode: multiply;
-  pointer-events: none;
-}
-
-.landing-section--gradient > .container {
-  position: relative;
-  z-index: 1;
-}
-
 .hero-bleed {
   width: 100%;
   padding: clamp(32px, 5vh, 96px) 0 clamp(12px, 2vh, 28px);
-  background: linear-gradient(180deg, rgba(var(--purple-50-rgb), 0.85), rgba(var(--purple-50-rgb), 0.6));
+  /* No fill of its own: the page background runs straight through into
+     Architecture, so the hero ends without a seam (its grid fades out) */
 }
 
 .landing-hero {
@@ -77,12 +75,16 @@
 
 #quests {
   padding-top: clamp(8px, 2vh, 20px);
+  /* The full-width quest picture rests directly on the footer */
+  padding-bottom: 0;
 }
 
 /* Tight top padding so the ARCHITECTURE heading peeks above the fold on a
    typical laptop viewport, signalling there's more below the hero. */
 #architecture {
   padding-top: clamp(24px, 5vh, 56px);
+  /* The Tech Stack band runs to the section's bottom edge */
+  padding-bottom: 0;
 }
 
 .landing-hero::before {
@@ -94,6 +96,18 @@
   background-size: 32px 32px;
   opacity: 0.32;
   pointer-events: none;
+  /* Fade the grid out instead of ending on a hard line at the next section */
+  -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 55%, transparent 100%);
+}
+
+/* Anchored targets land below the sticky navbar (~64px), not under it */
+.doc-section--fit,
+#tech-stack,
+#quests,
+#decisions,
+#purchase-saga {
+  scroll-margin-top: calc(64px + 16px);
 }
 
 /* No card here on purpose — the hero now sits directly on the section's
@@ -158,7 +172,7 @@
 /* .text-type.hero-typer beats TextType.css's .text-type letter-spacing;
    weight (600) still comes from .text-type. */
 .text-type.hero-typer {
-  font-family: 'Space Mono', 'Fira Code', 'Courier New', monospace;
+  font-family: var(--font-mono);
   font-size: clamp(1.1rem, 1.95vw, 1.75rem);
   line-height: 1.4;
   letter-spacing: 0.01em;
@@ -180,16 +194,20 @@
   margin-top: 8px;
 }
 
-/* Lighter than the tagline (smaller, regular weight, softer colour). */
+/* Lighter than the tagline: body face (not mono), smaller, regular weight, softer colour. */
 .hero-disclaimer {
-  font-family: 'Space Mono', 'Fira Code', 'Courier New', monospace;
-  font-size: clamp(1rem, 1.35vw, 1.2rem);
+  font-family: var(--font-body);
+  font-size: clamp(0.9rem, 1.1vw, 1.05rem);
   font-weight: 400;
-  letter-spacing: 0.01em;
   color: rgba(var(--ink-rgb), 0.68);
   /* Pulled up under the tagline so the two read as one subheading block */
   margin: -12px 0 0;
   text-wrap: balance;
+}
+
+/* Two lines: what it is, then what's in it */
+.hero-disclaimer__line {
+  display: block;
 }
 
 @media (min-width: 900px) {
@@ -208,12 +226,11 @@
   background: #ffffff;
   color: var(--ink);
   font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.0625rem;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.01em;
   cursor: pointer;
   text-decoration: none;
-  box-shadow: 4px 4px 0 rgba(var(--purple-600-rgb), 0.9);
   transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
 }
 
@@ -223,10 +240,8 @@
 
 .hero-cta:hover,
 .hero-cta:focus {
-  transform: translate(-2px, -2px);
   background: rgb(var(--purple-50-rgb));
   color: var(--ink);
-  box-shadow: 6px 6px 0 rgba(var(--purple-600-rgb), 0.9);
 }
 
 .hero-cta:focus {
@@ -234,64 +249,29 @@
 }
 
 .hero-cta:active {
+  background: rgb(var(--purple-100-rgb));
+}
+
+/* The offset shadow is kept for a few things only: the hero's primary button
+   (Guest access), the architecture card, and the navbar's Login/account
+   button. Everything else on the page is flat. */
+.hero-cta--primary {
+  background: rgb(var(--purple-300-rgb));
+  color: var(--ink);
+  box-shadow: 4px 4px 0 rgba(var(--purple-600-rgb), 0.9);
+}
+
+.hero-cta--primary:active {
   transform: translate(2px, 2px);
   box-shadow: 1px 1px 0 rgba(var(--purple-600-rgb), 0.9);
 }
 
-.hero-cta--primary {
-  background: rgb(var(--purple-300-rgb));
-  color: var(--ink);
-}
-
 .hero-cta--primary:hover,
 .hero-cta--primary:focus {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 rgba(var(--purple-600-rgb), 0.9);
   background: rgb(var(--purple-200-rgb));
   color: var(--ink);
-}
-
-
-.trade-ticker {
-  margin: 24px auto 0;
-  border-top: 1px solid rgba(var(--ink-rgb), 0.08);
-  border-bottom: 1px solid rgba(var(--ink-rgb), 0.08);
-  background: linear-gradient(90deg, rgba(var(--purple-600-rgb), 0.08), transparent 60%);
-  overflow: hidden;
-  position: relative;
-  z-index: 0;
-}
-
-.trade-ticker__inner {
-  display: flex;
-  white-space: nowrap;
-  animation: ticker-scroll 24s linear infinite;
-  font-size: 0.82rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 12px 0;
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 600;
-  color: rgba(var(--ink-rgb), 0.65);
-}
-
-.trade-ticker__item {
-  display: flex;
-  align-items: center;
-  margin-right: 48px;
-}
-
-.trade-ticker__item::before {
-  content: '◆';
-  margin-right: 12px;
-  color: var(--accent);
-}
-
-@keyframes ticker-scroll {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
 }
 
 @media (max-width: 992px) {
@@ -303,10 +283,6 @@
 @media (max-width: 768px) {
   .text-type.hero-typer {
     font-size: clamp(1rem, 4.5vw, 1.25rem);
-  }
-
-  .trade-ticker__inner {
-    animation-duration: 18s;
   }
 }
 
@@ -326,376 +302,523 @@
  * Stays at 1160px on tall screens; never narrower than 640px. */
 .doc-section--fit {
   max-width: clamp(640px, calc((100vh - 190px) * 1.5), 1160px);
-  /* Breathing room when "See How It's Built" scrolls the section into view */
-  scroll-margin-top: 24px;
 }
 
 .doc-section__header {
+  /* On the shared 1100px canvas, so ARCHITECTURE lines up with the diagram card
+     and the Tech Stack / Quest Timeline headings */
+  position: relative;
+  left: 50%;
+  width: min(1100px, calc(100vw - 48px));
   margin: 0 0 clamp(16px, 2vw, 24px);
   text-align: left;
+  transform: translateX(-50%);
 }
 
 .doc-section__title {
   margin: 0;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: var(--font-heading);
   font-weight: 700;
-  font-size: clamp(1.9rem, 3.3vw, 2.875rem);
+  font-size: var(--fs-h2);
   line-height: 1.1;
   letter-spacing: 0.03em;
   text-transform: uppercase;
   color: var(--ink);
 }
 
-.architecture-doc {
+/* Engineering canvas: no frames. Every section (runtime flow and both supporting views) uses the
+ * same pattern, a small label over a hairline rule, then the image, so the hierarchy is consistent.
+ * Runtime flow on top, the two supporting views side by side below it, caption last. It breaks out
+ * of the narrow text column; one spacing unit (--arch-gap) drives every gap. */
+.arch-canvas {
+  --arch-gap: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--arch-gap);
+  position: relative;
+  left: 50%;
+  width: min(1100px, calc(100vw - 48px));
+  transform: translateX(-50%);
+  margin-bottom: var(--arch-gap);
+}
+
+.arch-canvas__primary,
+.arch-canvas__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
   margin: 0;
+  min-width: 0;
 }
 
-/* Architecture diagram panel: fill matches the PNG's backdrop
- * (233,228,241) so the image blends into it. */
-.architecture-doc__figure {
-  padding: clamp(8px, 1.5vw, 16px);
-  background: rgb(233, 228, 241);
-  border: 1px solid rgba(var(--purple-600-rgb), 0.24);
-  border-radius: 12px;
-  box-shadow: 0 1px 2px rgba(var(--ink-rgb), 0.04), 0 12px 32px rgba(var(--purple-600-rgb), 0.08);
+/* Supporting views are full sections in their own right: stacked, with room between them */
+.arch-canvas__support {
+  display: flex;
+  flex-direction: column;
+  gap: var(--support-gap);
+  /* Clear gap after the framed diagram so the panels read as supporting detail */
+  margin-top: clamp(28px, 4.5vw, 52px);
 }
 
-/* Caption-sized, clearly smaller than body/description text */
-.architecture-doc__caption {
-  margin-top: 10px;
+/* The runtime diagram is the section's centrepiece: framed like the page's other
+ * cards (ink border, purple offset shadow), caption inside under a hairline. */
+.arch-canvas__primary {
+  padding: clamp(10px, 1.4vw, 16px);
+  background: #ffffff;
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  box-shadow: 4px 4px 0 rgba(var(--purple-600-rgb), 0.9);
+}
+
+/* Heading + framed diagram + caption fit one viewport (what "See How It's Built"
+ * scrolls to). ~300px covers the sticky navbar, the h2, the card padding and
+ * the compact caption + repo links; the diagram shrinks proportionally and
+ * centres in the full-width card. The 320px floor keeps it usable on very
+ * short windows. */
+.arch-canvas__primary .arch-canvas__img {
+  max-height: max(320px, calc(100vh - 300px));
+  max-height: max(320px, calc(100svh - 300px));
+  object-fit: contain;
+  /* Faint blueprint grid behind the (transparent) diagram, echoing the hero */
+  border-radius: 6px;
+  background-color: rgba(var(--purple-50-rgb), 0.5);
+  background-image:
+    linear-gradient(rgba(var(--purple-600-rgb), 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--purple-600-rgb), 0.07) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: -1px -1px;
+}
+
+.arch-canvas__primary {
+  gap: 4px;
+}
+
+/* Compact caption block: the diagram gets the height instead */
+.arch-canvas__primary .arch-canvas__title {
+  margin-top: 6px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(var(--purple-600-rgb), 0.14);
+  font-size: 0.9375rem;
+}
+
+.arch-canvas__primary .arch-canvas__note {
   font-size: 0.8125rem;
-  line-height: 1.5;
-  color: rgba(var(--ink-secondary-rgb), 0.62);
+  line-height: 1.45;
 }
 
-/* The PNG bakes in a "GamePlayEconomy Cloud-Native Distributed Architecture"
- * caption along its bottom edge (rows ~1100-1130 of 1176) that repeats the
- * section heading; crop it off by clamping the aspect ratio to the diagram. */
-.architecture-doc__img {
+.arch-canvas__primary .arch-canvas__repos .source-link {
+  font-size: 0.6875rem;
+}
+
+
+/* h3 for the supporting views: same size as the main diagram title, left rule for focus */
+.arch-canvas__heading {
+  margin: 0;
+  padding-left: 12px;
+  font-family: var(--font-heading);
+  font-size: var(--fs-h3);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--ink);
+  border-left: 4px solid rgb(var(--purple-600-rgb));
+}
+
+.arch-canvas__desc {
+  margin: 0;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: rgba(var(--ink-rgb), 0.75);
+}
+
+/* Heading, description and diagram share one 700px column, so the text no longer
+ * stretches across the full canvas while the image sits narrower in the middle. */
+.arch-canvas__panel {
+  width: 100%;
+  max-width: 700px;
+  margin-inline: auto;
+}
+
+.arch-canvas__img {
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 1600 / 1066;
-  object-fit: cover;
-  object-position: top;
 }
 
-/* Case study sheet */
-.case-study-anchor {
-  position: relative;
-  top: -72px;
-  width: 1px;
-  height: 1px;
-  pointer-events: none;
+/* h3 directly under the main diagram */
+.arch-canvas__title {
+  margin: 4px 0 0;
+  font-family: var(--font-heading);
+  font-size: var(--fs-h3);
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: center;
+  color: var(--ink);
 }
 
-.case-study-modal__dialog {
+.arch-canvas__note {
   margin: 0;
-  margin-left: auto;
-  height: 100%;
-  max-width: min(520px, 92vw);
+  text-align: center;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: rgba(var(--ink-rgb), 0.7);
+}
+
+/* Inline SVG flow diagrams (ArchFlowDiagrams.jsx): flat outlined nodes; the
+ * purple offset shadow is kept for top-level cards only. Sizes are viewBox units; the diagrams are ~426
+ * units wide and capped near that, so one unit is ~1px on desktop and phones. */
+.flow-diagram {
+  display: block;
   width: 100%;
-  display: flex;
-  align-items: stretch;
+  max-width: 460px;
+  height: auto;
+  overflow: visible;
 }
 
-.case-study-modal .modal-content {
-  width: 100%;
-  min-height: 100vh;
-  border-radius: 0;
-  border-left: 1px solid rgba(var(--purple-600-rgb), 0.18);
-  background: rgba(255, 255, 255, 0.97);
-  box-shadow: -24px 0 48px rgba(15, 23, 42, 0.18);
+.flow-diagram__card {
+  fill: #ffffff;
+  stroke: var(--ink);
+  stroke-width: 2;
 }
 
-.case-study-modal .modal-header,
-.case-study-modal .modal-footer {
-  border-color: rgba(var(--ink-rgb), 0.1);
-  padding: 1.25rem 1.75rem;
+.flow-diagram__card--hub {
+  fill: rgb(var(--purple-100-rgb));
 }
 
-.case-study-modal .modal-body {
-  padding: 1.5rem 1.75rem;
-  max-height: calc(100vh - 6rem);
-  overflow-y: auto;
+.flow-diagram__line {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
 }
 
-.case-study-modal .modal-title {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.05rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+.flow-diagram__line--dashed {
+  stroke: rgb(var(--purple-600-rgb));
+  stroke-dasharray: 6 5;
 }
 
-.case-study-modal .modal-header .close {
-  outline: none;
-  color: rgba(15, 23, 42, 0.55);
-  opacity: 0.8;
+.flow-diagram__arrowhead {
+  fill: var(--ink);
 }
 
-.case-study-modal .modal-header .close:hover,
-.case-study-modal .modal-header .close:focus {
-  opacity: 1;
-  color: rgba(15, 23, 42, 0.8);
+.flow-diagram__arrowhead--dashed {
+  fill: rgb(var(--purple-600-rgb));
 }
 
-.case-study-modal__backdrop {
-  background-color: rgba(15, 23, 42, 0.55);
+/* Phone architecture diagram: cluster boundary, soft service shadows, dashed async */
+.flow-diagram__shadow-soft {
+  fill: rgb(var(--purple-300-rgb));
 }
 
-.case-study-sheet {
-  display: grid;
-  gap: 18px;
+.flow-diagram__boundary {
+  fill: none;
+  stroke: rgb(var(--purple-600-rgb));
+  stroke-width: 1.5;
+  stroke-dasharray: 7 5;
 }
 
-.case-study-sheet__eyebrow {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  color: rgba(var(--ink-rgb), 0.65);
+.flow-diagram__boundary-tab {
+  fill: #ffffff;
+  stroke: rgb(var(--purple-600-rgb));
+  stroke-width: 1.5;
 }
 
-.case-study-sheet__section {
-  display: grid;
-  gap: 8px;
+.flow-diagram__line--dashed-async {
+  stroke-dasharray: 6 5;
 }
 
-.case-study-sheet__section h4 {
-  margin: 0;
-  font-size: 0.9rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  font-family: 'Space Grotesk', sans-serif;
-  color: rgba(var(--ink-rgb), 0.72);
+.flow-diagram__edge-label--muted {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  fill: rgba(var(--ink-rgb), 0.6);
 }
 
-.case-study-sheet__section p {
-  margin: 0;
-  font-size: 0.95rem;
-  color: rgba(var(--ink-rgb), 0.72);
-  line-height: 1.6;
+/* Desktop shows the drawn diagram; phones the vertical inline one */
+.arch-canvas__mobile {
+  display: none;
 }
 
-.case-study-sheet__section ul {
-  margin: 0;
-  padding-left: 1.1rem;
-  display: grid;
-  gap: 6px;
-  font-size: 0.95rem;
-  color: rgba(var(--ink-rgb), 0.72);
+/* Purchase saga: messages in the async colour, fault paths dashed ink */
+.flow-diagram__line--async {
+  stroke: var(--signal-async);
 }
 
-.case-study-walkthrough {
-  position: relative;
-  padding: 1rem;
-  border-radius: 16px;
-  border: 1px solid rgba(var(--purple-600-rgb), 0.18);
-  background: linear-gradient(120deg, rgba(var(--purple-100-rgb), 0.55), rgba(var(--purple-200-rgb), 0.25));
-  box-shadow: 0 14px 26px rgba(var(--purple-600-rgb), 0.12);
+.flow-diagram__arrowhead--async {
+  fill: var(--signal-async);
 }
 
-.case-study-walkthrough__list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: grid;
-  gap: 14px;
+.flow-diagram__line--fault {
+  stroke: rgba(var(--ink-rgb), 0.55);
+  stroke-dasharray: 5 4;
 }
 
-.case-study-walkthrough__item {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 12px;
-  align-items: flex-start;
+.flow-diagram__card--fault {
+  stroke-dasharray: 6 4;
 }
 
-.case-study-walkthrough__badge {
+.flow-diagram__title {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 700;
+  fill: var(--ink);
+}
+
+.flow-diagram__sub {
+  font-family: var(--font-body);
+  font-size: 13px;
+  fill: rgba(var(--ink-rgb), 0.65);
+}
+
+.flow-diagram__edge-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  fill: rgb(var(--purple-600-rgb));
+}
+
+.flow-diagram__edge-label--async {
+  font-size: 11px;
+  fill: var(--signal-async);
+}
+
+.flow-diagram__edge-label--fault {
+  font-size: 11px;
+  font-weight: 400;
+  fill: rgba(var(--ink-rgb), 0.6);
+}
+
+/* Source / live links: small mono links used under the diagram, the
+ * observability panel and the purchase saga */
+.landing-page .source-link {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #ffffff;
-  background: linear-gradient(135deg, rgba(var(--purple-500-rgb), 0.9), rgba(var(--purple-300-rgb), 0.95));
-  box-shadow: 0 10px 20px rgba(var(--purple-600-rgb), 0.28);
-}
-
-.case-study-walkthrough__content {
-  display: grid;
-  gap: 4px;
-  color: rgba(var(--ink-rgb), 0.8);
-}
-
-.case-study-walkthrough__title {
-  font-family: 'Space Grotesk', sans-serif;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  font-size: 0.82rem;
-  color: rgba(var(--ink-secondary-rgb), 0.82);
-}
-
-.case-study-walkthrough__body {
-  font-size: 0.92rem;
-  line-height: 1.55;
-}
-
-.case-study-sheet__section--grid {
-  border-left: 3px solid rgba(var(--purple-600-rgb), 0.35);
-  background: linear-gradient(135deg, rgba(var(--purple-600-rgb), 0.08), transparent 75%);
-  border-radius: 10px;
-  padding: 1rem;
-}
-
-.case-study-sheet__action {
-  margin: 0;
-}
-
-.case-study-sheet__link {
-  border: none;
-  background: none;
-  padding: 0;
-  color: var(--accent);
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: color 0.2s ease;
-}
-
-.case-study-sheet__link:hover,
-.case-study-sheet__link:focus {
-  color: rgba(var(--purple-600-rgb), 0.8);
-}
-
-.case-study-sheet__quick-links ul {
-  display: grid;
   gap: 6px;
-  padding-left: 1rem;
-}
-
-.case-study-sheet__quick-links a {
-  color: var(--accent);
-  text-decoration: none;
   border-bottom: 1px solid transparent;
-  transition: border-color 0.2s ease;
+  font-size: 0.8125rem;
+  color: rgba(var(--ink-rgb), 0.75);
+  transition: color 0.15s ease, border-color 0.15s ease;
 }
 
-.case-study-sheet__quick-links a:hover,
-.case-study-sheet__quick-links a:focus {
+.landing-page .source-link:hover,
+.landing-page .source-link:focus-visible {
+  color: rgb(var(--purple-600-rgb));
   border-bottom-color: currentColor;
 }
 
-.case-study-sheet__footer {
+.landing-page .source-link .bi-box-arrow-up-right {
+  font-size: 0.65rem;
+}
+
+.arch-canvas__repos,
+.arch-canvas__live {
   display: flex;
-  justify-content: flex-end;
-  gap: 12px;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.case-study-sheet__dismiss {
-  border: 1px solid rgba(var(--ink-rgb), 0.18);
-  background: transparent;
-  border-radius: 999px;
-  padding: 10px 20px;
-  font-family: 'Space Grotesk', sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-weight: 600;
-  color: rgba(var(--ink-rgb), 0.8);
-  cursor: pointer;
-  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+.arch-canvas__repos {
+  justify-content: center;
+  margin-top: 6px;
 }
 
-.case-study-sheet__dismiss:hover,
-.case-study-sheet__dismiss:focus {
-  transform: translateY(-1px);
-  background: rgba(var(--purple-600-rgb), 0.12);
-  border-color: rgba(var(--purple-600-rgb), 0.32);
-  color: rgba(var(--ink-rgb), 0.9);
-  box-shadow: 0 10px 20px rgba(var(--ink-rgb), 0.18);
-  outline: none;
+.arch-canvas__live {
+  margin-top: 6px;
 }
 
-.case-study-sheet__dismiss:focus {
-  box-shadow: 0 0 0 0.2rem rgba(var(--purple-600-rgb), 0.22);
-}
-
-@media (max-width: 768px) {
-  .case-study-modal__dialog {
-    max-width: 100%;
-  }
-
-  .case-study-anchor {
-    top: -64px;
-  }
-
-  .case-study-modal .modal-body {
-    max-height: calc(100vh - 5rem);
-  }
-
-  .case-study-sheet__headline {
-    font-size: 1.25rem;
-  }
-}
-
-.landing-scroll-top {
-  position: fixed;
-  right: clamp(16px, 4vw, 32px);
-  bottom: clamp(20px, 5vw, 36px);
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: none;
-  background: linear-gradient(135deg, rgba(var(--purple-600-rgb), 0.95), rgba(var(--purple-700-rgb), 0.95));
-  color: #fff;
-  display: inline-flex;
+.flow-diagram__tile {
+  box-sizing: border-box;
+  display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 18px 32px rgba(var(--purple-600-rgb), 0.28);
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-  z-index: 10;
+  width: 100%;
+  height: 100%;
+  /* No box behind the logo: it sits straight on the card */
+  color: rgb(var(--purple-600-rgb));
+  line-height: 1;
 }
 
-.landing-scroll-top:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 22px 38px rgba(var(--purple-600-rgb), 0.35);
-  background: linear-gradient(135deg, rgba(var(--purple-500-rgb), 1), rgba(var(--purple-600-rgb), 0.95));
+/* Without a frame the logos read small at the tile's 70%, so fill more of it
+   (the inline per-logo `fit` still evens out logos with built-in padding) */
+.flow-diagram__tile img {
+  object-fit: contain;
+  transform: scale(1.18);
 }
 
-.landing-scroll-top:focus-visible {
-  outline: 3px solid rgba(255, 255, 255, 0.85);
-  outline-offset: 3px;
+.flow-diagram__card {
+  transition: fill 0.15s ease;
 }
 
-@media (max-width: 768px) {
-  .landing-scroll-top {
-    width: 44px;
-    height: 44px;
-    bottom: max(16px, calc(env(safe-area-inset-bottom, 0px) + 12px));
-    right: 18px;
-    box-shadow: 0 16px 28px rgba(var(--purple-600-rgb), 0.24);
+.flow-diagram__node:hover .flow-diagram__card:not(.flow-diagram__card--hub) {
+  fill: rgb(var(--purple-50-rgb));
+}
+
+/* Build and delivery + Operations and observability: one pair of matching
+ * frames (same radius, title bar, padding, equal height, plain bodies), told
+ * apart by material. Build is a light plan on white; operations is a dark console, like
+ * the dashboards it links to, with the flow-diagram colours inverted. */
+.arch-canvas__frame {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  margin-top: 4px;
+  overflow: hidden;
+  border: 1.5px solid rgba(var(--ink-rgb), 0.85);
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.arch-canvas__frame-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  /* Fixed height so both bars match whatever they hold */
+  box-sizing: border-box;
+  height: 42px;
+  padding: 0 16px;
+  line-height: 1.2;
+  background: rgb(var(--purple-50-rgb));
+  border-bottom: 1px solid rgba(var(--ink-rgb), 0.14);
+}
+
+.arch-canvas__frame-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: rgba(var(--ink-rgb), 0.78);
+}
+
+.arch-canvas__frame-status i {
+  font-size: 0.9rem;
+  color: rgb(var(--purple-600-rgb));
+}
+
+/* Diagram centred in whatever height the taller frame sets */
+.arch-canvas__frame-body {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(16px, 2vw, 22px);
+}
+
+.arch-canvas__frame .arch-canvas__live {
+  /* Right side of the bar, like the build frame's cicd.yml link */
+  margin: 0 0 0 auto;
+  gap: 4px 16px;
+}
+
+/* Dark console */
+.arch-canvas__frame--console {
+  border-color: rgba(var(--purple-300-rgb), 0.28);
+  background: var(--ink);
+}
+
+.arch-canvas__frame--console .arch-canvas__frame-bar {
+  background: #16131f;
+  border-bottom-color: rgba(var(--purple-300-rgb), 0.18);
+}
+
+.arch-canvas__frame--console .arch-canvas__frame-status {
+  color: rgba(var(--purple-50-rgb), 0.85);
+}
+
+.arch-canvas__frame--console .flow-diagram__card {
+  fill: #1f1c2e;
+  stroke: rgba(var(--purple-200-rgb), 0.55);
+  stroke-width: 1.5;
+}
+
+.arch-canvas__frame--console .flow-diagram__card--hub {
+  fill: #2c2148;
+  stroke: rgb(var(--purple-300-rgb));
+}
+
+.arch-canvas__frame--console .flow-diagram__node:hover .flow-diagram__card:not(.flow-diagram__card--hub) {
+  fill: #2a2640;
+}
+
+.arch-canvas__frame--console .flow-diagram__title {
+  fill: rgb(var(--purple-50-rgb));
+  font-weight: 600;
+}
+
+.arch-canvas__frame--console .flow-diagram__line {
+  stroke: rgba(var(--purple-200-rgb), 0.75);
+  stroke-width: 1.5;
+}
+
+.arch-canvas__frame--console .flow-diagram__arrowhead {
+  fill: rgba(var(--purple-200-rgb), 0.9);
+}
+
+.arch-canvas__frame--console .flow-diagram__tile {
+  color: rgb(var(--purple-200-rgb));
+}
+
+.arch-canvas__frame--console .source-link {
+  color: rgba(var(--purple-50-rgb), 0.8);
+}
+
+.landing-page .arch-canvas__frame--console .source-link:hover,
+.landing-page .arch-canvas__frame--console .source-link:focus-visible {
+  color: rgb(var(--purple-200-rgb));
+}
+
+/* Desktop/tablet: the two supporting sections sit side by side, each with its own heading and text */
+/* Gap between the two frames: close enough to read as one pair */
+.arch-canvas__support {
+  --support-gap: clamp(20px, 2.6vw, 32px);
+}
+
+
+@media (min-width: 768px) {
+  .arch-canvas__support {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: var(--support-gap);
+    align-items: stretch;
+  }
+
+  .arch-canvas__panel {
+    max-width: none;
+    margin-inline: 0;
   }
 }
 
-@media (max-width: 480px) {
-  .landing-scroll-top {
-    width: 40px;
-    height: 40px;
-    bottom: max(14px, calc(env(safe-area-inset-bottom, 0px) + 10px));
-    right: 14px;
-    box-shadow: 0 14px 24px rgba(var(--purple-600-rgb), 0.22);
+@media (max-width: 640px) {
+  .arch-canvas {
+    --arch-gap: 12px;
   }
 
-  .landing-scroll-top i {
-    font-size: 1.35rem;
+  /* Phones: Architecture is just the diagram and its caption title. The
+     description, repo links and the build/observability panels (with their
+     text and dashboard links) are desktop-only. */
+  .arch-canvas__primary .arch-canvas__note,
+  .arch-canvas__primary .arch-canvas__repos,
+  .arch-canvas__support,
+  .arch-canvas__img--desktop {
+    display: none;
   }
-}
-.centered-text {
-  text-align: center;
+
+  /* The vertical diagram, full card width, with room to breathe */
+  .arch-canvas__mobile {
+    display: block;
+    padding: 10px 4px 6px;
+  }
+
+  .arch-canvas__mobile .flow-diagram {
+    max-width: none;
+  }
+
+  .arch-canvas__support {
+    grid-template-columns: 1fr;
+  }
 }
 
 /*
@@ -711,178 +834,131 @@
  * 2x2 grid of cards. Both use the site's brand box (ink border + hard purple
  * offset shadow, as in .home-drop-card / .store-card); the bar lifts on
  * hover and sits "pressed" while open, like .store-card--active. */
-.techstack-details {
-  margin-top: clamp(24px, 3vw, 36px);
+.techstack {
+  /* Same breakout width as .arch-canvas, so the section edges line up */
+  position: relative;
+  isolation: isolate;
+  left: 50%;
+  width: min(1100px, calc(100vw - 48px));
+  transform: translateX(-50%);
+  margin-top: clamp(56px, 8vw, 96px);
+  padding: clamp(40px, 5vw, 56px) 0;
 }
 
-.techstack-details__summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 18px clamp(18px, 2vw, 24px);
+/* Full-bleed ink band behind the content column: the one place the page
+ * background changes, echoing the navbar/footer, with a faint blueprint grid */
+.techstack::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  bottom: 0;
+  left: calc(50% - 50vw);
+  width: 100vw;
+  background-color: var(--ink);
+  background-image:
+    linear-gradient(rgba(var(--purple-300-rgb), 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--purple-300-rgb), 0.07) 1px, transparent 1px);
+  background-size: 32px 32px;
+  box-shadow: 0 -4px 0 rgba(var(--purple-600-rgb), 0.9);
+}
+
+.techstack__title {
+  margin-bottom: clamp(16px, 2vw, 24px);
+  color: rgb(var(--purple-50-rgb));
+}
+
+/* Spec sheet: one flat white panel on the ink band, one row per layer: name
+ * column left, tools flowing right */
+.techstack-sheet {
   background: #ffffff;
-  border: 3px solid var(--ink);
+  border: 2px solid rgb(var(--purple-50-rgb));
   border-radius: 10px;
-  box-shadow: 6px 6px 0 rgba(var(--purple-600-rgb), 0.9);
-  cursor: pointer;
-  list-style: none;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  overflow: hidden;
 }
 
-.techstack-details__summary::-webkit-details-marker {
-  display: none;
-}
-
-.techstack-details__summary:hover {
-  transform: translate(-3px, -3px);
-  background: rgb(var(--purple-50-rgb));
-  box-shadow: 9px 9px 0 rgba(var(--purple-600-rgb), 0.9);
-}
-
-.techstack-details[open] .techstack-details__summary {
-  transform: translate(3px, 3px);
-  background: rgb(var(--purple-100-rgb));
-  box-shadow: 3px 3px 0 rgba(var(--purple-600-rgb), 0.9);
-}
-
-.techstack-details__summary:focus-visible {
-  outline: 2px solid rgb(var(--purple-600-rgb));
-  outline-offset: 2px;
-}
-
-.techstack-details__title {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.05rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--ink);
-}
-
-.techstack-details__chevron {
-  flex: none;
-  font-size: 1.1rem;
-  color: var(--ink);
-  transition: transform 0.2s ease;
-}
-
-.techstack-details[open] .techstack-details__chevron {
-  transform: rotate(180deg);
-}
-
-.techstack-details[open] .techstack-grid {
-  margin-top: clamp(20px, 2.5vw, 28px);
-}
-
-.techstack-grid {
+.techstack-row {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(16px, 2vw, 24px);
-}
-
-.techstack-card {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: clamp(18px, 2vw, 24px);
-  background: #ffffff;
-  border: 2px solid var(--ink);
-  border-radius: 10px;
-  box-shadow: 4px 4px 0 rgba(var(--purple-600-rgb), 0.9);
-}
-
-.techstack-card__header {
-  display: flex;
+  grid-template-columns: clamp(170px, 22%, 240px) minmax(0, 1fr);
   align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px 16px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid rgba(var(--purple-600-rgb), 0.14);
+  gap: 8px 20px;
+  padding: 12px clamp(14px, 1.8vw, 20px);
 }
 
-.techstack-card__title {
+.techstack-row + .techstack-row {
+  border-top: 1px solid rgba(var(--purple-600-rgb), 0.14);
+}
+
+.techstack-row__title {
   margin: 0;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 1rem;
+  font-family: var(--font-heading);
+  font-size: var(--fs-h4);
   font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
   color: var(--ink);
 }
 
-.techstack-card__tools {
+.techstack-row__tools {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
+  gap: 6px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.techstack-card__tool {
-  display: block;
-  height: 28px;
-  width: auto;
-}
-
-.techstack-card__chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.techstack-chip {
+/* Tools read as quiet outlined tags */
+.techstack-tool {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  padding: 0.35rem 0.7rem;
-  border-radius: 999px;
-  background: rgba(var(--purple-600-rgb), 0.06);
-  border: 1px solid rgba(var(--purple-600-rgb), 0.2);
-  color: var(--ink);
-  font-size: 0.85rem;
+  gap: 6px;
+  padding: 4px 9px 4px 7px;
+  background: #ffffff;
+  border: 1px solid rgba(var(--ink-rgb), 0.22);
+  border-radius: 8px;
+  font-size: 0.8125rem;
   font-weight: 500;
-  line-height: 1.3;
+  line-height: 1.2;
+  color: var(--ink);
 }
 
-.techstack-chip i {
+/* Bare logo before the name, no box behind it */
+.techstack-tool__tile {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
   color: rgb(var(--purple-600-rgb));
+  font-size: 0.9rem;
 }
 
-@media (max-width: 900px) {
-  .techstack-grid {
+.techstack-tool__tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Narrow screens: layer name stacks above its tools */
+@media (max-width: 640px) {
+  .techstack-row {
     grid-template-columns: minmax(0, 1fr);
   }
 }
 
-/* ---- Small screens: hero, architecture diagram, tech stack ---- */
-
-@media (max-width: 640px) {
-  /* Thinner panel padding so the scaled diagram gets as much width as possible */
-  .architecture-doc__figure {
-    padding: 6px;
-    border-radius: 10px;
-  }
-
-  /* Smaller still on phones, under the scaled-down diagram */
-  .architecture-doc__caption {
-    margin-top: 8px;
-    font-size: 0.6875rem;
-    line-height: 1.45;
-  }
-}
-
 @media (max-width: 576px) {
+  /* Phone type scale: body and card titles step down once, everywhere */
+  .landing-page {
+    --fs-h4: 0.95rem;
+    --fs-body: 0.875rem;
+    --lh-body: 1.5;
+  }
+
   /* Overrides the older max-width: 992px hero padding. Small bottom padding
      so Architecture starts soon after the CTAs. */
   .landing-hero {
-    padding: 48px 0 40px;
+    padding: 48px 0 48px;
   }
 
   .landing-hero__content--stack {
@@ -908,13 +984,11 @@
     line-height: 1.25;
   }
 
-  /* Tighter, smaller context line: two lines instead of three.
-     13px is kept as a legibility floor for monospace body text. */
+  /* Tighter, smaller context line: two lines instead of three. */
   .hero-disclaimer {
     margin-top: -12px;
     font-size: 0.8125rem;
     line-height: 1.5;
-    letter-spacing: -0.02em;
   }
 
   /* Stack the CTAs at equal width instead of two ragged pills; 44px tall
@@ -936,34 +1010,15 @@
     line-height: 1.2;
   }
 
-  .techstack-details__summary {
-    padding: 14px 16px;
+  .techstack-row {
+    padding: 12px 14px;
   }
 
-  .techstack-card {
-    gap: 12px;
-    padding: 16px;
-  }
-
-  .techstack-card__header {
-    padding-bottom: 12px;
-  }
-
-  .techstack-card__title {
-    font-size: 0.92rem;
-  }
-
-  .techstack-card__tool {
-    height: 24px;
-  }
-
-  .techstack-card__chips {
-    gap: 6px;
-  }
-
-  .techstack-chip {
-    font-size: 0.8rem;
-    padding: 0.3rem 0.6rem;
+  /* Tool names stay at 12px (the desktop size): 11px was the smallest text
+     on the page */
+  .techstack-tool {
+    gap: 5px;
+    padding-right: 7px;
   }
 }
 

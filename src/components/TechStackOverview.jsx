@@ -3,14 +3,15 @@ import React from 'react';
 /*
  * TechStackOverview
  *
- * Renders the tech stack as a grid of cards, one per layer of the system.
- * Each card lists the tools used (logos, named for tooltips/screen readers)
- * and the concepts implemented with them (chips).
+ * Renders the tech stack as a spec sheet: one panel, one row per layer of the
+ * system, the layer name on the left and its tools flowing to the right. Each
+ * tool is shown (logo tile + visible name, same tile as the
+ * architecture flow diagrams; a Bootstrap icon where there is no logo). The
+ * practices behind them are covered by the diagrams and Key Decisions.
  */
 
 import DotnetIcon from '../assets/icons/dotnetcore.svg';
 import MongoDBIcon from '../assets/icons/mongodb.svg';
-import PostmanIcon from '../assets/icons/postman.svg';
 import RabbitMQIcon from '../assets/icons/rabbitmq.svg';
 import NugetIcon from '../assets/icons/nuget.svg';
 import DockerIcon from '../assets/icons/docker.svg';
@@ -22,63 +23,39 @@ import PrometheusIcon from '../assets/icons/prometheus.svg';
 import GrafanaIcon from '../assets/icons/grafana.svg';
 import OpenTelemetryIcon from '../assets/icons/opentelemetry.svg';
 import JaegerIcon from '../assets/icons/jaegertracing.svg';
-import AzureIcon from '../assets/icons/Azure.svg';
 import cosmosDbIcon from '../assets/icons/cosmosdb.svg';
 import EmissaryIcon from '../assets/icons/emissary.png';
 import AcrIcon from '../assets/icons/acr.png';
+import ServiceBusIcon from '../assets/icons/servicebus.svg';
+import KeyVaultIcon from '../assets/icons/keyvault.svg';
 
 const sections = [
   {
-    title: 'Core Microservices',
-    items: [
-      { text: 'REST APIs', icon: 'bi-code-slash' },
-      { text: 'Database storage', icon: 'bi-hdd-stack' },
-      { text: 'Code reuse', icon: 'bi-arrow-repeat' },
-      { text: 'Inter‑service communication', icon: 'bi-chat-dots' },
-      { text: 'Eventual consistency', icon: 'bi-clock-history' },
-      { text: 'Token based security', icon: 'bi-shield-lock' },
-      { text: 'Authentication & authorization', icon: 'bi-person-check' },
-      { text: 'Sagas', icon: 'bi-lightning-charge' },
-      { text: 'Frontend integration', icon: 'bi-window' },
-      { text: 'Real‑time communication', icon: 'bi-broadcast' }
-    ],
+    title: 'Core microservices',
     tools: [
       { src: DotnetIcon, name: '.NET' },
       { src: MongoDBIcon, name: 'MongoDB' },
-      { src: PostmanIcon, name: 'Postman' },
       { src: RabbitMQIcon, name: 'RabbitMQ' },
-      { src: NugetIcon, name: 'NuGet' }
+      { src: NugetIcon, name: 'NuGet' },
+      { icon: 'shield-lock', name: 'Duende IdentityServer' },
+      { icon: 'broadcast', name: 'SignalR' }
     ]
   },
   {
-    title: 'Cloud Infrastructure & Deployment',
-    items: [
-      { text: 'Microservices as containers', icon: 'bi-box-seam' },
-      { text: 'Integration with Azure resources', icon: 'bi-cloud' },
-      { text: 'Kubernetes deployment', icon: 'bi-diagram-3' },
-      { text: 'Health checks', icon: 'bi-heart-pulse' },
-      { text: 'Secrets management', icon: 'bi-key' },
-      { text: 'API Gateway', icon: 'bi-door-open' },
-      { text: 'HTTPS and TLS', icon: 'bi-lock-fill' }
-    ],
+    title: 'Cloud infrastructure & deployment',
     tools: [
+      // Short names keep this row on one line; all of these are Azure services
       { src: DockerIcon, name: 'Docker' },
-      { src: AzureIcon, name: 'Azure' },
       { src: cosmosDbIcon, name: 'Cosmos DB' },
-      { src: AcrIcon, name: 'Azure Container Registry' },
-      { src: KubernetesIcon, name: 'Kubernetes' },
-      { src: EmissaryIcon, name: 'Emissary-ingress' }
+      { src: AcrIcon, name: 'ACR' },
+      { src: KubernetesIcon, name: 'AKS' },
+      { src: EmissaryIcon, name: 'Emissary' },
+      { src: ServiceBusIcon, name: 'Service Bus' },
+      { src: KeyVaultIcon, name: 'Key Vault' }
     ]
   },
   {
     title: 'CI/CD',
-    items: [
-      { text: 'Using Helm charts', icon: 'bi-stack' },
-      { text: 'Versioning', icon: 'bi-clock-history' },
-      { text: 'Connecting GitHub with Azure', icon: 'bi-github' },
-      { text: 'Continuous integration', icon: 'bi-play-circle' },
-      { text: 'Continuous deployment', icon: 'bi-upload' }
-    ],
     tools: [
       { src: HelmIcon, name: 'Helm' },
       { src: GitHubIcon, name: 'GitHub' },
@@ -87,45 +64,32 @@ const sections = [
   },
   {
     title: 'Observability',
-    items: [
-      { text: 'Adding logging', icon: 'bi-journal-text' },
-      { text: 'Querying logs', icon: 'bi-search' },
-      { text: 'Distributed tracing', icon: 'bi-diagram-3' },
-      { text: 'Using metrics', icon: 'bi-graph-up' },
-      { text: 'Monitoring', icon: 'bi-eye' }
-    ],
     tools: [
       { src: PrometheusIcon, name: 'Prometheus' },
       { src: GrafanaIcon, name: 'Grafana' },
       { src: OpenTelemetryIcon, name: 'OpenTelemetry' },
-      { src: JaegerIcon, name: 'Jaeger' }
+      { src: JaegerIcon, name: 'Jaeger' },
+      { icon: 'file-earmark-text', name: 'Seq' }
     ]
   }
 ];
 
 export const TechStackOverview = () => (
-  <div className="techstack-grid">
+  <div className="techstack-sheet">
     {sections.map((section) => (
-      <article key={section.title} className="techstack-card">
-        <header className="techstack-card__header">
-          <h3 className="techstack-card__title">{section.title}</h3>
-          <ul className="techstack-card__tools" aria-label={`${section.title} tools`}>
-            {section.tools.map((tool) => (
-              <li key={tool.name}>
-                <img src={tool.src} alt={tool.name} title={tool.name} className="techstack-card__tool" />
-              </li>
-            ))}
-          </ul>
-        </header>
-        <ul className="techstack-card__chips">
-          {section.items.map((item) => (
-            <li key={item.text} className="techstack-chip">
-              <i className={`bi ${item.icon}`} aria-hidden="true"></i>
-              <span>{item.text}</span>
+      <section key={section.title} className="techstack-row">
+        <h3 className="techstack-row__title">{section.title}</h3>
+        <ul className="techstack-row__tools" aria-label={`${section.title} tools`}>
+          {section.tools.map((tool) => (
+            <li key={tool.name} className="techstack-tool">
+              <span className="techstack-tool__tile" aria-hidden="true">
+                {tool.src ? <img src={tool.src} alt="" /> : <i className={`bi bi-${tool.icon}`}></i>}
+              </span>
+              <span>{tool.name}</span>
             </li>
           ))}
         </ul>
-      </article>
+      </section>
     ))}
   </div>
 );

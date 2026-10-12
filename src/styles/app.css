@@ -80,51 +80,119 @@ code {
 
 .footer {
   width: 100%;
-  padding: 20px 0;
-  background-color: rgb(var(--purple-50-rgb));
-  border-top: 1px solid rgba(var(--purple-600-rgb), 0.15);
+  padding: 12px 0;
+  background-color: var(--ink);
+  color: rgb(var(--purple-50-rgb));
+  /* Mirrors the navbar's 3px ink edge + purple offset, flipped upward */
+  border-top: 3px solid var(--ink);
+  box-shadow: 0 -4px 0 rgba(var(--purple-600-rgb), 0.9);
+}
+
+/* Same content column as .navbar.navmenu .container (navmenu.css), so the
+   footer's logo lines up under the navbar's */
+.footer .container {
+  max-width: calc(1040px + 2 * clamp(24px, 6vw, 72px));
+  width: 100%;
+  padding-left: clamp(24px, 6vw, 72px);
+  padding-right: clamp(24px, 6vw, 72px);
 }
 
 .footer__inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px 20px;
   flex-wrap: wrap;
+}
+
+.footer__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.footer__logo {
+  flex: none;
+  width: 22px;
+  height: 22px;
 }
 
 .footer__text {
   margin: 0;
-  font-size: 0.8rem;
-  color: rgba(var(--ink-rgb), 0.6);
+  font-size: 0.8125rem;
   line-height: 1.4;
+  color: rgba(var(--purple-50-rgb), 0.65);
 }
 
 .footer__contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
   margin: 0;
   padding: 0;
   list-style: none;
-  display: inline-flex;
-  gap: 18px;
 }
 
+/* Icon-only links; 32px square keeps a comfortable hit area */
 .footer__link {
   display: inline-flex;
-  color: rgba(var(--ink-rgb), 0.55);
-  font-size: 1.05rem;
-  transition: color 0.2s ease;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: rgba(var(--purple-50-rgb), 0.75);
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .footer__link:hover,
 .footer__link:focus {
-  color: var(--accent);
+  color: rgb(var(--purple-50-rgb));
+  background: rgba(var(--purple-300-rgb), 0.18);
 }
 
+.footer__link:focus-visible {
+  outline: 2px solid rgb(var(--purple-300-rgb));
+  outline-offset: 2px;
+}
+
+/* Phones: one line, copyright left and icons right; the tagline is dropped
+   (the hero already says it's a portfolio project) and the text is smaller */
 @media (max-width: 600px) {
   .footer__inner {
-    flex-direction: column;
-    text-align: center;
-    gap: 10px;
+    flex-wrap: nowrap;
+    gap: 12px;
+  }
+
+  .footer__brand {
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .footer__logo {
+    width: 20px;
+    height: 20px;
+  }
+
+  .footer__text {
+    font-size: 0.75rem;
+    white-space: nowrap;
+  }
+
+  .footer__tagline {
+    display: none;
+  }
+
+  .footer__contact {
+    flex-wrap: nowrap;
+    gap: 2px;
+  }
+
+  .footer__link {
+    width: 30px;
+    height: 30px;
+    font-size: 0.95rem;
   }
 }
 

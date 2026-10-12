@@ -5,6 +5,191 @@
   padding-right: 0;
 }
 
+/* Landing page only (NavMenu isLanding): the header sticks so the section
+   links below stay in reach. .app-wrapper grows with the page, so sticky
+   holds for the full scroll. */
+.navmenu-header--sticky {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+}
+
+/* Logged-out Login always sits at the right edge. On the landing page it
+   follows the section-links group, so app.css's ".navbar .navbar-nav +
+   .navbar-nav { margin-left: 1rem }" matches it and (being more specific)
+   would beat a plain margin-left:auto, leaving Login beside the logo on phones,
+   where the section links are hidden. Hence the extra specificity here. */
+.navbar.navmenu .navbar-nav.navmenu__primary--inline {
+  margin-left: auto;
+}
+
+/* Landing section links (LandingSectionLinks.jsx): plain labels after the
+   brand, active one underlined in purple */
+.navmenu__sections {
+  flex: 0 0 auto;
+  gap: clamp(12px, 2.4vw, 28px);
+  margin: 0 auto 0 clamp(8px, 3vw, 40px);
+  padding: 0;
+  list-style: none;
+}
+
+.navmenu__sections > li {
+  display: flex;
+}
+
+/* Underline links, not pills: no hover fill or lift (the generic .nav-link
+   hover below), and the 2px underline is balanced by a 2px top border so the
+   text stays on the same centerline as the brand and Login */
+.navbar.navmenu .navmenu__sections .nav-link,
+.navbar.navmenu .navmenu__primary:not(.navmenu__primary--inline) .nav-link,
+.navbar.navmenu .navmenu__manage .dropdown-toggle {
+  margin: 0;
+  padding: 6px 0;
+  border-top: 2px solid transparent;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  color: rgba(var(--purple-50-rgb), 0.68) !important;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.navbar.navmenu .navmenu__sections .nav-link:hover,
+.navbar.navmenu .navmenu__sections .nav-link:focus,
+.navbar.navmenu .navmenu__primary:not(.navmenu__primary--inline) .nav-link:hover,
+.navbar.navmenu .navmenu__primary:not(.navmenu__primary--inline) .nav-link:focus,
+.navbar.navmenu .navmenu__manage .dropdown-toggle:hover,
+.navbar.navmenu .navmenu__manage .dropdown-toggle:focus,
+.navbar.navmenu .navmenu__manage.show .dropdown-toggle {
+  background: none;
+  transform: none;
+  color: rgb(var(--purple-50-rgb)) !important;
+  border-bottom-color: rgba(var(--purple-300-rgb), 0.5);
+}
+
+.navbar.navmenu .navmenu__sections .nav-link.is-active,
+.navbar.navmenu .navmenu__primary:not(.navmenu__primary--inline) .nav-link.is-active {
+  color: rgb(var(--purple-50-rgb)) !important;
+  border-bottom-color: rgb(var(--purple-300-rgb));
+}
+
+/* Logged-in app links: same underline treatment, spaced like the section
+   links; their icons stay but follow the text colour */
+.navbar.navmenu .navmenu__primary:not(.navmenu__primary--inline) {
+  gap: clamp(14px, 2.2vw, 28px);
+}
+
+/* App pages: start where the landing section links start, so the bar
+   doesn't shift between pages */
+.navbar.navmenu .navmenu__collapse > .navmenu__primary:not(.navmenu__primary--inline) {
+  margin-left: clamp(8px, 3vw, 40px);
+}
+
+.navbar.navmenu .navmenu__primary:not(.navmenu__primary--inline) .nav-link i,
+.navbar.navmenu .navmenu__manage .dropdown-toggle i {
+  font-size: 0.85rem;
+  opacity: 1;
+}
+
+.navbar.navmenu .navmenu__manage .dropdown-toggle::after {
+  margin-left: 2px;
+  vertical-align: middle;
+}
+
+/* Logged-out Login: a compact version of the hero's primary button (white,
+   ink border, purple offset shadow) so the one action in the bar reads as
+   one */
+.navbar.navmenu .navmenu__primary--inline .nav-link {
+  margin: 0;
+  padding: 7px 14px;
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 3px 3px 0 rgba(var(--purple-300-rgb), 0.9);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  color: var(--ink) !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.navbar.navmenu .navmenu__primary--inline .nav-link:hover,
+.navbar.navmenu .navmenu__primary--inline .nav-link:focus {
+  background: rgb(var(--purple-50-rgb));
+  border-bottom-color: var(--ink);
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 rgba(var(--purple-300-rgb), 0.9);
+}
+
+.navbar.navmenu .navmenu__primary--inline .nav-link:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 rgba(var(--purple-300-rgb), 0.9);
+}
+
+/* Landing, logged in: Home sits just left of the account tile */
+.navmenu__secondary > .navmenu__primary {
+  margin-right: 8px;
+}
+
+/* Account menu (logged in): the same tile as Login, so the right edge of the
+   bar looks the same signed in or out */
+.navbar.navmenu .navmenu__profile-dropdown .dropdown-toggle {
+  margin: 0;
+  padding: 7px 12px;
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 3px 3px 0 rgba(var(--purple-300-rgb), 0.9);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  color: var(--ink) !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.navbar.navmenu .navmenu__profile-dropdown .dropdown-toggle:hover,
+.navbar.navmenu .navmenu__profile-dropdown .dropdown-toggle:focus,
+.navbar.navmenu .navmenu__profile-dropdown.show .dropdown-toggle {
+  background: rgb(var(--purple-50-rgb));
+  border-bottom-color: var(--ink);
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 rgba(var(--purple-300-rgb), 0.9);
+}
+
+.navbar.navmenu .navmenu__profile-dropdown .navmenu__greeting {
+  padding: 0;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: inherit;
+}
+
+.navbar.navmenu .navmenu__profile-dropdown .navmenu__greeting i {
+  font-size: 0.9rem;
+  opacity: 1;
+}
+
+.navbar.navmenu .navmenu__primary--inline .nav-link i {
+  font-size: 0.9rem;
+  opacity: 1;
+}
+
+/* Phones: no room beside the logo and account links; the hero CTA still
+   jumps to Architecture */
+@media (max-width: 768px) {
+  .navmenu__sections {
+    display: none !important;
+  }
+}
+
 /* Match the data-page/home-page content column exactly (max-width:1040px
    inside padding: clamp(24px, 6vw, 72px)) so the logo lines up with page
    content below it instead of following Bootstrap's own container
@@ -24,9 +209,10 @@
 .navbar-light .navbar-brand {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 1.05rem;
-  font-weight: 500;
-  letter-spacing: 0.03em;
-  color: rgba(var(--purple-50-rgb), 0.85) !important;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: rgb(var(--purple-50-rgb)) !important;
+  border-bottom: none !important;
   display: inline-flex;
   align-items: center;
   gap: 8px;
